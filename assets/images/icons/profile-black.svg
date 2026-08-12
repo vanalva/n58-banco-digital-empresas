@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="b" data-name="Layer_2" xmlns="http://www.w3.org/2000/svg" width="4.236" height="5.93" viewBox="0 0 4.236 5.93">
+  <g id="c" data-name="Layer_1">
+    <g id="d" data-name="profile-black">
+      <g>
+        <path d="M2.755,3.272h-1.274c-.199,0-.383.104-.486.275L.081,5.073c-.226.377.046.857.486.857h.341s2.419,0,2.419,0h.341c.44,0,.712-.48.486-.857l-.914-1.525c-.102-.171-.287-.275-.486-.275Z" style="fill: #1b2021;"/>
+        <rect x=".916" width="2.454" height="2.784" rx="1.038" ry="1.038" style="fill: #1b2021;"/>
+      </g>
+    </g>
+  </g>
+</svg>

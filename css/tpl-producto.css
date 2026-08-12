@@ -1,0 +1,834 @@
+/* ══════════════════════════════════════════════════════════════════════════
+   tpl-producto.css — N58 Producto detail template
+   ──────────────────────────────────────────────────────────────────────────
+   Scoped to `.tpl-producto`. All variant knobs are `is-*` classes on that root;
+   they set CSS custom properties so they COMPOSE. See the VARIANT MANIFEST at
+   the top of producto-template.html.
+
+   Rules honoured (per BUILD-GUIDE):
+   · Longhand CSS only (no margin/padding/border/gap/background/transition/… shorthand)
+   · 3 max-width breakpoints only: 991 / 767 / 478
+   · Colour only via palette vars (--_palette---<fam>--<stop>) + color-mix on them
+   · Mode classes stay on <section>, never <body>
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/* ── Accent token (variant-driven) + local scales ───────────────────────────
+   --tpl-accent is the family 500; softer/stronger tints are color-mixed from it
+   (color-mix on a palette var is allowed — imports as an @raw value). */
+.tpl-producto {
+  --tpl-accent:        var(--_palette---core--500);
+  --tpl-media-order:   2;
+  --tpl-stagger:       0rem;
+
+  --tpl-accent-soft:   color-mix(in oklch, var(--tpl-accent) 15%, transparent);
+  --tpl-accent-line:   color-mix(in oklch, var(--tpl-accent) 55%, transparent);
+  --tpl-card-surface:  color-mix(in oklch, var(--_palette---neutral--900) 5%, transparent);
+  --tpl-card-border:   color-mix(in oklch, var(--_palette---neutral--500) 24%, transparent);
+  --tpl-card-radius:   var(--_component---card--radius);
+}
+
+.tpl-producto.is-accent-core        { --tpl-accent: var(--_palette---core--500);        }
+.tpl-producto.is-accent-alternate   { --tpl-accent: var(--_palette---alternate--500);   }
+.tpl-producto.is-accent-alternate-2 { --tpl-accent: var(--_palette---alternate-2--500); }
+.tpl-producto.is-accent-alert       { --tpl-accent: var(--_palette---alert--500);       }
+
+/* Optional product-identity marquee between the hero and product details. */
+.n58-product-marquee {
+  overflow: hidden;
+  border-top-width: 1px;
+  border-top-style: solid;
+  border-top-color: color-mix(in oklch, var(--_palette---neutral--100) 18%, transparent);
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+  border-bottom-color: color-mix(in oklch, var(--_palette---neutral--100) 18%, transparent);
+  background-color: var(--_theme---surface--main);
+  color: var(--_theme---text--strong);
+}
+.n58-product-marquee_track {
+  display: flex;
+  width: max-content;
+  align-items: center;
+  column-gap: 1.25rem;
+  row-gap: 1.25rem;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  animation-name: n58-product-marquee;
+  animation-duration: 28s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+.n58-product-marquee_item {
+  font-size: clamp(1.25rem, 2.4vw, 2.25rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+}
+.n58-product-marquee_star { color: var(--tpl-accent); font-size: 1.5rem; }
+@keyframes n58-product-marquee { to { transform: translateX(-50%); } }
+@media (prefers-reduced-motion: reduce) { .n58-product-marquee_track { animation-name: none; } }
+
+/* Eligibility and related-information bridge after requirements. */
+.tpl-resources-section {
+  border-top-width: 1px;
+  border-top-style: solid;
+  border-top-color: var(--_theme---border);
+  padding-top: clamp(4rem, 7vw, 7rem);
+  padding-bottom: clamp(4rem, 7vw, 7rem);
+  background-color: var(--_theme---surface--main);
+}
+.tpl-resources {
+  display: flex;
+  flex-direction: column;
+  row-gap: clamp(2.5rem, 5vw, 4.5rem);
+}
+.tpl-resources_head {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(18rem, 0.6fr);
+  column-gap: var(--_spacing---step--6);
+  row-gap: 1rem;
+  align-items: end;
+}
+.tpl-resources_head > :first-child {
+  grid-column: 1 / -1;
+  margin-bottom: 0.25rem;
+}
+.tpl-resources_head > :last-child {
+  max-width: 32rem;
+  padding-bottom: 0.35rem;
+}
+.tpl-resources_links {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr));
+  column-gap: 1rem;
+  row-gap: 1rem;
+}
+.tpl-resource-card {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  column-gap: 1.25rem;
+  row-gap: 1rem;
+  align-items: start;
+  min-height: 12.5rem;
+  padding-top: 1.5rem;
+  padding-right: 1.5rem;
+  padding-bottom: 1.5rem;
+  padding-left: 1.5rem;
+  overflow: hidden;
+  border-top-width: 1px;
+  border-right-width: 1px;
+  border-bottom-width: 1px;
+  border-left-width: 1px;
+  border-top-style: solid;
+  border-right-style: solid;
+  border-bottom-style: solid;
+  border-left-style: solid;
+  border-top-color: var(--_theme---border);
+  border-right-color: var(--_theme---border);
+  border-bottom-color: var(--_theme---border);
+  border-left-color: var(--_theme---border);
+  border-top-left-radius: var(--_component---card--radius);
+  border-top-right-radius: var(--_component---card--radius);
+  border-bottom-right-radius: var(--_component---card--radius);
+  border-bottom-left-radius: var(--_component---card--radius);
+  background-color: var(--_theme---surface--raised);
+  color: var(--_theme---text--strong);
+  transition-property: transform, background-color, border-color;
+  transition-duration: 240ms;
+  transition-timing-function: var(--_motion---ease-emphasized);
+}
+.tpl-resource-card::after {
+  content: "";
+  position: absolute;
+  right: -3rem;
+  bottom: -3rem;
+  width: 8rem;
+  height: 8rem;
+  border-top-left-radius: 999rem;
+  border-top-right-radius: 999rem;
+  border-bottom-right-radius: 999rem;
+  border-bottom-left-radius: 999rem;
+  background-color: var(--tpl-accent-soft);
+  transition-property: transform;
+  transition-duration: 240ms;
+  transition-timing-function: var(--_motion---ease-emphasized);
+}
+.tpl-resource-card:hover {
+  transform: translateY(-0.35rem);
+  border-top-color: var(--tpl-accent);
+  border-right-color: var(--tpl-accent);
+  border-bottom-color: var(--tpl-accent);
+  border-left-color: var(--tpl-accent);
+}
+.tpl-resource-card:hover::after { transform: scale(1.35); }
+.tpl-resource-card_num {
+  color: var(--tpl-accent);
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+.tpl-resource-card_body {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  row-gap: 0.65rem;
+}
+.tpl-resource-card_arrow {
+  position: relative;
+  z-index: 1;
+  width: 1.5rem;
+  height: 1.5rem;
+  color: var(--tpl-accent);
+}
+@media (max-width: 767px) {
+  .tpl-resources_head { grid-template-columns: 1fr; }
+  .tpl-resources_head > :first-child { grid-column: auto; }
+  .tpl-resource-card { min-height: 10rem; }
+}
+
+/* Dark sections need a softer card surface (lift off the ink, not darken it). */
+.tpl-producto .f-mode-dark {
+  --tpl-card-surface: color-mix(in oklch, var(--_palette---neutral--100) 6%, transparent);
+  --tpl-card-border:  color-mix(in oklch, var(--_palette---neutral--100) 16%, transparent);
+}
+
+/* ── Media side (hero + requisitos splits) ─────────────────────────────────── */
+.tpl-producto.is-media-left  { --tpl-media-order: 0; }
+.tpl-producto.is-media-right { --tpl-media-order: 2; }
+
+/* Eyebrows use the real n58-badge (project.css), not an invented pill. */
+
+/* Section heading block. */
+.tpl-sec-head {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  row-gap: 0.4rem;
+  column-gap: 0.4rem;
+  margin-top: 0;
+  margin-right: 0;
+  margin-bottom: 3rem;
+  margin-left: 0;
+  max-width: 46rem;
+}
+.tpl-sec-head--center {
+  align-items: center;
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Media frame — soft rounded, subtle accent ring on hover. */
+.tpl-media-frame {
+  order: var(--tpl-media-order);
+  border-top-left-radius: var(--_component---card--radius);
+  border-top-right-radius: var(--_component---card--radius);
+  border-bottom-right-radius: var(--_component---card--radius);
+  border-bottom-left-radius: var(--_component---card--radius);
+  overflow-x: hidden;
+  overflow-y: hidden;
+}
+
+/* ══════════════ 01 · HERO ══════════════ */
+.tpl-hero {
+  display: grid;
+  grid-template-columns: var(--tpl-hero-cols, 1.05fr 0.95fr);
+  align-items: center;
+  column-gap: clamp(2rem, 5vw, 5rem);
+  row-gap: clamp(2rem, 5vw, 3.5rem);
+}
+.tpl-hero_text {
+  order: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: var(--tpl-hero-items, flex-start);
+  text-align: var(--tpl-hero-align, left);
+  row-gap: 1.1rem;
+  column-gap: 1.1rem;
+}
+.tpl-hero_media { order: var(--tpl-media-order); }
+.tpl-hero_title { margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; }
+
+/* stacked → single column, media below. */
+.tpl-producto.is-hero-stacked .tpl-hero { --tpl-hero-cols: minmax(0, 1fr); }
+.tpl-producto.is-hero-stacked .tpl-hero_media { order: var(--tpl-media-order); }
+.tpl-producto.is-hero-stacked .tpl-hero_text { max-width: 46rem; }
+
+/* centered → centered text, media below, narrower. */
+.tpl-producto.is-hero-centered .tpl-hero {
+  --tpl-hero-cols: minmax(0, 1fr);
+  justify-items: center;
+}
+.tpl-producto.is-hero-centered .tpl-hero_text {
+  --tpl-hero-align: center;
+  --tpl-hero-items: center;
+  order: 0;
+  max-width: 42rem;
+}
+.tpl-producto.is-hero-centered .tpl-hero_media {
+  order: 1;
+  width: 100%;
+  max-width: 40rem;
+}
+.tpl-producto.is-hero-centered .tpl-hero_stats { justify-content: center; }
+
+/* Hero stat row. */
+.tpl-hero_stats {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: 2.4rem;
+  row-gap: 1.2rem;
+  margin-top: 1.6rem;
+  margin-right: 0;
+  margin-bottom: 0;
+  margin-left: 0;
+  padding-top: 1.4rem;
+  padding-right: 0;
+  padding-bottom: 0;
+  padding-left: 0;
+  border-top-width: var(--_theme---border--width-2);
+  border-top-style: solid;
+  border-top-color: var(--tpl-card-border);
+  list-style-type: none;
+  list-style-position: outside;
+}
+.tpl-stat {
+  display: flex;
+  flex-direction: column;
+  row-gap: 0.15rem;
+  column-gap: 0.15rem;
+}
+.tpl-stat_num {
+  font-size: clamp(1.5rem, 3vw, 2.1rem);
+  font-weight: 800;
+  line-height: 1;
+  color: var(--tpl-accent);
+}
+.tpl-stat_lbl {
+  font-size: 0.82rem;
+  letter-spacing: 0.02em;
+  color: var(--_theme---text--muted, var(--_palette---neutral--400));
+}
+
+/* ══════════════ 02 · CARACTERÍSTICAS ══════════════ */
+.tpl-feats {
+  display: grid;
+  grid-template-columns: repeat(var(--tpl-cards-cols, 3), minmax(0, 1fr));
+  column-gap: 1.4rem;
+  row-gap: 1.4rem;
+  margin-top: 0;
+  margin-right: 0;
+  margin-bottom: 0;
+  margin-left: 0;
+  padding-top: 0;
+  padding-right: 0;
+  padding-bottom: 0;
+  padding-left: 0;
+  list-style-type: none;
+  list-style-position: outside;
+}
+.tpl-producto.is-cards-grid    { --tpl-cards-cols: 3; }
+.tpl-producto.is-cards-row     { --tpl-cards-cols: 3; }
+.tpl-producto.is-cards-stagger { --tpl-cards-cols: 3; --tpl-stagger: 2.4rem; }
+
+/* ── FLIP CARD (4:5) ──
+   .tpl-feat is the perspective stage; .tpl-feat_flip rotates on hover + on the
+   timed auto-play (is-flipped, driven by the scoped script). Two absolute faces
+   with backface-visibility hidden; the back is a photo + description. */
+.tpl-feat {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  list-style-type: none;
+  -webkit-perspective: 1400px;
+  perspective: 1400px;
+}
+.tpl-feat_flip {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  -webkit-transform-style: preserve-3d;
+  transform-style: preserve-3d;
+  transition-property: transform;
+  transition-duration: 0.75s;
+  transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  transition-delay: 0s;
+  will-change: transform;
+}
+.tpl-feat:hover .tpl-feat_flip,
+.tpl-feat_flip.is-flipped {
+  -webkit-transform: rotateY(180deg);
+  transform: rotateY(180deg);
+}
+.tpl-feat_face {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  border-top-left-radius: var(--tpl-card-radius);
+  border-top-right-radius: var(--tpl-card-radius);
+  border-bottom-right-radius: var(--tpl-card-radius);
+  border-bottom-left-radius: var(--tpl-card-radius);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+/* FRONT face */
+.tpl-feat_front {
+  padding-top: 1.8rem;
+  padding-right: 1.6rem;
+  padding-bottom: 1.8rem;
+  padding-left: 1.6rem;
+  border-top-width: var(--_theme---border--width-2);
+  border-right-width: var(--_theme---border--width-2);
+  border-bottom-width: var(--_theme---border--width-2);
+  border-left-width: var(--_theme---border--width-2);
+  border-top-style: solid;
+  border-right-style: solid;
+  border-bottom-style: solid;
+  border-left-style: solid;
+  border-top-color: var(--tpl-card-border);
+  border-right-color: var(--tpl-card-border);
+  border-bottom-color: var(--tpl-card-border);
+  border-left-color: var(--tpl-card-border);
+  background-color: var(--tpl-card-surface);
+}
+/* Accent top rule. */
+.tpl-feat_front::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 1.6rem;
+  width: 2.6rem;
+  height: 3px;
+  border-top-left-radius: var(--n58-radius-control);
+  border-top-right-radius: var(--n58-radius-control);
+  border-bottom-right-radius: var(--n58-radius-control);
+  border-bottom-left-radius: var(--n58-radius-control);
+  background-color: var(--tpl-accent);
+}
+/* BACK face — photo + description. */
+.tpl-feat_back {
+  -webkit-transform: rotateY(180deg);
+  transform: rotateY(180deg);
+  justify-content: flex-end;
+  background-color: var(--_palette---neutral--900);
+}
+.tpl-feat_img {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.tpl-feat_back::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-image: linear-gradient(to top, var(--_palette---neutral--1000) 0%, color-mix(in oklch, var(--_palette---neutral--1000) 55%, transparent) 42%, transparent 78%);
+}
+.tpl-feat_back_body {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  row-gap: 0.4rem;
+  padding-top: 1.4rem;
+  padding-right: 1.5rem;
+  padding-bottom: 1.6rem;
+  padding-left: 1.5rem;
+}
+.tpl-feat_back_title { color: var(--_palette---neutral--0); }
+.tpl-feat_back_desc { color: var(--_palette---neutral--100); }
+/* Timer bar (front) — mirrors .n58-faq-progress; the script fills scaleX. */
+.tpl-feat_progress {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 4px;
+  transform: scaleX(0);
+  transform-origin: left center;
+  background-color: var(--tpl-accent);
+  pointer-events: none;
+  will-change: transform;
+}
+.tpl-feat_num {
+  font-size: 2.4rem;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--tpl-accent);
+}
+.tpl-feat_body {
+  display: flex;
+  flex-direction: column;
+  row-gap: 0.55rem;
+  column-gap: 0.55rem;
+  margin-top: 0.9rem;
+}
+.tpl-feat_title { margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; }
+.tpl-feat_link {
+  align-self: flex-start;
+  margin-top: auto;
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  color: var(--tpl-accent);
+  text-decoration-line: none;
+  text-decoration-color: var(--tpl-accent);
+  text-decoration-style: solid;
+  border-bottom-width: var(--_theme---border--width-2);
+  border-bottom-style: solid;
+  border-bottom-color: transparent;
+  transition-property: border-color;
+  transition-duration: 0.25s;
+  transition-timing-function: ease;
+  transition-delay: 0s;
+}
+.tpl-feat_link:hover { border-bottom-color: var(--tpl-accent); }
+.tpl-producto.is-cards-row .tpl-feat_num { font-size: 1.9rem; }
+
+/* ══════════════ 03 · BENEFICIOS (4 renderers, one shown) ══════════════ */
+.tpl-benef_tabs,
+.tpl-benef_accordion,
+.tpl-benef_grid,
+.tpl-benef_stack { display: none; }
+
+.tpl-producto.is-beneficios-tabs      .tpl-benef_tabs      { display: block; }
+.tpl-producto.is-beneficios-accordion .tpl-benef_accordion { display: block; }
+.tpl-producto.is-beneficios-grid      .tpl-benef_grid      { display: grid; }
+.tpl-producto.is-beneficios-stack     .tpl-benef_stack     { display: grid; }
+/* Stack renderer carries its own left-aligned heading, so drop the centered one. */
+.tpl-producto.is-beneficios-stack .tpl-sec-head--center { display: none; }
+
+/* ── STACK renderer: info left + auto-cycling deck right (the N58 method) ── */
+.tpl-benef_stack {
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  column-gap: clamp(2rem, 5vw, 5rem);
+  row-gap: 2.4rem;
+  align-items: center;
+}
+.tpl-benef_stack_info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  row-gap: 1rem;
+}
+.tpl-benef_stack_info h2 { margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; }
+/* Segment indicators — current = accent, like the live progress bars. */
+.tpl-benef_dots {
+  display: flex;
+  flex-direction: row;
+  column-gap: 0.5rem;
+  row-gap: 0.5rem;
+  margin-top: 0.8rem;
+}
+.tpl-benef_dot {
+  width: 2.2rem;
+  height: 0.5rem;
+  padding-top: 0;
+  padding-right: 0;
+  padding-bottom: 0;
+  padding-left: 0;
+  border-top-left-radius: var(--n58-radius-control);
+  border-top-right-radius: var(--n58-radius-control);
+  border-bottom-right-radius: var(--n58-radius-control);
+  border-bottom-left-radius: var(--n58-radius-control);
+  border-top-width: 0;
+  border-right-width: 0;
+  border-bottom-width: 0;
+  border-left-width: 0;
+  background-color: color-mix(in oklch, var(--_theme---text--main) 26%, transparent);
+  cursor: pointer;
+  transition-property: background-color, width;
+  transition-duration: 0.4s;
+  transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  transition-delay: 0s;
+}
+.tpl-benef_dot.is-active {
+  width: 3rem;
+  background-color: var(--tpl-accent);
+}
+/* Deck — theme-aware cards. The framework freezes --_component---card--surface to
+   the light page wrapper's value (var() resolves where it's declared), so re-point
+   the card tokens to the theme tokens HERE, inside the section — they now resolve in
+   this section's mode (dark → surface--raised/text--main/border--main), and would
+   follow along if the section were flipped to light. */
+.tpl-benef_deck {
+  /* Shorter/landscape so the centered content doesn't read top-heavy. */
+  --_component---card-stack--aspect-ratio: 3 / 2;
+  --_component---card--text: var(--_theme---text--main);
+  /* The card face/border/notch come from .n58-notch-border on each slide — a
+     bordered notch (border follows the diagonal), like the buttons. Fill matches
+     the dark section (surface--main); tune the notch bigger + more rounded than
+     the class default for these large cards. */
+  --n58-notch-fill: var(--_theme---surface--main);
+  --n58-notch-border-color: var(--_theme---border--main);
+  --n58-notch-size: 2rem;
+  --n58-notch-radius: var(--n58-radius-control);
+  /* No padding: the front card fills the deck box so it vertically centers with
+     the info column; deeper cards peek by OVERFLOWING down-right (the framework
+     keeps the wrap overflow visible). Padding here would shrink + lift the front
+     card, pushing it above the info column's center. */
+}
+.tpl-benef_slide_in {
+  box-sizing: border-box;   /* keep padding INSIDE the card so content never overflows */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  row-gap: 1.1rem;
+  width: 100%;
+  height: 100%;
+  padding-top: 2.4rem;
+  padding-right: 2.4rem;
+  padding-bottom: 2.4rem;
+  padding-left: 2.4rem;
+}
+/* Smaller than f-text-h2 so long titles wrap to 2 lines inside the card. */
+.tpl-benef_slide_title {
+  margin-top: 0;
+  margin-right: 0;
+  margin-bottom: 0;
+  margin-left: 0;
+  font-size: clamp(1.4rem, 2vw, 1.95rem);
+  line-height: 1.2;
+  /* contain the highlight block so it doesn't span the whole card width */
+  max-width: 18rem;
+}
+/* Accent highlight behind the title (like the live "Seguridad" mark). */
+/* ONE cohesive block behind the whole title (text wraps inside it) — no per-line
+   clone, so multi-line titles read as a single clean sticker, not stepped bars. */
+.tpl-benef_hl {
+  display: inline-block;
+  padding-top: 0.3em;
+  padding-right: 0.5em;
+  padding-bottom: 0.3em;
+  padding-left: 0.5em;
+  background-color: var(--tpl-accent);
+  color: var(--_palette---neutral--900);
+  border-top-left-radius: var(--n58-radius-control);
+  border-top-right-radius: var(--n58-radius-control);
+  border-bottom-right-radius: var(--n58-radius-control);
+  border-bottom-left-radius: var(--n58-radius-control);
+}
+.tpl-benef_slide_desc {
+  color: var(--_theme---text--muted);
+  max-width: 26rem;   /* tidy reading measure, centered */
+}
+
+/* Tabs: accent-tint the active trigger + its progress underline. */
+.tpl-benef_tabs .flwr_tabs_trigger[aria-selected="true"] { color: var(--tpl-accent); }
+.tpl-benef_tabs .n58-tab-progress { background-color: var(--tpl-accent); }
+.tpl-benef_panel {
+  display: flex;
+  flex-direction: column;
+  row-gap: 0.8rem;
+  column-gap: 0.8rem;
+  padding-top: 1.6rem;
+  padding-right: 0;
+  padding-bottom: 0.4rem;
+  padding-left: 0;
+}
+.tpl-benef_panel h3 { margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; }
+
+/* Grid: 3 accent-icon panels. */
+.tpl-benef_grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  column-gap: 1.4rem;
+  row-gap: 1.4rem;
+  margin-top: 0;
+  margin-right: 0;
+  margin-bottom: 0;
+  margin-left: 0;
+  padding-top: 0;
+  padding-right: 0;
+  padding-bottom: 0;
+  padding-left: 0;
+  list-style-type: none;
+  list-style-position: outside;
+}
+.tpl-benef_card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  row-gap: 0.7rem;
+  column-gap: 0.7rem;
+  padding-top: 1.8rem;
+  padding-right: 1.6rem;
+  padding-bottom: 1.8rem;
+  padding-left: 1.6rem;
+  border-top-left-radius: var(--tpl-card-radius);
+  border-top-right-radius: var(--tpl-card-radius);
+  border-bottom-right-radius: var(--tpl-card-radius);
+  border-bottom-left-radius: var(--tpl-card-radius);
+  border-top-width: var(--_theme---border--width-2);
+  border-right-width: var(--_theme---border--width-2);
+  border-bottom-width: var(--_theme---border--width-2);
+  border-left-width: var(--_theme---border--width-2);
+  border-top-style: solid;
+  border-right-style: solid;
+  border-bottom-style: solid;
+  border-left-style: solid;
+  border-top-color: var(--tpl-card-border);
+  border-right-color: var(--tpl-card-border);
+  border-bottom-color: var(--tpl-card-border);
+  border-left-color: var(--tpl-card-border);
+  background-color: var(--tpl-card-surface);
+}
+.tpl-benef_ico {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;
+  height: 3rem;
+  border-top-left-radius: var(--_component---card--radius);
+  border-top-right-radius: var(--_component---card--radius);
+  border-bottom-right-radius: var(--_component---card--radius);
+  border-bottom-left-radius: var(--_component---card--radius);
+  background-color: var(--tpl-accent-soft);
+  color: var(--tpl-accent);
+}
+.tpl-benef_ico svg { width: 1.5rem; height: 1.5rem; }
+.tpl-benef_card h3 { margin-top: 0.2rem; margin-right: 0; margin-bottom: 0; margin-left: 0; }
+
+/* ══════════════ 04 · REQUISITOS ══════════════ */
+.tpl-reqs {
+  display: grid;
+  grid-template-columns: 0.9fr 1.1fr;
+  align-items: center;
+  column-gap: clamp(2rem, 5vw, 4.5rem);
+  row-gap: clamp(2rem, 5vw, 3rem);
+}
+.tpl-reqs_media {
+  position: relative;
+  order: var(--tpl-media-order);
+}
+.tpl-reqs_media .tpl-media-frame { order: 0; }
+.tpl-reqs_body {
+  order: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  row-gap: 1rem;
+  column-gap: 1rem;
+}
+/* Accent stat badge floating on the media. */
+.tpl-reqs_stat {
+  position: absolute;
+  right: -0.8rem;
+  bottom: -0.8rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 5.6rem;
+  height: 5.6rem;
+  padding-top: 0.4rem;
+  padding-right: 0.4rem;
+  padding-bottom: 0.4rem;
+  padding-left: 0.4rem;
+  border-top-left-radius: var(--_component---card--radius);
+  border-top-right-radius: var(--_component---card--radius);
+  border-bottom-right-radius: var(--_component---card--radius);
+  border-bottom-left-radius: var(--_component---card--radius);
+  background-color: var(--tpl-accent);
+  color: var(--_palette---neutral--900);
+}
+.tpl-reqs_stat-num { font-size: 2rem; font-weight: 800; line-height: 1; }
+.tpl-reqs_stat-lbl { font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; }
+
+.tpl-reqs_list {
+  display: flex;
+  flex-direction: column;
+  row-gap: 0.9rem;
+  column-gap: 0.9rem;
+  margin-top: 0.4rem;
+  margin-right: 0;
+  margin-bottom: 0.4rem;
+  margin-left: 0;
+  padding-top: 0;
+  padding-right: 0;
+  padding-bottom: 0;
+  padding-left: 0;
+  list-style-type: none;
+  list-style-position: outside;
+}
+.tpl-req {
+  display: flex;
+  align-items: flex-start;
+  column-gap: 0.85rem;
+  row-gap: 0.85rem;
+}
+.tpl-req_check {
+  flex-grow: 0;
+  flex-shrink: 0;
+  flex-basis: auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.8rem;
+  height: 1.8rem;
+  border-top-left-radius: var(--n58-radius-pill);
+  border-top-right-radius: var(--n58-radius-pill);
+  border-bottom-right-radius: var(--n58-radius-pill);
+  border-bottom-left-radius: var(--n58-radius-pill);
+  background-color: var(--tpl-accent-soft);
+  color: var(--tpl-accent);
+}
+.tpl-req_check svg { width: 1.05rem; height: 1.05rem; }
+
+/* ══════════════ RESPONSIVE ══════════════ */
+@media (max-width: 991px) {
+  .tpl-hero { grid-template-columns: minmax(0, 1fr); }
+  .tpl-hero_media { order: 2; }
+  .tpl-producto.is-hero-split .tpl-hero_text { max-width: 44rem; }
+  .tpl-reqs { grid-template-columns: minmax(0, 1fr); }
+  .tpl-reqs_media { order: 2; }
+  .tpl-producto.is-cards-stagger .tpl-feat:nth-child(even) { transform: none; }
+  .tpl-sec-head { margin-bottom: 2.4rem; }
+  .tpl-benef_stack {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: 3rem;
+  }
+  .tpl-benef_stack_info { align-items: center; text-align: center; }
+  .tpl-benef_deck { --_component---card-stack--aspect-ratio: 3 / 2; }
+}
+
+@media (max-width: 767px) {
+  .tpl-feats,
+  .tpl-benef_grid { grid-template-columns: minmax(0, 1fr); }
+  .tpl-producto.is-cards-row .tpl-feat { flex-direction: row; }
+  .tpl-hero_stats { column-gap: 1.8rem; }
+  .tpl-reqs_stat { width: 4.6rem; height: 4.6rem; right: 0; bottom: -0.6rem; }
+  .tpl-reqs_stat-num { font-size: 1.6rem; }
+  /* Shorter hero image on mobile so the stacked hero doesn't overrun the viewport. */
+  .tpl-hero_media .home-media_img { aspect-ratio: 16 / 10; }
+}
+
+@media (max-width: 478px) {
+  .tpl-feat_front {
+    padding-top: 1.4rem;
+    padding-right: 1.3rem;
+    padding-bottom: 1.4rem;
+    padding-left: 1.3rem;
+  }
+  .tpl-hero_stats {
+    column-gap: 1.4rem;
+    row-gap: 0.9rem;
+  }
+  .tpl-stat_num { font-size: 1.5rem; }
+}

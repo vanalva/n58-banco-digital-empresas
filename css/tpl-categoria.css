@@ -1,0 +1,476 @@
+/* ══════════════════════════════════════════════════════════════════════════
+   tpl-categoria.css — N58 Categoría (product-category / /tipo/*) template
+   Variant-driven: classes on `.tpl-categoria` set CSS custom props the template
+   consumes, so hero / grid / card-style / promo / accent axes compose freely.
+   See the VARIANT MANIFEST comment at the top of categoria-template.html.
+
+   Rules honoured: longhand only · 3 max-width breakpoints (991/767/478) ·
+   colour only via palette/theme vars · descendant selectors are scoped to
+   .tpl-categoria (they fold into the CSS embed on import, like project.css).
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/* ─── Root axis tokens (defaults) ─────────────────────────────────────────── */
+.tpl-categoria {
+  --tpl-accent: var(--_palette---core--500);
+  --tpl-accent-soft: var(--_palette---core--100);
+  --tpl-accent-deep: var(--_palette---core--900);
+  --tpl-cols: 2;
+}
+
+/* Accent axis — sets the tint used by dividers, coin ring, card hover, banner. */
+.tpl-categoria.is-accent-core {
+  --tpl-accent: var(--_palette---core--500);
+  --tpl-accent-soft: var(--_palette---core--100);
+  --tpl-accent-deep: var(--_palette---core--900);
+}
+.tpl-categoria.is-accent-alternate {
+  --tpl-accent: var(--_palette---alternate--500);
+  --tpl-accent-soft: var(--_palette---alternate--200);
+  --tpl-accent-deep: var(--_palette---alternate--900);
+}
+.tpl-categoria.is-accent-alternate-2 {
+  --tpl-accent: var(--_palette---alternate-2--500);
+  --tpl-accent-soft: var(--_palette---alternate-2--300);
+  --tpl-accent-deep: var(--_palette---alternate-2--900);
+}
+.tpl-categoria.is-accent-alert {
+  --tpl-accent: var(--_palette---alert--500);
+  --tpl-accent-soft: var(--_palette---alert--300);
+  --tpl-accent-deep: var(--_palette---alert--900);
+}
+
+/* Grid axis — column count. */
+.tpl-categoria.is-grid-2 { --tpl-cols: 2; }
+.tpl-categoria.is-grid-3 { --tpl-cols: 3; }
+.tpl-categoria.is-grid-list { --tpl-cols: 1; }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   01 · HERO
+   ═════════════════════════════════════════════════════════════════════════ */
+.tpl-cat-hero {
+  position: relative;
+  overflow-x: clip;
+  overflow-y: clip;
+}
+.tpl-cat-hero_inner {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  column-gap: var(--_spacing---step--7);
+  row-gap: var(--_spacing---step--6);
+}
+.tpl-cat-hero_stack {
+  flex-grow: 1;
+  flex-shrink: 1;
+  flex-basis: 0%;
+}
+.tpl-cat-hero_title {
+  text-wrap: balance;
+}
+.tpl-cat-hero_media {
+  flex-grow: 0;
+  flex-shrink: 0;
+  flex-basis: 42%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.tpl-cat-hero_coin {
+  position: relative;
+  width: 100%;
+  max-width: 26rem;
+  aspect-ratio: 1 / 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.tpl-cat-hero_coin::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 78%;
+  height: 78%;
+  transform: translate(-50%, -50%);
+  border-top-left-radius: var(--n58-radius-pill);
+  border-top-right-radius: var(--n58-radius-pill);
+  border-bottom-left-radius: var(--n58-radius-pill);
+  border-bottom-right-radius: var(--n58-radius-pill);
+  background-color: var(--tpl-accent);
+  opacity: 0.22;
+  filter: blur(46px);
+  z-index: 0;
+}
+.tpl-cat-hero_coinimg {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+/* Hero · CENTERED */
+.tpl-categoria.is-hero-centered .tpl-cat-hero_inner {
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+.tpl-categoria.is-hero-centered .tpl-cat-hero_stack {
+  align-items: center;
+  text-align: center;
+}
+.tpl-categoria.is-hero-centered .tpl-cat-hero_stack .f-flex {
+  justify-content: center;
+}
+.tpl-categoria.is-hero-centered .tpl-cat-hero_media {
+  flex-basis: auto;
+  order: -1;
+}
+.tpl-categoria.is-hero-centered .tpl-cat-hero_coin {
+  max-width: 18rem;
+}
+
+/* Hero · BANNER (full-bleed deep brand colour, coin as faint backdrop) */
+.tpl-categoria.is-hero-banner .tpl-cat-hero {
+  background-color: var(--tpl-accent-deep);
+}
+.tpl-categoria.is-hero-banner .tpl-cat-hero_inner {
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-height: 56vh;
+}
+.tpl-categoria.is-hero-banner .tpl-cat-hero_stack {
+  align-items: center;
+  text-align: center;
+  position: relative;
+  z-index: 2;
+}
+.tpl-categoria.is-hero-banner .tpl-cat-hero_stack .f-flex {
+  justify-content: center;
+}
+.tpl-categoria.is-hero-banner .tpl-cat-hero_media {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+  flex-basis: auto;
+  width: 100%;
+  max-width: 52rem;
+  opacity: 0.26;
+  pointer-events: none;
+}
+.tpl-categoria.is-hero-banner .tpl-cat-hero_coin {
+  max-width: none;
+}
+.tpl-categoria.is-hero-banner .tpl-cat-hero_coin::before {
+  display: none;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   02 · PROMO BAND
+   ═════════════════════════════════════════════════════════════════════════ */
+.tpl-cat-promo_inner {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  column-gap: var(--_spacing---step--6);
+  row-gap: var(--_spacing---step--5);
+}
+.tpl-cat-promo_text {
+  flex-grow: 1;
+  flex-shrink: 1;
+  flex-basis: 22rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  row-gap: var(--_spacing---step--3);
+}
+.tpl-cat-promo_stores {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  column-gap: var(--_spacing---step--3);
+  row-gap: var(--_spacing---step--3);
+}
+.tpl-cat-store {
+  display: inline-flex;
+  transition-property: transform;
+  transition-duration: 0.28s;
+  transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  transition-delay: 0s;
+}
+.tpl-cat-store:hover {
+  transform: translateY(-3px);
+}
+.tpl-cat-store_img {
+  height: 3rem;
+  width: auto;
+  display: block;
+}
+.tpl-categoria.is-promo-off .tpl-cat-promo {
+  display: none;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   03 · PRODUCT LISTING + CARDS
+   ═════════════════════════════════════════════════════════════════════════ */
+.tpl-cat-listing_head {
+  max-width: 44rem;
+  margin-block-end: var(--_spacing---step--7);
+}
+.tpl-cat-grid {
+  display: grid;
+  grid-template-columns: repeat(var(--tpl-cols), minmax(0, 1fr));
+  column-gap: var(--_spacing---step--5);
+  row-gap: var(--_spacing---step--5);
+}
+
+/* Card shell */
+.tpl-cat-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow-x: clip;
+  overflow-y: clip;
+  border-top-left-radius: var(--_component---card--radius);
+  border-top-right-radius: var(--_component---card--radius);
+  border-bottom-left-radius: var(--_component---card--radius);
+  border-bottom-right-radius: var(--_component---card--radius);
+  background-color: var(--_theme---surface--raised);
+  border-block-start: 1px solid var(--_theme---border--subtle);
+  border-block-end: 1px solid var(--_theme---border--subtle);
+  border-inline-start: 1px solid var(--_theme---border--subtle);
+  border-inline-end: 1px solid var(--_theme---border--subtle);
+  transition-property: transform, box-shadow, border-color;
+  transition-duration: 0.32s;
+  transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  transition-delay: 0s;
+}
+.tpl-cat-card:hover {
+  transform: translateY(-5px);
+  border-block-start-color: var(--tpl-accent);
+  border-block-end-color: var(--tpl-accent);
+  border-inline-start-color: var(--tpl-accent);
+  border-inline-end-color: var(--tpl-accent);
+  box-shadow: 0 1.5rem 2.5rem -1rem var(--_theme---surface--scrim);
+}
+
+/* Card media */
+.tpl-cat-card_media {
+  position: relative;
+  display: block;
+  aspect-ratio: 16 / 10;
+  overflow-x: clip;
+  overflow-y: clip;
+}
+.tpl-cat-card_img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition-property: transform;
+  transition-duration: 0.6s;
+  transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  transition-delay: 0s;
+}
+.tpl-cat-card:hover .tpl-cat-card_img {
+  transform: scale(1.05);
+}
+.tpl-cat-card_coin {
+  position: absolute;
+  top: var(--_spacing---step--3);
+  left: var(--_spacing---step--3);
+  width: 3.25rem;
+  height: 3.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-top-left-radius: var(--n58-radius-pill);
+  border-top-right-radius: var(--n58-radius-pill);
+  border-bottom-left-radius: var(--n58-radius-pill);
+  border-bottom-right-radius: var(--n58-radius-pill);
+  background-color: var(--_theme---surface--main);
+  border-block-start: 2px solid var(--tpl-accent);
+  border-block-end: 2px solid var(--tpl-accent);
+  border-inline-start: 2px solid var(--tpl-accent);
+  border-inline-end: 2px solid var(--tpl-accent);
+}
+.tpl-cat-card_coin img {
+  width: 66%;
+  height: 66%;
+  object-fit: contain;
+  display: block;
+}
+
+/* Card body */
+.tpl-cat-card_body {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  row-gap: var(--_spacing---step--3);
+  padding-top: var(--_spacing---step--5);
+  padding-right: var(--_spacing---step--5);
+  padding-bottom: var(--_spacing---step--5);
+  padding-left: var(--_spacing---step--5);
+}
+.tpl-cat-card_title {
+  position: relative;
+}
+.tpl-cat-card_title::after {
+  content: "";
+  display: block;
+  width: 2.5rem;
+  height: 3px;
+  margin-block-start: var(--_spacing---step--2);
+  background-color: var(--tpl-accent);
+  border-top-left-radius: var(--n58-radius-pill);
+  border-top-right-radius: var(--n58-radius-pill);
+  border-bottom-left-radius: var(--n58-radius-pill);
+  border-bottom-right-radius: var(--n58-radius-pill);
+}
+.tpl-cat-card_link {
+  margin-block-start: var(--_spacing---step--2);
+}
+
+/* Card style · IMAGE-BG (photo fills the card, scrim + overlaid text) */
+.tpl-categoria.is-cards-image-bg .tpl-cat-card {
+  min-height: 22rem;
+  justify-content: flex-end;
+}
+.tpl-categoria.is-cards-image-bg .tpl-cat-card_media {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  aspect-ratio: auto;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+.tpl-categoria.is-cards-image-bg .tpl-cat-card_body::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: -1;
+  background-image: linear-gradient(to top, var(--_palette---neutral--1000), transparent);
+}
+.tpl-categoria.is-cards-image-bg .tpl-cat-card_title {
+  color: var(--_palette---neutral--0);
+}
+.tpl-categoria.is-cards-image-bg .tpl-cat-card_desc {
+  color: var(--_palette---neutral--100);
+}
+
+/* Card style · MINIMAL (no photo; coin token + accent rule, prose-first) */
+.tpl-categoria.is-cards-minimal .tpl-cat-card_img {
+  display: none;
+}
+.tpl-categoria.is-cards-minimal .tpl-cat-card_media {
+  position: static;
+  aspect-ratio: auto;
+  padding-top: var(--_spacing---step--5);
+  padding-left: var(--_spacing---step--5);
+}
+.tpl-categoria.is-cards-minimal .tpl-cat-card_coin {
+  position: static;
+  width: 3rem;
+  height: 3rem;
+}
+.tpl-categoria.is-cards-minimal .tpl-cat-card_body {
+  padding-top: var(--_spacing---step--4);
+}
+
+/* Grid · LIST (horizontal media | body rows) */
+.tpl-categoria.is-grid-list .tpl-cat-card {
+  flex-direction: row;
+  align-items: stretch;
+}
+.tpl-categoria.is-grid-list .tpl-cat-card_media {
+  flex-grow: 0;
+  flex-shrink: 0;
+  flex-basis: 40%;
+  aspect-ratio: auto;
+}
+.tpl-categoria.is-grid-list .tpl-cat-card_body {
+  flex-grow: 1;
+  flex-shrink: 1;
+  flex-basis: 0%;
+  justify-content: center;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   RESPONSIVE — 3 Webflow breakpoints
+   ═════════════════════════════════════════════════════════════════════════ */
+@media (max-width: 991px) {
+  .tpl-cat-hero_inner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .tpl-categoria.is-hero-centered .tpl-cat-hero_inner,
+  .tpl-categoria.is-hero-banner .tpl-cat-hero_inner {
+    align-items: center;
+  }
+  .tpl-cat-hero_media {
+    flex-basis: auto;
+    width: 100%;
+  }
+  .tpl-cat-hero_coin {
+    max-width: 20rem;
+    margin-inline-start: auto;
+    margin-inline-end: auto;
+  }
+  .tpl-categoria.is-grid-3 .tpl-cat-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 767px) {
+  .tpl-cat-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .tpl-categoria.is-grid-2 .tpl-cat-grid,
+  .tpl-categoria.is-grid-3 .tpl-cat-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .tpl-categoria.is-grid-list .tpl-cat-card {
+    flex-direction: column;
+  }
+  .tpl-categoria.is-grid-list .tpl-cat-card_media {
+    flex-basis: auto;
+    width: 100%;
+    aspect-ratio: 16 / 10;
+  }
+  .tpl-cat-promo_inner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 478px) {
+  .tpl-cat-hero_coin {
+    max-width: 15rem;
+  }
+  .tpl-cat-store_img {
+    height: 2.5rem;
+  }
+  .tpl-cat-card_body {
+    padding-top: var(--_spacing---step--4);
+    padding-right: var(--_spacing---step--4);
+    padding-bottom: var(--_spacing---step--4);
+    padding-left: var(--_spacing---step--4);
+  }
+}

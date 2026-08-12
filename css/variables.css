@@ -1,0 +1,108 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   N58 Banco Digital — flwr project token overrides
+   ───────────────────────────────────────────────────────────────────────────
+   Framework: flwr (pinned in .flowriter-lock). Loaded AFTER framework.css so
+   these declarations override the catalog defaults in .flwr/styles/tokens.css.
+
+   flwr palettes are OKLCH-seed-derived: override ONLY the `--seed` line per
+   category and all 9 stops (50→900) re-derive via the framework's
+   `oklch(from var(--seed) ...)` expressions. Do NOT redeclare the stops.
+
+   Brand colors keep their playful N58 nicknames in comments (brand voice).
+   Hex → OKLCH conversions generated via plugin/frameworks/oklch-seed.js.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+:root {
+
+  /* ─────────────────────────────────────────────────────────────────────────
+     PALETTE SEEDS — one line each; ramps derive automatically
+     ───────────────────────────────────────────────────────────────────────── */
+
+  /* core — primary brand identity. "--te-quiero-verde" lime #a0dd52
+     (the hero action hue: "Abre tu cuenta" CTA; drives default links + accents). */
+  --_palette---core--seed: oklch(0.829 0.18 129.8);
+
+  /* alternate — secondary brand. "--not-barbie" magenta #b743ed
+     ("Banca en línea" CTA, contrast accents on dark). */
+  --_palette---alternate--seed: oklch(0.618 0.248 312.6);
+
+  /* alternate-2 — tertiary accent. "--el-mostro-de-lavanda" deep purple #6035a5. */
+  --_palette---alternate-2--seed: oklch(0.445 0.171 296.4);
+
+  /* accent — spot color. Re-anchored OFF the old teal (#45b3ba): teal is NOT an
+     N58 brand color and must not appear anywhere. Hue-shifted onto the brand
+     green axis (same L/C, no teal). */
+  --_palette---accent--seed: oklch(0.707 0.099 129.8);
+
+  /* alert — destructive / fraud banner. "--cola-de-langosta" coral #ef5541. */
+  --_palette---alert--seed: oklch(0.654 0.193 30.4);
+
+  /* focus — focus ring + border--focus. flwr defaults this to hue 285 (blue-
+     purple) to match its OWN purple alternate; N58's alternate is magenta, so
+     re-align the ring to the magenta hue. No blue anywhere on the site. */
+  --_palette---focus--seed: oklch(0.65 0.20 312.6);
+
+  /* info — status "info" color. flwr defaults to periwinkle blue; the old N58
+     override used teal — both off-brand (no blue, no teal anywhere on the site).
+     Re-anchored to the brand lavender/purple hue (same L/C), which stays clearly
+     distinct from success-green and alert-coral. */
+  --_palette---info--seed: oklch(0.707 0.099 296);
+
+  /* ─────────────────────────────────────────────────────────────────────────
+     NEUTRAL RAMP — fully re-anchored (NOT seed-derived; flwr hand-sets stops).
+     flwr's default neutrals use cool hue 285 (blue-lilac) on the light stops —
+     WRONG for N58, which is a WARM cream-and-ink brand. Every stop is rewritten
+     on a warm axis (~40° hue, very low chroma) running cream → ink so borders
+     and muted grays read warm, never blue.
+       0   surface--main (cream)      50  surface--raised (cream-dark)
+       600 text--muted (grey)         900 text--main (ink)
+     ───────────────────────────────────────────────────────────────────────── */
+
+  --_palette---neutral--0:    oklch(0.963 0.019 42);   /* --caldito-de-pollo      #ffefe9 */
+  --_palette---neutral--50:   oklch(0.931 0.020 41);   /* --caldito-de-pollo-dark #f5e4de */
+  --_palette---neutral--100:  oklch(0.890 0.013 42);
+  --_palette---neutral--200:  oklch(0.805 0.010 42);   /* hairline borders */
+  --_palette---neutral--300:  oklch(0.710 0.008 42);
+  --_palette---neutral--400:  oklch(0.620 0.007 42);
+  --_palette---neutral--500:  oklch(0.530 0.006 42);
+  --_palette---neutral--600:  oklch(0.450 0.006 42);   /* muted text (warm grey) */
+  /* Dark stops share the cool "oro-negro" hue (211) so raised surfaces + dark
+     borders match the dark sections — NOT the warm hue 32/38 that read brown. */
+  --_palette---neutral--700:  oklch(0.360 0.006 211.1);
+  --_palette---neutral--800:  oklch(0.290 0.006 211.1);
+  --_palette---neutral--900:  oklch(0.239 0.008 211.1); /* --oro-negro EXACT #1b2021 (dark section bg) */
+  --_palette---neutral--1000: oklch(0.150 0.006 211.1); /* deeper ink */
+
+  /* ─────────────────────────────────────────────────────────────────────────
+     BRAND STOP OVERRIDES — "Extensión de colores" (official N58 color card).
+     Each family's 500 base already derives correctly from its seed above; the
+     OKLCH ramp only approximated the light tint + dark shade, so hand-set those
+     to the EXACT brand hex (like the neutral ramp does). Stop chosen per value's
+     lightness so each ramp stays monotonic. Hex is intentional — exact values.
+       core (verde)        light E8FFBB   dark 1F2823
+       alternate (magenta) light D7A2F4   dark 2C1638
+       alternate-2 (morado)light 9672DD   dark 261A28
+       alert (coral)       light E88982   dark 561D18
+     ───────────────────────────────────────────────────────────────────────── */
+  --_palette---core--100:        #E8FFBB;   /* --te-quiero-verde light */
+  --_palette---core--900:        #1F2823;   /* --te-quiero-verde dark  */
+  --_palette---alternate--200:   #D7A2F4;   /* --not-barbie light */
+  --_palette---alternate--900:   #2C1638;   /* --not-barbie dark (empresas banner bg) */
+  --_palette---alternate-2--300: #9672DD;   /* --el-mostro-de-lavanda light */
+  --_palette---alternate-2--900: #261A28;   /* --el-mostro-de-lavanda dark  */
+  --_palette---alert--300:       #E88982;   /* --cola-de-langosta light */
+  --_palette---alert--900:       #561D18;   /* --cola-de-langosta dark  */
+
+  /* ─────────────────────────────────────────────────────────────────────────
+     TYPOGRAPHY — single family (Nugros). @font-face lives in fonts.css.
+     ───────────────────────────────────────────────────────────────────────── */
+
+  --_typography---family--sans:    "Nugros", Arial, sans-serif;
+  --_typography---family--display: "Nugros", Arial, sans-serif;
+
+  /* Tighten heading line-height — flwr's "tight" (1.1) leaves too much air
+     between lines on the big section titles (f-text-h1/h2). 0.95 reads as a
+     tight, modern multi-line heading. Display stays at its 0.9 "squashed". */
+  --_typography---leading--tight: 0.95;
+
+}

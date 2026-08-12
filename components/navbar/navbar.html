@@ -1,0 +1,83 @@
+<!-- ════════════════════════════════════════════════════════════════════════
+     N58 — Navbar (shared)
+     flwr family: navbar. Sticky, Personas dropdown, two header CTAs,
+     hamburger → mobile menu. Runtime hydrates .flwr_navbar_dropdown_trigger
+     and .flwr_navbar_hamburger automatically (.flwr/assets/runtime.js).
+     Place inside the page's [data-flwr] wrapper.
+     ════════════════════════════════════════════════════════════════════════ -->
+<nav class="flwr_navbar_wrap is-fixed" data-flwr="navbar" data-flwr-navbar-trigger="hover" data-flwr-navbar-scroll="auto-hide" aria-label="Principal">
+  <a href="#main-content" class="flwr_navbar_skip u-sr-only">Saltar al contenido</a>
+
+  <div class="flwr_navbar_inner n58-container">
+    <a href="index.html" class="flwr_navbar_logo" aria-label="N58 Banco Digital — Inicio">
+      <img src="assets/images/logos/logotipo-light.svg" alt="N58 Banco Digital" width="120" height="32" loading="eager">
+    </a>
+
+    <ul class="flwr_navbar_menu" role="list">
+      <li class="flwr_navbar_dropdown">
+        <button type="button" class="flwr_navbar_dropdown_trigger flwr_navbar_link" aria-expanded="false" aria-haspopup="true">Personas</button>
+        <ul class="flwr_navbar_dropdown_menu" role="list">
+          <li class="flwr_navbar_dropdown_sub">
+            <a href="productos-personas.html" class="flwr_navbar_dropdown_item flwr_navbar_dropdown_subtrigger">Cuentas<svg class="flwr_navbar_dropdown_caret" viewBox="0 0 8 12" fill="none" aria-hidden="true"><path d="M1.5 1.5 6 6l-4.5 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+            <ul class="flwr_navbar_dropdown_submenu" role="list">
+              <li><a href="cuenta-moneda-extranjera-personas.html" class="flwr_navbar_dropdown_item">Cuenta en Moneda Extranjera</a></li>
+              <li><a href="cuenta-corriente-personas.html" class="flwr_navbar_dropdown_item">Cuenta Corriente</a></li>
+            </ul>
+          </li>
+          <li><a href="productos-personas.html" class="flwr_navbar_dropdown_item">Créditos</a></li>
+          <li><a href="pago-movil-personas.html" class="flwr_navbar_dropdown_item">Pago Móvil</a></li>
+          <li><a href="pago-de-servicios-personas.html" class="flwr_navbar_dropdown_item">Pago de Servicios</a></li>
+          <li><a href="intervencion-cambiaria-personas.html" class="flwr_navbar_dropdown_item">Intervención Cambiaria</a></li>
+          <li><a href="tarjeta-maestro-personas.html" class="flwr_navbar_dropdown_item">Tarjeta Maestro</a></li>
+        </ul>
+      </li>
+      <li class="flwr_navbar_dropdown">
+        <button type="button" class="flwr_navbar_dropdown_trigger flwr_navbar_link" aria-expanded="false" aria-haspopup="true">Empresas</button>
+        <ul class="flwr_navbar_dropdown_menu" role="list">
+          <li class="flwr_navbar_dropdown_sub">
+            <a href="productos-empresas.html" class="flwr_navbar_dropdown_item flwr_navbar_dropdown_subtrigger">Cuentas<svg class="flwr_navbar_dropdown_caret" viewBox="0 0 8 12" fill="none" aria-hidden="true"><path d="M1.5 1.5 6 6l-4.5 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+            <ul class="flwr_navbar_dropdown_submenu" role="list">
+              <li><a href="cuenta-moneda-extranjera-empresas.html" class="flwr_navbar_dropdown_item">Cuenta en Moneda Extranjera</a></li>
+              <li><a href="cuenta-corriente-empresas.html" class="flwr_navbar_dropdown_item">Cuenta Corriente</a></li>
+            </ul>
+          </li>
+          <li><a href="productos-empresas.html" class="flwr_navbar_dropdown_item">Créditos</a></li>
+          <li><a href="tarjeta-maestro-empresas.html" class="flwr_navbar_dropdown_item">Tarjeta Maestro</a></li>
+          <li><a href="pago-movil-empresas.html" class="flwr_navbar_dropdown_item">Pago Móvil</a></li>
+          <li><a href="pago-de-servicios-empresas.html" class="flwr_navbar_dropdown_item">Pago de Servicios</a></li>
+          <li><a href="intervencion-cambiaria-empresas.html" class="flwr_navbar_dropdown_item">Intervención Cambiaria</a></li>
+          <li><a href="productos-empresas.html" class="flwr_navbar_dropdown_item">Productos e Inversiones</a></li>
+        </ul>
+      </li>
+      <li><a href="conocenos.html" class="flwr_navbar_link">Conócenos</a></li>
+    </ul>
+
+    <div class="flwr_navbar_actions">
+      <a href="https://banca.n58bancodigital.com" class="flwr_button_secondary" data-flwr-trigger="hover focus">
+        <span data-flwr-target="label">Banca en línea</span>
+      </a>
+      <a href="productos-personas.html" class="flwr_button_primary" data-flwr-trigger="hover focus">
+        <span data-flwr-target="label">Abre tu cuenta</span>
+      </a>
+    </div>
+
+    <button type="button" class="flwr_navbar_hamburger" aria-label="Abrir menú" aria-expanded="false">
+      <span class="n58-hamburger_icon" aria-hidden="true">
+      <img src="assets/images/icons/menu-bar-cream.svg" alt="" class="n58-hamburger_bar n58-hamburger_bar--1">
+      <img src="assets/images/icons/menu-bar-cream.svg" alt="" class="n58-hamburger_bar n58-hamburger_bar--2">
+    </span>
+    </button>
+  </div>
+
+  <div class="flwr_navbar_mobile_menu">
+    <a href="productos-personas.html" class="flwr_navbar_mobile_link">Personas</a>
+    <a href="empresas.html" class="flwr_navbar_mobile_link">Empresas</a>
+    <a href="conocenos.html" class="flwr_navbar_mobile_link">Conócenos</a>
+    <a href="preguntas-frecuentes.html" class="flwr_navbar_mobile_link">Preguntas Frecuentes</a>
+    <a href="https://banca.n58bancodigital.com" class="flwr_button_secondary"><span data-flwr-target="label">Banca en línea</span></a>
+    <a href="productos-personas.html" class="flwr_button_primary"><span data-flwr-target="label">Abre tu cuenta</span></a>
+  </div>
+</nav>
+
+<!-- Dropdown dimming backdrop — sibling of the navbar (covers the viewport when any dropdown is open). -->
+<div class="flwr_navbar_dropdown_backdrop" aria-hidden="true"></div>

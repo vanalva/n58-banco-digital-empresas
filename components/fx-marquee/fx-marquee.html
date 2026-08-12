@@ -1,0 +1,36 @@
+<!-- ════════════════════════════════════════════════════════════════════════
+     N58 — FX Marquee (shared)
+     Infinite ticker of USD / EUR / Fecha.
+     DESKTOP: the draggable flwr marquee (drag-scrub + hover-pause).
+     MOBILE (≤991px): the page's init script (the `.n58-fx-bar .flwr_marquee_wrap`
+     handler in index.html) swaps this for a CSS compositor animation so it stays
+     smooth while the page scrolls — no per-frame JS. Brand styling (.n58-fx-*)
+     lives in project.css. On the live site values are CMS-driven; here static.
+     ════════════════════════════════════════════════════════════════════════ -->
+<section class="f-mode-dark n58-fx-bar" aria-label="Tasas de cambio">
+  <div class="flwr_marquee_wrap" data-flwr="marquee"
+       data-flwr-marquee-speed="18000"
+       data-flwr-marquee-direction="false"
+       data-flwr-marquee-hover-pause="true"
+       data-flwr-marquee-hover-ease="true"
+       data-flwr-marquee-draggable="true"
+       data-flwr-marquee-respect-prm="false">
+    <div class="flwr_marquee_track">
+      <div class="flwr_marquee_item n58-fx-item">
+        <span class="n58-fx-label">Cambio USD:</span>
+        <span class="n58-fx-value">Bs. 00,00</span>
+      </div>
+      <img src="assets/images/marquee/star-pink.svg" alt="" aria-hidden="true" class="n58-fx-sep">
+      <div class="flwr_marquee_item n58-fx-item">
+        <span class="n58-fx-label">Cambio EUR:</span>
+        <span class="n58-fx-value">Bs. 00,00</span>
+      </div>
+      <img src="assets/images/marquee/face-pink.svg" alt="" aria-hidden="true" class="n58-fx-sep">
+      <div class="flwr_marquee_item n58-fx-item">
+        <span class="n58-fx-label">Fecha:</span>
+        <span class="n58-fx-value">00/00/0000</span>
+      </div>
+      <img src="assets/images/marquee/stars-pink.svg" alt="" aria-hidden="true" class="n58-fx-sep">
+    </div>
+  </div>
+</section>

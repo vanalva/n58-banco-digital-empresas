@@ -1,0 +1,735 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   N58 · TEMPLATE — Documento legal  (/documentos/*)
+   ───────────────────────────────────────────────────────────────────────────
+   Long-form legal rich-text template. Variant-driven: one template renders
+   every legal document (long contract, tariff tables, or a short PDF stub)
+   just by swapping `is-*` classes on the `.tpl-documento` root.
+
+   Loaded AFTER project.css. All custom CSS for this template lives here only.
+   Rules honoured: longhand only · 3 max-width breakpoints (991/767/478) ·
+   colour via palette/theme vars only · no !important · scoped descendant
+   selectors (become a CSS embed on Webflow import, like project.css).
+   Class order in HTML: structural → spacing → typography → colour → state.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ───────────────────────────────────────────────────────────────────────────
+   ROOT + VARIANT KNOBS
+   The root consumes three CSS custom properties the variants override:
+     --tpl-accent   accent hue (headings rule, section number, TOC active, links)
+     --tpl-measure  reading measure (article max-width)
+     --tpl-toc-w    sidebar TOC rail width
+   Density (f-density-*) and Theme (f-mode-*) come from the framework and
+   compose automatically because the layout uses --_spacing---step--* + theme
+   tokens. ─────────────────────────────────────────────────────────────────── */
+.tpl-documento {
+  --tpl-accent: var(--_palette---alternate-2--500);   /* default: morado */
+  --tpl-measure: 72ch;
+  --tpl-toc-w: 17rem;
+  --tpl-navoffset: 7rem;   /* fixed-navbar clearance for sticky + anchor jump */
+
+  display: block;
+  box-sizing: border-box;
+}
+
+/* — Accent axis — */
+.tpl-documento.is-accent-core        { --tpl-accent: var(--_palette---core--500); }
+.tpl-documento.is-accent-alternate   { --tpl-accent: var(--_palette---alternate--500); }
+.tpl-documento.is-accent-alternate-2 { --tpl-accent: var(--_palette---alternate-2--500); }
+.tpl-documento.is-accent-alert       { --tpl-accent: var(--_palette---alert--500); }
+
+/* — Reading-width axis — */
+.tpl-documento.is-read-narrow { --tpl-measure: 60ch; }
+.tpl-documento.is-read-normal { --tpl-measure: 72ch; }
+.tpl-documento.is-read-wide   { --tpl-measure: 88ch; }
+
+/* PDF-first mode for reports, bulletins, and short downloadable documents. */
+.tpl-doc-pdf-first { display: none; }
+.tpl-documento.is-pdf-first .tpl-doc-pdf-first { display: block; }
+.tpl-documento.is-pdf-first .tpl-doc-bodysection { display: none; }
+.tpl-doc-pdf-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.65fr) minmax(18rem, 0.65fr);
+  column-gap: var(--_spacing---step--6);
+  row-gap: var(--_spacing---step--6);
+  align-items: start;
+}
+.tpl-doc-pdf-viewer {
+  min-height: 44rem;
+  overflow: hidden;
+  border-top-left-radius: var(--_component---card--radius);
+  border-top-right-radius: var(--_component---card--radius);
+  border-bottom-right-radius: var(--_component---card--radius);
+  border-bottom-left-radius: var(--_component---card--radius);
+  background-color: var(--_palette---neutral--100);
+}
+.tpl-doc-pdf-viewer iframe { width: 100%; height: 44rem; border-width: 0; }
+.tpl-doc-pdf-summary {
+  position: sticky;
+  top: 7rem;
+  padding-top: var(--_spacing---step--5);
+  padding-right: var(--_spacing---step--5);
+  padding-bottom: var(--_spacing---step--5);
+  padding-left: var(--_spacing---step--5);
+  border-top-left-radius: var(--_component---card--radius);
+  border-top-right-radius: var(--_component---card--radius);
+  border-bottom-right-radius: var(--_component---card--radius);
+  border-bottom-left-radius: var(--_component---card--radius);
+  background-color: color-mix(in oklch, var(--tpl-accent) 12%, transparent);
+}
+.tpl-doc-pdf-meta {
+  display: grid;
+  row-gap: 0.75rem;
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+.tpl-doc-pdf-meta div {
+  display: flex;
+  justify-content: space-between;
+  column-gap: 1rem;
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+  border-bottom-color: var(--_theme---border);
+  padding-bottom: 0.75rem;
+}
+.tpl-doc-pdf-meta dt { color: var(--_theme---text--muted); }
+.tpl-doc-pdf-meta dd { font-weight: 700; text-align: right; }
+@media (max-width: 991px) {
+  .tpl-doc-pdf-grid { grid-template-columns: 1fr; }
+  .tpl-doc-pdf-summary { position: static; }
+}
+@media (max-width: 767px) {
+  .tpl-doc-pdf-viewer, .tpl-doc-pdf-viewer iframe { min-height: 32rem; height: 32rem; }
+}
+
+/* ───────────────────────────────────────────────────────────────────────────
+   01 · DOCUMENT HERO
+   Dark statement banner: category label, title, meta row, Descargar-PDF CTA,
+   with the brand "Libro" mark set decoratively behind. ─────────────────────── */
+.tpl-doc-hero {
+  position: relative;
+  overflow-x: clip;
+  overflow-y: clip;
+}
+.tpl-doc-hero_inner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  row-gap: var(--_spacing---step--3);
+  max-width: 54rem;
+}
+/* Eyebrow uses the real n58-badge (project.css), not an invented pill. */
+.tpl-doc-hero_title {
+  text-wrap: balance;
+}
+.tpl-doc-hero_desc {
+  max-width: 46ch;
+}
+/* Meta row — updated date + reading affordance, divided by hairlines. */
+.tpl-doc-meta {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  column-gap: var(--_spacing---step--3);
+  row-gap: var(--_spacing---step--1);
+  margin-top: var(--_spacing---step--2);
+}
+.tpl-doc-meta_item {
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  column-gap: 0.5em;
+}
+.tpl-doc-meta_dot {
+  width: 0.35em;
+  height: 0.35em;
+  border-top-left-radius: var(--n58-radius-pill);
+  border-top-right-radius: var(--n58-radius-pill);
+  border-bottom-left-radius: var(--n58-radius-pill);
+  border-bottom-right-radius: var(--n58-radius-pill);
+  background-color: var(--tpl-accent);
+}
+.tpl-doc-hero_actions {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  column-gap: var(--_spacing---step--3);
+  row-gap: var(--_spacing---step--2);
+  margin-top: var(--_spacing---step--3);
+}
+/* Decorative brand mark behind the hero copy. */
+.tpl-doc-hero_mark {
+  position: absolute;
+  z-index: 0;
+  top: 50%;
+  right: -2rem;
+  width: 26rem;
+  max-width: 40vw;
+  height: auto;
+  transform: translateY(-50%);
+  opacity: 0.14;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* ───────────────────────────────────────────────────────────────────────────
+   02 · BODY LAYOUT — TOC rail + rich-text article
+   Grid switches per TOC-position variant. ──────────────────────────────────── */
+.tpl-doc-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  column-gap: var(--_spacing---step--7);
+  row-gap: var(--_spacing---step--5);
+  align-items: start;
+}
+.tpl-documento.is-toc-sidebar .tpl-doc-layout {
+  grid-template-columns: var(--tpl-toc-w) minmax(0, 1fr);
+}
+
+/* ── Table of contents (single markup; variants reposition it) ── */
+.tpl-doc-toc {
+  box-sizing: border-box;
+  border-top-left-radius: var(--_component---card--radius);
+  border-top-right-radius: var(--_component---card--radius);
+  border-bottom-left-radius: var(--_component---card--radius);
+  border-bottom-right-radius: var(--_component---card--radius);
+  border-top-width: 1px;
+  border-right-width: 1px;
+  border-bottom-width: 1px;
+  border-left-width: 1px;
+  border-top-style: solid;
+  border-right-style: solid;
+  border-bottom-style: solid;
+  border-left-style: solid;
+  border-top-color: var(--_theme---border--subtle);
+  border-right-color: var(--_theme---border--subtle);
+  border-bottom-color: var(--_theme---border--subtle);
+  border-left-color: var(--_theme---border--subtle);
+  background-color: var(--_theme---surface--raised);
+}
+.tpl-doc-toc_summary {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  column-gap: var(--_spacing---step--2);
+  padding-top: var(--_spacing---step--2);
+  padding-bottom: var(--_spacing---step--2);
+  padding-left: var(--_spacing---step--3);
+  padding-right: var(--_spacing---step--3);
+  cursor: pointer;
+  list-style-type: none;
+  list-style-position: outside;
+}
+.tpl-doc-toc_summary::-webkit-details-marker { display: none; }
+.tpl-doc-toc_title {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--_theme---text--muted);
+}
+.tpl-doc-toc_chev {
+  width: 1rem;
+  height: 1rem;
+  flex-grow: 0;
+  flex-shrink: 0;
+  color: var(--_theme---text--muted);
+  transition-property: transform;
+  transition-duration: 240ms;
+  transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  transition-delay: 0s;
+}
+.tpl-doc-toc[open] .tpl-doc-toc_chev { transform: rotate(180deg); }
+
+.tpl-doc-toc_nav {
+  padding-top: var(--_spacing---step--1);
+  padding-bottom: var(--_spacing---step--3);
+  padding-left: var(--_spacing---step--3);
+  padding-right: var(--_spacing---step--3);
+}
+.tpl-doc-toc_list {
+  display: flex;
+  flex-direction: column;
+  row-gap: 0.15rem;
+  margin-top: 0;
+  margin-bottom: 0;
+  margin-left: 0;
+  margin-right: 0;
+  padding-left: 0;
+  padding-right: 0;
+  list-style-type: none;
+  list-style-position: outside;
+  counter-reset: tpl-toc;
+}
+.tpl-doc-toc_item { display: block; }
+.tpl-doc-toc_link {
+  display: block;
+  padding-top: 0.4rem;
+  padding-bottom: 0.4rem;
+  padding-left: 0.75rem;
+  padding-right: 0.5rem;
+  border-left-width: 2px;
+  border-left-style: solid;
+  border-left-color: var(--_theme---border--subtle);
+  font-size: 0.9rem;
+  line-height: 1.35;
+  text-decoration-line: none;
+  color: var(--_theme---text--muted);
+  transition-property: color, border-left-color, background-color;
+  transition-duration: 180ms;
+  transition-timing-function: ease;
+  transition-delay: 0s;
+}
+.tpl-doc-toc_link:hover {
+  color: var(--_theme---text--strong);
+  border-left-color: var(--tpl-accent);
+}
+/* sub-level (h3) entries indent a notch */
+.tpl-doc-toc_item.is-sub .tpl-doc-toc_link {
+  padding-left: 1.5rem;
+  font-size: 0.82rem;
+  color: var(--_theme---text--subtle);
+}
+/* scroll-spy active state (set by the scoped script) */
+.tpl-doc-toc_link.is-active {
+  color: var(--_theme---text--strong);
+  border-left-color: var(--tpl-accent);
+  background-color: var(--_theme---surface--sunken);
+}
+
+/* ── Variant: SIDEBAR (sticky rail, summary hidden on desktop) ── */
+.tpl-documento.is-toc-sidebar .tpl-doc-toc {
+  position: sticky;
+  top: var(--tpl-navoffset);
+  max-height: calc(100svh - var(--tpl-navoffset) - 1.5rem);
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+.tpl-documento.is-toc-sidebar .tpl-doc-toc_summary { display: none; }
+
+/* ── Variant: TOP (collapsible bar above the prose) ── */
+.tpl-documento.is-toc-top .tpl-doc-toc {
+  position: static;
+  max-width: var(--tpl-measure);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ── Variant: OFF (no TOC at all) ── */
+.tpl-documento.is-toc-off .tpl-doc-toc { display: none; }
+
+/* ───────────────────────────────────────────────────────────────────────────
+   03 · RICH-TEXT PROSE  (semantic bare tags, styled like a CMS Rich Text field)
+   Reading measure via --tpl-measure; centred in its column. ────────────────── */
+.tpl-doc-prose {
+  max-width: var(--tpl-measure);
+  margin-left: auto;
+  margin-right: auto;
+  counter-reset: tpl-sec;
+}
+/* Give the prose room in TOC-off / TOC-top single-column layouts too. */
+.tpl-documento.is-toc-sidebar .tpl-doc-prose {
+  margin-left: 0;
+  margin-right: auto;
+}
+
+.tpl-doc-prose > * {
+  scroll-margin-top: var(--tpl-navoffset);
+}
+
+/* Lead / intro paragraph with optional drop-cap. */
+.tpl-doc-lead {
+  margin-top: 0;
+  margin-bottom: var(--_spacing---step--4);
+  font-size: 1.2rem;
+  line-height: 1.55;
+  color: var(--_theme---text--main);
+}
+.tpl-doc-lead.has-dropcap::first-letter {
+  float: left;
+  margin-top: 0.06em;
+  margin-right: 0.09em;
+  margin-bottom: 0;
+  margin-left: 0;
+  padding-top: 0.02em;
+  padding-bottom: 0.02em;
+  padding-left: 0;
+  padding-right: 0;
+  font-family: var(--_typography---family--display);
+  font-size: 3.4em;
+  font-weight: 800;
+  line-height: 0.72;
+  color: var(--tpl-accent);
+}
+
+/* Section headings (h2 = numbered chapter). */
+.tpl-doc-prose h2 {
+  counter-increment: tpl-sec;
+  position: relative;
+  margin-top: var(--_spacing---step--6);
+  margin-bottom: var(--_spacing---step--3);
+  padding-bottom: 0.4em;
+  padding-left: 0;
+  padding-top: 0;
+  padding-right: 0;
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+  border-bottom-color: var(--_theme---border--subtle);
+  font-family: var(--_typography---family--display);
+  font-size: 1.85rem;
+  font-weight: 800;
+  line-height: 1.1;
+  color: var(--_theme---text--strong);
+}
+.tpl-doc-prose h2::before {
+  content: counter(tpl-sec, decimal-leading-zero);
+  display: inline-block;
+  margin-right: 0.6rem;
+  font-size: 0.72em;
+  font-weight: 700;
+  color: var(--tpl-accent);
+}
+.tpl-doc-prose h3 {
+  margin-top: var(--_spacing---step--5);
+  margin-bottom: var(--_spacing---step--2);
+  font-family: var(--_typography---family--display);
+  font-size: 1.3rem;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--_theme---text--strong);
+}
+.tpl-doc-prose h4 {
+  margin-top: var(--_spacing---step--4);
+  margin-bottom: var(--_spacing---step--1);
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  color: var(--tpl-accent);
+}
+.tpl-doc-prose p {
+  margin-top: 0;
+  margin-bottom: var(--_spacing---step--3);
+  font-size: 1.02rem;
+  line-height: 1.72;
+  color: var(--_theme---text--main);
+}
+.tpl-doc-prose strong { color: var(--_theme---text--strong); font-weight: 700; }
+.tpl-doc-prose em { font-style: italic; }
+.tpl-doc-prose a {
+  color: var(--tpl-accent);
+  text-decoration-line: underline;
+  text-decoration-color: color-mix(in srgb, var(--tpl-accent) 45%, transparent);
+  text-decoration-style: solid;
+  text-underline-offset: 0.16em;
+}
+.tpl-doc-prose a:hover {
+  text-decoration-color: var(--tpl-accent);
+}
+
+/* Lists. */
+.tpl-doc-prose ul,
+.tpl-doc-prose ol {
+  margin-top: 0;
+  margin-bottom: var(--_spacing---step--3);
+  padding-left: 1.4rem;
+  color: var(--_theme---text--main);
+}
+.tpl-doc-prose li {
+  margin-top: 0;
+  margin-bottom: 0.6rem;
+  font-size: 1.02rem;
+  line-height: 1.65;
+}
+.tpl-doc-prose ul { list-style-type: none; }
+.tpl-doc-prose ul > li {
+  position: relative;
+  padding-left: 0.4rem;
+}
+.tpl-doc-prose ul > li::before {
+  content: "";
+  position: absolute;
+  top: 0.65em;
+  left: -0.9rem;
+  width: 0.42rem;
+  height: 0.42rem;
+  border-top-left-radius: var(--n58-radius-control);
+  border-top-right-radius: var(--n58-radius-control);
+  border-bottom-left-radius: var(--n58-radius-control);
+  border-bottom-right-radius: var(--n58-radius-control);
+  background-color: var(--tpl-accent);
+  transform: rotate(45deg);
+}
+.tpl-doc-prose ol {
+  list-style-type: decimal;
+  list-style-position: outside;
+}
+.tpl-doc-prose ol > li::marker {
+  color: var(--tpl-accent);
+  font-weight: 700;
+}
+
+/* Definition rows — <strong> term leading a paragraph. */
+.tpl-doc-def {
+  padding-left: 1rem;
+  border-left-width: 2px;
+  border-left-style: solid;
+  border-left-color: var(--_theme---border--subtle);
+}
+
+/* Blockquote / legal callout. */
+.tpl-doc-prose blockquote {
+  margin-top: var(--_spacing---step--4);
+  margin-bottom: var(--_spacing---step--4);
+  margin-left: 0;
+  margin-right: 0;
+  padding-top: var(--_spacing---step--3);
+  padding-bottom: var(--_spacing---step--3);
+  padding-left: var(--_spacing---step--4);
+  padding-right: var(--_spacing---step--4);
+  border-top-left-radius: var(--_component---card--radius);
+  border-top-right-radius: var(--_component---card--radius);
+  border-bottom-left-radius: var(--_component---card--radius);
+  border-bottom-right-radius: var(--_component---card--radius);
+  border-left-width: 3px;
+  border-left-style: solid;
+  border-left-color: var(--tpl-accent);
+  background-color: color-mix(in srgb, var(--tpl-accent) 8%, var(--_theme---surface--raised));
+}
+.tpl-doc-prose blockquote p:last-child { margin-bottom: 0; }
+.tpl-doc-prose blockquote p {
+  font-size: 1.05rem;
+  line-height: 1.6;
+  color: var(--_theme---text--main);
+}
+
+/* ───────────────────────────────────────────────────────────────────────────
+   TABLES — responsive: horizontal-scroll wrapper on narrow viewports, zebra
+   rows, sticky header, accent header rule. ─────────────────────────────────── */
+.tpl-doc-tablegroup {
+  margin-top: var(--_spacing---step--3);
+  margin-bottom: var(--_spacing---step--4);
+}
+.tpl-doc-table-caption {
+  margin-top: 0;
+  margin-bottom: 0.6rem;
+  font-size: 0.98rem;
+  font-weight: 700;
+  color: var(--_theme---text--strong);
+}
+.tpl-doc-table-wrap {
+  box-sizing: border-box;
+  overflow-x: auto;
+  overflow-y: hidden;
+  border-top-left-radius: var(--_component---card--radius);
+  border-top-right-radius: var(--_component---card--radius);
+  border-bottom-left-radius: var(--_component---card--radius);
+  border-bottom-right-radius: var(--_component---card--radius);
+  border-top-width: 1px;
+  border-right-width: 1px;
+  border-bottom-width: 1px;
+  border-left-width: 1px;
+  border-top-style: solid;
+  border-right-style: solid;
+  border-bottom-style: solid;
+  border-left-style: solid;
+  border-top-color: var(--_theme---border--subtle);
+  border-right-color: var(--_theme---border--subtle);
+  border-bottom-color: var(--_theme---border--subtle);
+  border-left-color: var(--_theme---border--subtle);
+  -webkit-overflow-scrolling: touch;
+}
+.tpl-doc-table-wrap:focus-visible {
+  outline-width: 2px;
+  outline-style: solid;
+  outline-color: var(--tpl-accent);
+  outline-offset: 2px;
+}
+.tpl-doc-prose table {
+  width: 100%;
+  min-width: 34rem;
+  border-collapse: collapse;
+  border-spacing: 0;
+  font-size: 0.95rem;
+}
+.tpl-doc-prose thead th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  border-bottom-width: 2px;
+  border-bottom-style: solid;
+  border-bottom-color: var(--tpl-accent);
+  background-color: var(--_theme---surface--sunken);
+  color: var(--_theme---text--strong);
+  font-weight: 700;
+  text-align: left;
+  vertical-align: bottom;
+}
+.tpl-doc-prose tbody td {
+  padding-top: 0.7rem;
+  padding-bottom: 0.7rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  border-top-width: 1px;
+  border-top-style: solid;
+  border-top-color: var(--_theme---border--subtle);
+  color: var(--_theme---text--main);
+  line-height: 1.45;
+  vertical-align: top;
+}
+.tpl-doc-prose tbody tr:nth-child(even) td {
+  background-color: var(--_theme---surface--raised);
+}
+/* the numeric / last column reads as the "value" — nudge it strong + right */
+.tpl-doc-prose tbody td:last-child {
+  color: var(--_theme---text--strong);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* ───────────────────────────────────────────────────────────────────────────
+   04 · DOWNLOAD / PDF CTA (foot of the document)
+   ─────────────────────────────────────────────────────────────────────────── */
+.tpl-doc-download {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  column-gap: var(--_spacing---step--5);
+  row-gap: var(--_spacing---step--3);
+  padding-top: var(--_spacing---step--5);
+  padding-bottom: var(--_spacing---step--5);
+  padding-left: var(--_spacing---step--5);
+  padding-right: var(--_spacing---step--5);
+  border-top-left-radius: var(--_component---card--radius);
+  border-top-right-radius: var(--_component---card--radius);
+  border-bottom-left-radius: var(--_component---card--radius);
+  border-bottom-right-radius: var(--_component---card--radius);
+  border-top-width: 1px;
+  border-right-width: 1px;
+  border-bottom-width: 1px;
+  border-left-width: 1px;
+  border-top-style: solid;
+  border-right-style: solid;
+  border-bottom-style: solid;
+  border-left-style: solid;
+  border-top-color: color-mix(in srgb, var(--tpl-accent) 35%, transparent);
+  border-right-color: color-mix(in srgb, var(--tpl-accent) 35%, transparent);
+  border-bottom-color: color-mix(in srgb, var(--tpl-accent) 35%, transparent);
+  border-left-color: color-mix(in srgb, var(--tpl-accent) 35%, transparent);
+  background-color: color-mix(in srgb, var(--tpl-accent) 7%, var(--_theme---surface--raised));
+}
+.tpl-doc-download_text {
+  display: flex;
+  flex-direction: column;
+  row-gap: 0.35rem;
+  max-width: 40ch;
+}
+.tpl-doc-download_ico {
+  width: 1.15em;
+  height: 1.15em;
+  flex-grow: 0;
+  flex-shrink: 0;
+}
+
+/* ───────────────────────────────────────────────────────────────────────────
+   BACK-TO-TOP — fixed pill, revealed by the scoped script after scroll.
+   ─────────────────────────────────────────────────────────────────────────── */
+.tpl-doc-totop {
+  position: fixed;
+  z-index: 60;
+  right: 1.25rem;
+  bottom: 6.5rem;
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  width: 2.9rem;
+  height: 2.9rem;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 0;
+  padding-right: 0;
+  border-top-left-radius: var(--n58-radius-pill);
+  border-top-right-radius: var(--n58-radius-pill);
+  border-bottom-left-radius: var(--n58-radius-pill);
+  border-bottom-right-radius: var(--n58-radius-pill);
+  border-top-width: 1px;
+  border-right-width: 1px;
+  border-bottom-width: 1px;
+  border-left-width: 1px;
+  border-top-style: solid;
+  border-right-style: solid;
+  border-bottom-style: solid;
+  border-left-style: solid;
+  border-top-color: var(--tpl-accent);
+  border-right-color: var(--tpl-accent);
+  border-bottom-color: var(--tpl-accent);
+  border-left-color: var(--tpl-accent);
+  background-color: var(--_theme---surface--main);
+  color: var(--tpl-accent);
+  cursor: pointer;
+  opacity: 0;
+  transform: translateY(0.75rem);
+  visibility: hidden;
+  transition-property: opacity, transform, visibility;
+  transition-duration: 260ms;
+  transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  transition-delay: 0s;
+}
+.tpl-doc-totop.is-shown {
+  opacity: 1;
+  transform: translateY(0);
+  visibility: visible;
+}
+.tpl-doc-totop:hover {
+  background-color: var(--tpl-accent);
+  color: var(--_palette---neutral--0);
+}
+.tpl-doc-totop_ico {
+  width: 1.15rem;
+  height: 1.15rem;
+}
+
+/* ───────────────────────────────────────────────────────────────────────────
+   RESPONSIVE
+   ─────────────────────────────────────────────────────────────────────────── */
+@media (max-width: 991px) {
+  /* Sidebar collapses to a stacked, collapsible TOC above the prose. */
+  .tpl-documento.is-toc-sidebar .tpl-doc-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .tpl-documento.is-toc-sidebar .tpl-doc-toc {
+    position: static;
+    max-height: none;
+    max-width: var(--tpl-measure);
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .tpl-documento.is-toc-sidebar .tpl-doc-toc_summary { display: flex; }
+  .tpl-documento.is-toc-sidebar .tpl-doc-prose { margin-left: auto; }
+
+  .tpl-doc-hero_mark { opacity: 0.1; width: 20rem; }
+  .tpl-doc-prose h2 { font-size: 1.6rem; }
+}
+
+@media (max-width: 767px) {
+  .tpl-doc-hero_mark { display: none; }
+  .tpl-doc-prose h2 { font-size: 1.45rem; }
+  .tpl-doc-lead { font-size: 1.1rem; }
+  .tpl-doc-download { flex-direction: column; align-items: flex-start; }
+  .tpl-doc-totop { right: 1rem; bottom: 5.5rem; }
+}
+
+@media (max-width: 478px) {
+  .tpl-doc-prose h2 { font-size: 1.3rem; }
+  .tpl-doc-lead.has-dropcap::first-letter { font-size: 2.8em; }
+  .tpl-doc-prose table { min-width: 30rem; }
+}

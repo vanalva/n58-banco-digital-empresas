@@ -1,0 +1,1109 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Intervención para Empresas — N58 Banco Digital</title>
+  <meta name="description" content="Adquiere divisas asignadas por el Banco Central de Venezuela, sujeto a disponibilidad.">
+  <link rel="canonical" href="https://www.n58bancodigital.com/producto/pago-movil-personas">
+  <meta property="og:title" content="Intervención para Empresas — N58 Banco Digital">
+  <meta property="og:description" content="Adquiere divisas asignadas por el Banco Central de Venezuela, sujeto a disponibilidad.">
+  <meta property="og:type" content="website">
+
+  <!-- Fonts: Nugros (custom @font-face) loaded first, then framework → project overrides. -->
+  <link rel="preload" href="assets/fonts/Nugros-Regular.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/Nugros-ExtraBold.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="css/fonts.css?v=d00f1644">
+  <link rel="stylesheet" href="css/framework.css?v=1a765f0c">
+  <link rel="stylesheet" href="css/variables.css?v=402f79dd">
+  <link rel="stylesheet" href="css/project.css?v=17f2c04a">
+  <link rel="stylesheet" href="css/tpl-producto.css?v=91166e78">
+  <!-- Swiper.js — required by the flwr marquee engine used by the FX ticker. -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.css">
+</head>
+<body>
+<div data-flwr class="f-mode-light n58-page">
+
+  <!-- ════════════════ PAGE PRELOADER (ported from the live site) ════════════════
+       Ink overlay + lime loading bar (280×14, 2px border, ~2s ease-out fill).
+       The inline script below marks the wrapper .is-booting synchronously so
+       the hero entrance holds until the loader lifts; the lift script near the
+       end of <body> adds .is-done on window.load (+500ms, 3s hard fallback),
+       then removes the node. JS-off: the <noscript> style hides the loader and
+       the hero entrance plays normally. -->
+  <div class="n58-preloader" aria-hidden="true">
+    <div class="n58-preloader_bar"><div class="n58-preloader_fill"></div></div>
+  </div>
+  <noscript><style>.n58-preloader { display: none; }</style></noscript>
+  <script>document.querySelector('[data-flwr]').classList.add('is-booting');</script>
+
+  <a href="#main-content" class="u-sr-only">Saltar al contenido</a>
+
+  <!-- ════════════════ NAVBAR (shared) ════════════════ -->
+  <nav class="flwr_navbar_wrap is-fixed f-mode-dark" data-flwr="navbar" data-flwr-navbar-trigger="hover" data-flwr-navbar-scroll="auto-hide" aria-label="Principal">
+    <div class="flwr_navbar_inner n58-container">
+      <a href="index.html" class="flwr_navbar_logo" aria-label="N58 Banco Digital — Inicio">
+        <div class="n58-lottie-logo" data-n58-lottie="assets/n58-logo-lottie.json" role="img" aria-label="N58 Banco Digital"></div>
+      </a>
+      <ul class="flwr_navbar_menu" role="list">
+        <li class="flwr_navbar_dropdown">
+          <button type="button" class="flwr_navbar_dropdown_trigger flwr_navbar_link" aria-expanded="false" aria-haspopup="true">Empresas</button>
+          <ul class="flwr_navbar_dropdown_menu" role="list">
+            <li class="flwr_navbar_dropdown_sub">
+              <a href="productos-empresas.html#cuentas" class="flwr_navbar_dropdown_item flwr_navbar_dropdown_subtrigger">Cuentas<svg class="flwr_navbar_dropdown_caret" viewBox="0 0 8 12" fill="none" aria-hidden="true"><path d="M1.5 1.5 6 6l-4.5 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+              <ul class="flwr_navbar_dropdown_submenu" role="list">
+                <li><a href="cuenta-corriente-empresas.html" class="flwr_navbar_dropdown_item">Cuenta Corriente</a></li>
+                <li><a href="cuenta-moneda-extranjera-empresas.html" class="flwr_navbar_dropdown_item">Cuenta en Moneda Extranjera</a></li>
+              </ul>
+            </li>
+            <li class="flwr_navbar_dropdown_sub">
+              <a href="pago-movil-empresas.html" class="flwr_navbar_dropdown_item flwr_navbar_dropdown_subtrigger">Pago Móvil<svg class="flwr_navbar_dropdown_caret" viewBox="0 0 8 12" fill="none" aria-hidden="true"><path d="M1.5 1.5 6 6l-4.5 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+              <ul class="flwr_navbar_dropdown_submenu" role="list">
+                <li><a href="pago-movil-empresas.html" class="flwr_navbar_dropdown_item">Pago Móvil</a></li>
+              </ul>
+            </li>
+            <li class="flwr_navbar_dropdown_sub">
+              <a href="pago-de-servicios-empresas.html" class="flwr_navbar_dropdown_item flwr_navbar_dropdown_subtrigger">Pago de Servicios<svg class="flwr_navbar_dropdown_caret" viewBox="0 0 8 12" fill="none" aria-hidden="true"><path d="M1.5 1.5 6 6l-4.5 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+              <ul class="flwr_navbar_dropdown_submenu" role="list">
+                <li><a href="pago-de-servicios-empresas.html" class="flwr_navbar_dropdown_item">Pago de Servicios</a></li>
+              </ul>
+            </li>
+            <li class="flwr_navbar_dropdown_sub">
+              <a href="intervencion-cambiaria-empresas.html" class="flwr_navbar_dropdown_item flwr_navbar_dropdown_subtrigger">Operaciones Cambiarias<svg class="flwr_navbar_dropdown_caret" viewBox="0 0 8 12" fill="none" aria-hidden="true"><path d="M1.5 1.5 6 6l-4.5 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+              <ul class="flwr_navbar_dropdown_submenu" role="list">
+                <li><a href="intervencion-cambiaria-empresas.html" class="flwr_navbar_dropdown_item">Intervención</a></li>
+              </ul>
+            </li>
+            <li><a href="productos-empresas.html#productos-inversiones" class="flwr_navbar_dropdown_item">Productos e Inversiones</a></li>
+            <li><a href="productos-empresas.html#creditos" class="flwr_navbar_dropdown_item">Créditos</a></li>
+            <li><a href="productos-empresas.html" class="flwr_navbar_dropdown_item">Ver todos los productos</a></li>
+          </ul>
+        </li>
+        <li class="flwr_navbar_dropdown">
+          <button type="button" class="flwr_navbar_dropdown_trigger flwr_navbar_link" aria-expanded="false" aria-haspopup="true">Recursos</button>
+          <ul class="flwr_navbar_dropdown_menu" role="list">
+            <li><a href="blog.html" class="flwr_navbar_dropdown_item">Blog</a></li>
+            <li><a href="boletines.html" class="flwr_navbar_dropdown_item">Boletines</a></li>
+            <li><a href="documentos-legales.html" class="flwr_navbar_dropdown_item">Documentos legales</a></li>
+            <li><a href="informes-financieros.html" class="flwr_navbar_dropdown_item">Informes financieros</a></li>
+            <li><a href="limites-diarios.html" class="flwr_navbar_dropdown_item">Límites diarios</a></li>
+            <li><a href="preguntas-frecuentes.html" class="flwr_navbar_dropdown_item">Preguntas frecuentes</a></li>
+            <li><a href="atencion-al-cliente.html" class="flwr_navbar_dropdown_item">Atención al cliente</a></li>
+          </ul>
+        </li>
+        <li><a href="conocenos.html" class="flwr_navbar_link">Conócenos</a></li>
+      </ul>
+      <div class="flwr_navbar_actions">
+        <a href="https://banca.n58bancodigital.com" class="flwr_button_secondary" data-flwr-trigger="hover focus"><span data-flwr-target="label">Banca en línea</span></a>
+        <a href="productos-empresas.html" class="flwr_button_primary" data-flwr-trigger="hover focus"><span data-flwr-target="label">Abre tu cuenta</span></a>
+      </div>
+      <button type="button" class="flwr_navbar_hamburger n58-hamburger" aria-label="Abrir menú" aria-expanded="false" data-flwr-target="fullscreen-menu-trigger" data-flwr-menu-id="n58-menu">
+        <span class="n58-hamburger_icon" aria-hidden="true">
+          <img src="assets/images/icons/menu-bar-cream.svg" alt="" class="n58-hamburger_bar n58-hamburger_bar--1">
+          <img src="assets/images/icons/menu-bar-cream.svg" alt="" class="n58-hamburger_bar n58-hamburger_bar--2">
+        </span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Dropdown dimming backdrop — sibling of the navbar (see project.css). -->
+  <div class="flwr_navbar_dropdown_backdrop" aria-hidden="true"></div>
+
+  <!-- Scroll progress — thin lime bar pinned to the top edge, scrubbed by the
+       root scroll via a CSS scroll timeline (compositor thread, zero JS). -->
+  <div class="n58-scroll-progress" aria-hidden="true"></div>
+
+  <!-- ════════════════ MOBILE FULLSCREEN MENU (flwr fullscreen-menu) ════════════════ -->
+  <dialog id="n58-menu" class="flwr_fullscreen_menu_wrap n58-fsmenu" data-flwr="fullscreen-menu" tabindex="-1" aria-label="Menú principal">
+    <!-- Logo + close are pinned to the EXACT navbar logo/hamburger positions so
+         nothing jumps when the menu opens (the hamburger morphs to X in place). -->
+    <div class="n58-fsmenu-logo n58-lottie-logo" data-n58-lottie="assets/n58-logo-lottie.json" role="img" aria-label="N58 Banco Digital"></div>
+    <button type="button" class="flwr_fullscreen_menu_close n58-menu-close" data-flwr-target="close" aria-label="Cerrar menú">
+      <span class="n58-menu-close_icon" aria-hidden="true">
+        <img src="assets/images/icons/menu-bar-cream.svg" alt="" class="n58-menu-close_bar n58-menu-close_bar--1">
+        <img src="assets/images/icons/menu-bar-cream.svg" alt="" class="n58-menu-close_bar n58-menu-close_bar--2">
+      </span>
+    </button>
+    <div class="flwr_fullscreen_menu_content">
+      <span class="n58-fsmenu-headroom" aria-hidden="true"></span>
+      <nav class="flwr_fullscreen_menu_links" aria-label="Menú">
+        <div class="n58-fsmenu-group" data-flwr="collapse">
+          <button type="button" class="flwr_fullscreen_menu_link n58-fsmenu-trigger" data-flwr-target="trigger" aria-expanded="false">
+            <span>Empresas</span>
+            <svg class="n58-fsmenu-chev" viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 6 L8 10.5 L12.5 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <div class="n58-fsmenu-subwrap">
+            <div class="n58-fsmenu-sublist">
+              <div class="n58-fsmenu-sublinks">
+                <a href="categoria-template.html" class="n58-fsmenu-sublink">Cuentas</a>
+                <a href="categoria-template.html" class="n58-fsmenu-sublink">Pago Móvil</a>
+                <a href="categoria-template.html" class="n58-fsmenu-sublink">Pago de Servicios</a>
+                <a href="categoria-template.html" class="n58-fsmenu-sublink">Operaciones Cambiarias</a>
+                <a href="categoria-template.html" class="n58-fsmenu-sublink">Productos e Inversiones</a>
+                <a href="categoria-template.html" class="n58-fsmenu-sublink">Créditos</a>
+                <a href="productos-empresas.html" class="n58-fsmenu-sublink">Ver todos los productos</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="n58-fsmenu-group" data-flwr="collapse">
+          <button type="button" class="flwr_fullscreen_menu_link n58-fsmenu-trigger" data-flwr-target="trigger" aria-expanded="false">
+            <span>Recursos</span>
+            <svg class="n58-fsmenu-chev" viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 6 L8 10.5 L12.5 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <div class="n58-fsmenu-subwrap">
+            <div class="n58-fsmenu-sublist">
+              <div class="n58-fsmenu-sublinks">
+                <a href="blog.html" class="n58-fsmenu-sublink">Blog</a>
+                <a href="boletines.html" class="n58-fsmenu-sublink">Boletines</a>
+                <a href="documentos-legales.html" class="n58-fsmenu-sublink">Documentos legales</a>
+                <a href="informes-financieros.html" class="n58-fsmenu-sublink">Informes financieros</a>
+                <a href="limites-diarios.html" class="n58-fsmenu-sublink">Límites diarios</a>
+                <a href="preguntas-frecuentes.html" class="n58-fsmenu-sublink">Preguntas frecuentes</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="n58-fsmenu-group">
+          <a href="conocenos.html" class="flwr_fullscreen_menu_link">Conócenos</a>
+        </div>
+        <div class="n58-fsmenu-group" data-flwr="collapse">
+          <button type="button" class="flwr_fullscreen_menu_link n58-fsmenu-trigger" data-flwr-target="trigger" aria-expanded="false">
+            <span>Atención al Cliente</span>
+            <svg class="n58-fsmenu-chev" viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 6 L8 10.5 L12.5 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <div class="n58-fsmenu-subwrap">
+            <div class="n58-fsmenu-sublist">
+              <div class="n58-fsmenu-sublinks">
+                <a href="preguntas-frecuentes.html" class="n58-fsmenu-sublink">Preguntas Frecuentes</a>
+                <a href="atencion-al-cliente.html" class="n58-fsmenu-sublink">Contáctanos</a>
+                <a href="formulario-reclamos.html" class="n58-fsmenu-sublink">Reclamos</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </nav>
+      <div class="flwr_fullscreen_menu_footer">
+        <div class="n58-fsmenu-ctas">
+          <a href="https://banca.n58bancodigital.com" class="flwr_button_secondary"><span data-flwr-target="label">Banca en línea</span></a>
+          <a href="productos-empresas.html" class="flwr_button_primary"><span data-flwr-target="label">Abre tu cuenta</span></a>
+        </div>
+        <div class="flwr_fullscreen_menu_socials">
+          <a href="tel:+582129177201" class="flwr_fullscreen_menu_social" aria-label="Llamar a Línea N58"><img src="assets/images/icons/phone-cream.svg" alt=""></a>
+          <a href="mailto:atencionalcliente@n58bancodigital.com" class="flwr_fullscreen_menu_social" aria-label="Escríbenos"><img src="assets/images/icons/mail-cream.svg" alt=""></a>
+        </div>
+      </div>
+    </div>
+  </dialog>
+
+  <main role="main" id="main-content">
+
+    <!-- ════════════════════════════════════════════════════════════════════════
+         VARIANT MANIFEST — tpl-producto (N58 Producto detail template)
+         ────────────────────────────────────────────────────────────────────────
+         Put the `is-*` knobs on the template root:
+           <div class="tpl-producto  is-hero-split  is-media-right  is-cards-grid
+                       is-beneficios-tabs  is-accent-core"> … </div>
+         They set CSS custom properties, so they COMPOSE freely. Section theme is
+         driven by flwr `f-mode-light|dark` on each <section> (never on <body>).
+
+         ── HERO layout ──────────────────────────────────────────────────────────
+           is-hero-split     · text + media side-by-side (DEFAULT)
+           is-hero-stacked   · text block, media full-width below it
+           is-hero-centered  · centered text, media below, narrower
+
+         ── MEDIA side (hero + requisitos split order) ───────────────────────────
+           is-media-right    · media column after text (DEFAULT)  → --tpl-media-order:2
+           is-media-left     · media column before text           → --tpl-media-order:0
+
+         ── CARACTERÍSTICAS cards ────────────────────────────────────────────────
+           is-cards-grid     · 3 equal columns, vertical cards (DEFAULT)
+           is-cards-row      · one horizontal row, number beside title (compact)
+           is-cards-stagger  · 3 columns with an alternating vertical offset
+
+         ── BENEFICIOS display (only one renderer shows; all 3 live in the DOM) ───
+           is-beneficios-tabs      · flwr tabs (DEFAULT)
+           is-beneficios-accordion · flwr <details> accordion
+           is-beneficios-grid      · 3 icon panels
+
+         ── ACCENT (sets --tpl-accent + soft tint; used on kickers, card numbers,
+            top-rules, dividers, tab underline, checks, button tints) ─────────────
+           is-accent-core       · verde   var(--_palette---core--500)  (DEFAULT)
+           is-accent-alternate  · magenta var(--_palette---alternate--500)
+           is-accent-alternate-2· morado  var(--_palette---alternate-2--500)
+           is-accent-alert      · coral   var(--_palette---alert--500)
+
+         ── DEFAULT combo (this page) ────────────────────────────────────────────
+           is-hero-split is-media-right is-cards-grid is-beneficios-tabs is-accent-core
+
+         ── EXAMPLE per-CMS-item combos an editor can paste ──────────────────────
+           • Cuenta Corriente (empresas, calmer):
+               is-hero-stacked is-media-left is-cards-row is-beneficios-accordion is-accent-alternate-2
+           • Créditos (bold, offer-led):
+               is-hero-centered is-media-right is-cards-stagger is-beneficios-grid is-accent-alternate
+           • Alertas / Seguridad (attention):
+               is-hero-split is-media-left is-cards-grid is-beneficios-tabs is-accent-alert
+    ════════════════════════════════════════════════════════════════════════════ -->
+
+    <div class="tpl-producto is-hero-split is-media-right is-cards-grid is-beneficios-stack is-accent-core" data-product-slug="intervencion-cambiaria-empresas" data-product-audience="empresas" data-compliance-status="pending-review">
+
+      <!-- ════════════════ 01 · HERO [dark] ════════════════
+           Product statement hero. Layout (split/stacked/centered) + media side +
+           accent are all variant-driven. Stat row echoes the homepage rhythm. -->
+      <section class="f-section-lg f-mode-dark tpl-hero-section f-min-h-svh f-flex f-flex-column f-justify-center" aria-label="Intervención">
+        <div class="n58-container"><div class="tpl-hero">
+          <div class="tpl-hero_text n58-reveal-stack">
+            <p class="f-text-small f-text-color-accent">Empresas · Intervención</p>
+            <h1 class="f-text-display f-text-color-strong tpl-hero_title">Intervención</h1>
+            <p class="f-text-lead f-text-color-muted f-max-w-40ch">Adquiere divisas asignadas por el Banco Central de Venezuela, sujeto a disponibilidad.</p>
+            <div class="f-flex f-flex-wrap f-gap-3 f-margin-top-2">
+              <a href="http://onboarding.n58bancodigital.com/" class="flwr_button_primary" data-flwr-trigger="hover focus"><span data-flwr-target="label">Empezar</span></a>
+              <a href="#tpl-caracteristicas" class="flwr_button_secondary" data-flwr-trigger="hover focus"><span data-flwr-target="label">Leer más</span></a>
+            </div>
+          </div>
+          <div class="tpl-hero_media"><div class="home-media n58-reveal-media tpl-media-frame"><img src="assets/images/photos/intervencion.webp" alt="Intervención para Empresas en N58 Banco Digital" class="home-media_img" loading="eager"></div></div>
+        </div></div>
+      </section>
+<div class="n58-product-marquee f-mode-dark" aria-hidden="true"><div class="n58-product-marquee_track"><span class="n58-product-marquee_item">Intervención</span><span class="n58-product-marquee_star" aria-hidden="true">✦</span><span class="n58-product-marquee_item">Intervención</span><span class="n58-product-marquee_star" aria-hidden="true">✦</span><span class="n58-product-marquee_item">Intervención</span><span class="n58-product-marquee_star" aria-hidden="true">✦</span><span class="n58-product-marquee_item">Intervención</span><span class="n58-product-marquee_star" aria-hidden="true">✦</span><span class="n58-product-marquee_item">Intervención</span><span class="n58-product-marquee_star" aria-hidden="true">✦</span><span class="n58-product-marquee_item">Intervención</span><span class="n58-product-marquee_star" aria-hidden="true">✦</span></div></div>
+
+      <!-- ════════════════ 02 · CARACTERÍSTICAS [light] ════════════════
+           3 feature cards. Arrangement (grid/row/stagger) is variant-driven; the
+           accent tints the index number + top rule of each card. -->
+      <section id="tpl-caracteristicas" class="f-section-lg tpl-feats-section" aria-label="Características de Intervención">
+        <div class="n58-container"><div class="tpl-sec-head n58-reveal"><p class="f-text-small"><span class="n58-badge is-core f-text-color-strong">Características</span></p><h2 class="f-text-h1">Todo lo que hace<br>especial a Intervención</h2></div>
+          <ul class="tpl-feats n58-reveal-list" role="list"><li class="tpl-feat"><div class="tpl-feat_flip"><div class="tpl-feat_face tpl-feat_front"><span class="tpl-feat_num" aria-hidden="true">01</span><div class="tpl-feat_body"><h3 class="f-text-h4 tpl-feat_title">Asignación a tasa oficial</h3><p class="f-text-body f-text-color-muted">Compra de divisas según la disponibilidad establecida por el Banco Central de Venezuela.</p></div><a href="http://onboarding.n58bancodigital.com/" class="tpl-feat_link">Conoce más</a><span class="tpl-feat_progress" aria-hidden="true"></span></div><div class="tpl-feat_face tpl-feat_back"><img src="assets/images/photos/intervencion.webp" alt="Asignación a tasa oficial" class="tpl-feat_img" loading="lazy" decoding="async"><div class="tpl-feat_back_body"><h3 class="f-text-h4 tpl-feat_title tpl-feat_back_title">Asignación a tasa oficial</h3><p class="f-text-body tpl-feat_back_desc">Compra de divisas según la disponibilidad establecida por el Banco Central de Venezuela.</p></div></div></div></li><li class="tpl-feat"><div class="tpl-feat_flip"><div class="tpl-feat_face tpl-feat_front"><span class="tpl-feat_num" aria-hidden="true">02</span><div class="tpl-feat_body"><h3 class="f-text-h4 tpl-feat_title">Impacto positivo</h3><p class="f-text-body f-text-color-muted">Influye de manera favorable en las expectativas económicas, la inversión y la estabilidad de precios.</p></div><a href="http://onboarding.n58bancodigital.com/" class="tpl-feat_link">Conoce más</a><span class="tpl-feat_progress" aria-hidden="true"></span></div><div class="tpl-feat_face tpl-feat_back"><img src="assets/images/photos/intervencion.webp" alt="Impacto positivo" class="tpl-feat_img" loading="lazy" decoding="async"><div class="tpl-feat_back_body"><h3 class="f-text-h4 tpl-feat_title tpl-feat_back_title">Impacto positivo</h3><p class="f-text-body tpl-feat_back_desc">Influye de manera favorable en las expectativas económicas, la inversión y la estabilidad de precios.</p></div></div></div></li><li class="tpl-feat"><div class="tpl-feat_flip"><div class="tpl-feat_face tpl-feat_front"><span class="tpl-feat_num" aria-hidden="true">03</span><div class="tpl-feat_body"><h3 class="f-text-h4 tpl-feat_title">Tarifas oficiales</h3><p class="f-text-body f-text-color-muted">Tipo de cambio y comisiones establecidas por el Banco Central de Venezuela.</p></div><a href="http://onboarding.n58bancodigital.com/" class="tpl-feat_link">Conoce más</a><span class="tpl-feat_progress" aria-hidden="true"></span></div><div class="tpl-feat_face tpl-feat_back"><img src="assets/images/photos/intervencion.webp" alt="Tarifas oficiales" class="tpl-feat_img" loading="lazy" decoding="async"><div class="tpl-feat_back_body"><h3 class="f-text-h4 tpl-feat_title tpl-feat_back_title">Tarifas oficiales</h3><p class="f-text-body tpl-feat_back_desc">Tipo de cambio y comisiones establecidas por el Banco Central de Venezuela.</p></div></div></div></li></ul>
+          <div class="f-flex f-justify-center f-margin-top-6 n58-reveal is-2"><a href="http://onboarding.n58bancodigital.com/" class="flwr_button_primary is-invert" data-flwr-trigger="hover focus"><span data-flwr-target="label">Abrir mi cuenta N58</span></a></div>
+        </div>
+      </section>
+      <!-- Feature flip auto-play: same timing pattern as the FAQ auto-play — each
+           card's timer bar fills, the card flips to its photo back, holds, then the
+           next card takes over, looping. First pointer/click hands control to the
+           user (hover flips manually). Self-guarding; skipped under reduce-motion. -->
+      <script>
+        (function () {
+          var list = document.querySelector('.tpl-feats');
+          if (!list) return;
+          var flips = [].slice.call(list.querySelectorAll('.tpl-feat_flip'));
+          if (!flips.length) return;
+          var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+          var FILL_MS = 2600, HOLD_MS = 2200, cancelled = false, started = false, timer;
+          function progOf(i) { return flips[i] && flips[i].querySelector('.tpl-feat_progress'); }
+          function resetProg(b) { if (b) { b.style.transition = 'none'; b.style.transform = 'scaleX(0)'; } }
+          function cancelAuto() {
+            if (cancelled) return;
+            cancelled = true; clearTimeout(timer);
+            flips.forEach(function (f) { f.classList.remove('is-flipped'); resetProg(f.querySelector('.tpl-feat_progress')); });
+          }
+          function fill(i) {
+            if (cancelled) return;
+            var b = progOf(i);
+            if (b) {
+              b.style.transition = 'none'; b.style.transform = 'scaleX(0)'; void b.offsetWidth;
+              b.style.setProperty('transition', 'transform ' + FILL_MS + 'ms cubic-bezier(0.65, 0, 0.35, 1)');
+              b.style.transform = 'scaleX(1)';
+            }
+            timer = setTimeout(function () { step(i); }, FILL_MS);
+          }
+          function step(i) {
+            if (cancelled) return;
+            flips.forEach(function (f, j) { f.classList.toggle('is-flipped', j === i); });
+            timer = setTimeout(function () {
+              if (cancelled) return;
+              flips[i].classList.remove('is-flipped');
+              resetProg(progOf(i));
+              fill((i + 1) % flips.length);
+            }, HOLD_MS);
+          }
+          flips.forEach(function (f) {
+            f.addEventListener('click', cancelAuto);
+            f.addEventListener('pointerenter', cancelAuto);
+          });
+          function start() { if (started || cancelled || reduce) return; started = true; fill(0); }
+          if ('IntersectionObserver' in window) {
+            var io = new IntersectionObserver(function (es) {
+              es.forEach(function (e) { if (e.isIntersecting) { start(); io.disconnect(); } });
+            }, { threshold: 0.4 });
+            io.observe(list);
+          } else { start(); }
+        })();
+      </script>
+
+      <!-- ════════════════ 03 · BENEFICIOS [dark] ════════════════
+           Three renderers live in the DOM — tabs / accordion / grid — and the
+           variant class reveals exactly one. Same content in each, so switching
+           display is a one-class change per CMS item. -->
+      <section class="f-section-lg f-mode-dark tpl-benef-section" aria-label="Beneficios"><div class="n58-container">
+        <div class="tpl-benef_stack n58-reveal is-2"><div class="tpl-benef_stack_info"><p class="f-text-small f-text-color-accent">Beneficios</p><h2 class="f-text-h1 f-text-color-strong">Beneficios de<br>Intervención</h2><p class="f-text-body f-text-color-muted f-max-w-40ch">Ventajas pensadas para que aproveches este producto N58.</p><div class="tpl-benef_dots" role="tablist" aria-label="Beneficios"><button type="button" class="tpl-benef_dot" data-benef="b0" aria-label="Seguridad financiera"></button><button type="button" class="tpl-benef_dot" data-benef="b1" aria-label="Gestión en línea"></button><button type="button" class="tpl-benef_dot" data-benef="b2" aria-label="Horario programado"></button></div></div><div class="tpl-benef_deck flwr_card_stack_wrap is-direction-br"><div class="flwr_card_stack_list"><div class="flwr_card_stack_slide tpl-benef_slide n58-notch-border" data-benef="b0"><div class="tpl-benef_slide_in"><h3 class="f-text-h2 tpl-benef_slide_title"><span class="tpl-benef_hl">Seguridad financiera</span></h3><p class="f-text-body tpl-benef_slide_desc">Compra divisas de manera segura y regulada.</p></div></div><div class="flwr_card_stack_slide tpl-benef_slide n58-notch-border" data-benef="b1"><div class="tpl-benef_slide_in"><h3 class="f-text-h2 tpl-benef_slide_title"><span class="tpl-benef_hl">Gestión en línea</span></h3><p class="f-text-body tpl-benef_slide_desc">Procesos rápidos con acreditación en tu cuenta de moneda extranjera.</p></div></div><div class="flwr_card_stack_slide tpl-benef_slide n58-notch-border" data-benef="b2"><div class="tpl-benef_slide_in"><h3 class="f-text-h2 tpl-benef_slide_title"><span class="tpl-benef_hl">Horario programado</span></h3><p class="f-text-body tpl-benef_slide_desc">Atención de lunes a viernes de 9:00 am a 12:00 m.</p></div></div></div></div></div>
+      </div></section>
+      <!-- Beneficios stacking-cards auto-play: cycles the flwr card-stack every 5s
+           (like the live site), syncs the segment dots to the top card, pauses on
+           hover, jumps on dot click. Self-guarding; no auto-cycle under reduce-motion. -->
+      <script>
+        (function () {
+          var stack = document.querySelector('.tpl-benef_stack');
+          if (!stack) return;
+          var wrap = stack.querySelector('.flwr_card_stack_wrap');
+          var list = wrap && wrap.querySelector('.flwr_card_stack_list');
+          var dots = [].slice.call(stack.querySelectorAll('.tpl-benef_dot'));
+          if (!wrap || !list || !dots.length) return;
+          var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+          function topKey() { var t = list.lastElementChild; return t ? t.getAttribute('data-benef') : null; }
+          function syncDots() { var k = topKey(); dots.forEach(function (d) { d.classList.toggle('is-active', d.getAttribute('data-benef') === k); }); }
+          syncDots();
+          new MutationObserver(syncDots).observe(list, { childList: true });
+          var timer = null;
+          function stop() { if (timer) { clearInterval(timer); timer = null; } }
+          function start() { if (reduce) return; stop(); timer = setInterval(function () { if (window.flwr && window.flwr.cardStack) window.flwr.cardStack.next(wrap); }, 5000); }
+          dots.forEach(function (d) {
+            d.addEventListener('click', function () {
+              var slide = list.querySelector('.flwr_card_stack_slide[data-benef="' + d.getAttribute('data-benef') + '"]');
+              if (slide) slide.click();
+              start();
+            });
+          });
+          wrap.addEventListener('pointerenter', stop);
+          wrap.addEventListener('pointerleave', start);
+          if ('IntersectionObserver' in window) {
+            new IntersectionObserver(function (es) {
+              es.forEach(function (e) { if (e.isIntersecting) start(); else stop(); });
+            }, { threshold: 0.3 }).observe(stack);
+          } else { start(); }
+        })();
+      </script>
+
+      <!-- ════════════════ 04 · REQUISITOS [light] ════════════════
+           Split: media + a two-step checklist. Media side follows the same
+           --tpl-media-order knob as the hero. Accent tints the checks + step pips. -->
+      <section class="f-section-lg tpl-reqs-section" aria-label="Requisitos"><div class="n58-container"><div class="tpl-reqs"><div class="tpl-reqs_media"><div class="home-media n58-reveal-media tpl-media-frame"><img src="assets/images/photos/intervencion.webp" alt="Requisitos para Intervención" class="home-media_img" loading="lazy"></div><span class="tpl-reqs_stat" aria-hidden="true"><span class="tpl-reqs_stat-num">1</span><span class="tpl-reqs_stat-lbl">recaudos</span></span></div><div class="tpl-reqs_body n58-reveal-stack"><p class="f-text-small"><span class="n58-badge is-core f-text-color-strong">Requisitos</span></p><h2 class="f-text-h1">Lo que necesitas<br>para comenzar</h2><p class="f-text-body f-text-color-muted f-max-w-40ch">Intervención · Empresas. Confirma los recaudos vigentes antes de iniciar.</p><ul class="tpl-reqs_list" role="list"><li class="tpl-req"><span class="tpl-req_check" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="m5 12.5 4.5 4.5L19 7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="f-text-body">Tener una cuenta activa en bolívares y en dólares, con saldo disponible en N58.</span></li></ul><div class="f-flex f-flex-wrap f-gap-3 f-margin-top-2"><a href="http://onboarding.n58bancodigital.com/" class="flwr_button_primary is-invert" data-flwr-trigger="hover focus"><span data-flwr-target="label">Abre tu cuenta</span></a></div></div></div></div></section>
+<section id="tpl-recursos" class="tpl-resources-section" aria-label="Información relacionada"><div class="n58-container"><div class="tpl-resources n58-reveal"><header class="tpl-resources_head"><p class="f-text-small f-text-color-accent">Antes de comenzar</p><h2 class="f-text-h2">Todo claro antes<br>de dar el siguiente paso.</h2><p class="f-text-body f-text-color-muted">Consulta la información vigente vinculada a Intervención.</p></header><nav class="tpl-resources_links" aria-label="Recursos relacionados"><a class="tpl-resource-card" href="index.html#tasas"><span class="tpl-resource-card_num" aria-hidden="true">01</span><span class="tpl-resource-card_body"><strong class="f-text-h4">Tasa oficial BCV</strong><span class="f-text-small f-text-color-muted">Consulta el tipo de cambio oficial aplicado a las operaciones.</span></span><svg class="tpl-resource-card_arrow" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14m-5-5 5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a><a class="tpl-resource-card" href="limites-diarios.html"><span class="tpl-resource-card_num" aria-hidden="true">02</span><span class="tpl-resource-card_body"><strong class="f-text-h4">Límites diarios</strong><span class="f-text-small f-text-color-muted">Revisa los montos máximos vigentes para cada tipo de operación.</span></span><svg class="tpl-resource-card_arrow" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14m-5-5 5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a><a class="tpl-resource-card" href="documentos-legales.html"><span class="tpl-resource-card_num" aria-hidden="true">03</span><span class="tpl-resource-card_body"><strong class="f-text-h4">Tarifas y comisiones</strong><span class="f-text-small f-text-color-muted">Consulta costos, cargos y condiciones antes de operar.</span></span><svg class="tpl-resource-card_arrow" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14m-5-5 5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a><a class="tpl-resource-card" href="documentos-legales.html"><span class="tpl-resource-card_num" aria-hidden="true">04</span><span class="tpl-resource-card_body"><strong class="f-text-h4">Seguridad y prevención</strong><span class="f-text-small f-text-color-muted">Conoce cómo proteger tu cuenta, tus datos y cada transacción.</span></span><svg class="tpl-resource-card_arrow" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14m-5-5 5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a></nav></div></div></section>
+
+      <!-- ════════════════ 05 · FAQ [dark] · CMS: FAQs (Pago Móvil subset) ════════════════
+           Site-wide FAQ collection, filtered to a representative Pago Móvil set.
+           Uses .home-faq_list so the shared single-open + auto-play script drives it. -->
+      <section class="f-section-lg f-mode-dark tpl-faq-section" aria-label="Preguntas Frecuentes"><div class="n58-container"><div class="f-flex f-flex-column f-items-center f-gap-2 f-text-center f-margin-bottom-6 n58-reveal"><p class="f-text-small f-text-color-accent">Intervención</p><h2 class="f-text-h1 f-text-color-strong">Preguntas<br>Frecuentes</h2><p class="f-text-body f-text-color-muted">Resolvemos las dudas más comunes sobre Intervención.</p></div><div class="flwr_accordion_wrap home-faq_list n58-reveal-list"><details class="flwr_accordion_item"><summary class="flwr_accordion_trigger"><span class="n58-faq-q">¿Qué es el servicio de Intervención del BCV?</span><span class="n58-plus" aria-hidden="true"></span><span class="n58-faq-progress" aria-hidden="true"></span></summary><div class="flwr_accordion_content"><p class="f-text-body f-text-color-muted">Nuestro equipo puede orientarte sobre Intervención. Consulta las condiciones vigentes o comunícate con la Línea N58.</p></div></details><details class="flwr_accordion_item"><summary class="flwr_accordion_trigger"><span class="n58-faq-q">¿Cuándo opera la mesa de cambio?</span><span class="n58-plus" aria-hidden="true"></span><span class="n58-faq-progress" aria-hidden="true"></span></summary><div class="flwr_accordion_content"><p class="f-text-body f-text-color-muted">Nuestro equipo puede orientarte sobre Intervención. Consulta las condiciones vigentes o comunícate con la Línea N58.</p></div></details><details class="flwr_accordion_item"><summary class="flwr_accordion_trigger"><span class="n58-faq-q">¿Puedo vender divisas BCV también?</span><span class="n58-plus" aria-hidden="true"></span><span class="n58-faq-progress" aria-hidden="true"></span></summary><div class="flwr_accordion_content"><p class="f-text-body f-text-color-muted">Nuestro equipo puede orientarte sobre Intervención. Consulta las condiciones vigentes o comunícate con la Línea N58.</p></div></details></div><div class="f-flex f-justify-center f-margin-top-6 n58-reveal"><a href="preguntas-frecuentes.html" class="flwr_button_secondary" data-flwr-trigger="hover focus"><span data-flwr-target="label">Ver todas</span></a></div></div></section>
+
+    </div>
+
+  </main>
+
+  <!-- ════════════════ FOOTER (shared) [dark] ════════════════ -->
+  <footer class="flwr_footer_main n58-footer-green">
+    <div class="n58-container n58-footer-top">
+
+      <!-- Brand column -->
+      <div class="n58-footer-brand n58-reveal">
+        <div class="n58-lottie-logo n58-footer-brandlogo" data-n58-lottie="assets/n58-logo-lottie.json" role="img" aria-label="N58 Banco Digital"></div>
+        <p class="f-text-small f-text-color-muted">Neo-banco microfinanciero 100% digital. Tu aliado financiero en Venezuela.</p>
+        <div class="n58-footer-contact">
+          <a href="tel:+582129177201" class="flwr_button_primary is-small is-outline is-outline-ink" data-flwr-trigger="hover focus">
+            <svg class="n58-contact-ico" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6.8 4h2.1l1.2 3-1.5 1.2a11 11 0 0 0 5.2 5.2L15 12.9l3 1.2v2.1a2 2 0 0 1-2.2 2A13.5 13.5 0 0 1 4.8 6.2 2 2 0 0 1 6.8 4Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+            <span data-flwr-target="label">Línea N58 · 0212-917-7201</span>
+          </a>
+          <a href="mailto:atencionalcliente@n58bancodigital.com" class="flwr_button_primary is-small is-outline is-outline-ink" data-flwr-trigger="hover focus">
+            <svg class="n58-contact-ico" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 7.5A1.5 1.5 0 0 1 5.5 6h13A1.5 1.5 0 0 1 20 7.5v9A1.5 1.5 0 0 1 18.5 18h-13A1.5 1.5 0 0 1 4 16.5v-9Z" stroke="currentColor" stroke-width="1.6"/><path d="m5 8 7 4.5L19 8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span data-flwr-target="label">atencionalcliente@n58bancodigital.com</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Link columns — Información de Interés (the long list) gets its own column;
+           the shorter groups pair up so every column is reasonably filled. -->
+      <div class="n58-footer-cols">
+        <div class="n58-footer-col n58-reveal is-2">
+          <nav class="flwr_footer_group" aria-label="Empresas">
+            <p class="flwr_footer_group_title">Empresas</p>
+            <a href="productos-empresas.html" class="flwr_footer_link">Cuentas</a>
+            <a href="productos-empresas.html" class="flwr_footer_link">Pago Móvil</a>
+            <a href="productos-empresas.html" class="flwr_footer_link">Pago de Servicios</a>
+            <a href="productos-empresas.html" class="flwr_footer_link">Operaciones Cambiarias</a>
+          </nav>
+          <nav class="flwr_footer_group" aria-label="Atención al Cliente">
+            <p class="flwr_footer_group_title">Atención al Cliente</p>
+            <a href="atencion-al-cliente.html" class="flwr_footer_link">Contáctanos</a>
+            <a href="preguntas-frecuentes.html" class="flwr_footer_link">Preguntas Frecuentes</a>
+            <a href="formulario-reclamos.html" class="flwr_footer_link">Reclamos</a>
+          </nav>
+        </div>
+        <div class="n58-footer-col n58-reveal is-3">
+          <nav class="flwr_footer_group" aria-label="Información de interés">
+            <p class="flwr_footer_group_title">Información de Interés</p>
+            <a href="conocenos.html" class="flwr_footer_link">Conócenos</a>
+            <a href="documentos-legales.html" class="flwr_footer_link">Documentos</a>
+            <a href="limites-diarios.html" class="flwr_footer_link">Límites Diarios</a>
+            <a href="informes-financieros.html" class="flwr_footer_link">Informes Financieros</a>
+            <a href="documentos-legales.html" class="flwr_footer_link">Tasas</a>
+            <a href="documentos-legales.html" class="flwr_footer_link">Memoria y Cuenta Institucional</a>
+            <a href="documentos-legales.html" class="flwr_footer_link">Tarifas y Comisiones</a>
+            <a href="documentos-legales.html" class="flwr_footer_link">Concientización y Capacitación en Ciberseguridad</a>
+          </nav>
+        </div>
+        <div class="n58-footer-col n58-reveal is-4">
+          <nav class="flwr_footer_group" aria-label="Prevención LC/FT/FPADM">
+            <p class="flwr_footer_group_title">Prevención LC/FT/FPADM</p>
+            <a href="documentos-legales.html" class="flwr_footer_link">Prevención y Control de Legitimación de Capitales FT/FPADM</a>
+            <a href="boletines.html" class="flwr_footer_link">Boletines Informativos</a>
+          </nav>
+          <nav class="flwr_footer_group" aria-label="Defensoría al Cliente">
+            <p class="flwr_footer_group_title">Defensoría al Cliente</p>
+            <a href="documentos-legales.html" class="flwr_footer_link">Defensoría del Cliente y Usuario Bancario</a>
+          </nav>
+          <nav class="flwr_footer_group" aria-label="Legal">
+            <p class="flwr_footer_group_title">Legal</p>
+            <a href="documentos-legales.html" class="flwr_footer_link">Contrato Único de Productos y Servicios Financieros</a>
+            <a href="documentos-legales.html" class="flwr_footer_link">Políticas de Privacidad</a>
+          </nav>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dark full-bleed bottom bar (matches the live footer's dark strip). -->
+    <div class="n58-footer-bottom">
+      <div class="n58-container n58-footer-bottom-inner">
+        <p class="f-text-tiny">© 2026 N58 Banco Digital, S.A.</p>
+        <p class="f-text-tiny">Impulsado por Inteligencia Artificial para tu comodidad 🤖</p>
+        <p class="f-text-tiny">J-503581107</p>
+        <div class="n58-footer-help">
+          <span class="f-text-tiny">¿Necesitas ayuda? Llámanos:</span>
+          <a href="tel:+582129177201" class="flwr_button_secondary" data-flwr-trigger="hover focus"><span data-flwr-target="label">Línea N58</span></a>
+          <a href="https://wa.me/582129177201" target="_blank" rel="noopener" class="flwr_button_primary" data-flwr-trigger="hover focus"><span data-flwr-target="label">WhatsApp</span></a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ════════════════ Floating AlaN chatbot trigger ════════════════ -->
+  <a href="https://interfaces.zapier.com/embed/chatbot/cmc1x2kxk001k4i9jbygtrl5e" target="_blank" rel="noopener" class="alan-fab flwr_button_primary">
+    <img src="assets/images/icons/alan-crema.png" alt="" width="22" height="22" data-flwr-target="icon-leading">
+    <span data-flwr-target="label">Chatear con AlaN</span>
+  </a>
+
+  <!-- ════════════════ Anti-fraud dialog (first-visit, cookie-gated) ════════════════ -->
+  <!-- FLAG: confirm trigger with client — first-visit only vs every session. -->
+  <dialog class="antifraud-dialog f-mode-dark" tabindex="-1" aria-labelledby="antifraud-title" data-flwr-target="antifraud">
+    <button type="button" class="n58-modal-close" aria-label="Cerrar" data-flwr-target="antifraud-close">
+      <span class="n58-close-x" aria-hidden="true">
+        <img src="assets/images/icons/menu-bar-cream.svg" alt="" class="n58-close-x_bar n58-close-x_bar--1">
+        <img src="assets/images/icons/menu-bar-cream.svg" alt="" class="n58-close-x_bar n58-close-x_bar--2">
+      </span>
+    </button>
+    <div class="f-flex f-flex-column f-items-start f-gap-3 antifraud-body">
+      <h2 id="antifraud-title" class="f-text-h3 f-leading-tight f-text-balance f-text-color-strong">¡Protégete ante el fraude!</h2>
+      <p class="f-text-body f-text-color-muted f-max-w-30ch">Solo ingresa tus datos en nuestros canales verificados y seguros.</p>
+      <div class="antifraud-urls">
+        <p class="f-text-small"><span class="f-text-color-muted">Web oficial:</span> www.n58bancodigital.com</p>
+        <p class="f-text-small"><span class="f-text-color-muted">Onboarding:</span> onboarding.n58bancodigital.com</p>
+        <p class="f-text-small"><span class="f-text-color-muted">Banca en línea:</span> banca.n58bancodigital.com</p>
+      </div>
+      <button type="button" class="flwr_button_primary" data-flwr-target="antifraud-close"><span data-flwr-target="label">Entendido</span></button>
+    </div>
+  </dialog>
+
+  <!-- Swiper.js (marquee dependency) — load before runtime so it hydrates on init. -->
+  <script src="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.js" defer></script>
+  <!-- flwr runtime: hydrates navbar dropdown/hamburger, marquee scroll, tabs, etc. (self-inits on DOMContentLoaded). -->
+  <script src="assets/runtime.js" defer></script>
+
+  <!-- MOBILE-ONLY (≤991px) smoothness swap. Desktop is left completely untouched:
+       the ticker keeps the draggable flwr marquee (drag-scrub + hover-pause). On
+       mobile only, it is swapped for a CSS compositor ticker so it stays smooth
+       and never fights the page's vertical scroll. The data-flwr strip runs
+       synchronously (this inline script executes during parse, before the
+       deferred runtime.js) so flwr skips it on mobile. Cross the breakpoint?
+       Reload to switch implementations. -->
+  <script>
+    (function () {
+      if (!window.matchMedia || !window.matchMedia('(max-width: 991px)').matches) return;
+
+      var fxWrap  = document.querySelector('.n58-fx-bar .flwr_marquee_wrap');
+      var galWrap = document.querySelector('.n58-gallery-marquee');
+      // Synchronous: stop flwr from hydrating these on mobile.
+      if (fxWrap)  fxWrap.removeAttribute('data-flwr');
+      if (galWrap) galWrap.removeAttribute('data-flwr');
+
+      /* Ticker → CSS compositor marquee. Clone the set into two equal groups wide
+         enough to fill the viewport, then let the CSS animation (0→-50%) scroll. */
+      function initTicker() {
+        if (!fxWrap) return;
+        var track = fxWrap.querySelector('.flwr_marquee_track');
+        if (!track) return;
+        fxWrap.classList.add('n58-fx-marquee');
+        track.classList.add('n58-fx-track');
+        var speed = 60; // px/sec
+        var setHTML = track.innerHTML;
+        var setCount = track.children.length;
+        function build() {
+          track.style.animation = 'none';
+          track.innerHTML = '<div class="n58-fx-group">' + setHTML + '</div>';
+          var setW = track.firstElementChild.scrollWidth;
+          var cw = fxWrap.clientWidth || window.innerWidth || 1;
+          if (!setW) { track.style.animation = ''; return; }
+          var perGroup = Math.max(1, Math.ceil(cw / setW) + 1);
+          var inner = '';
+          for (var i = 0; i < perGroup; i++) inner += setHTML;
+          track.innerHTML =
+            '<div class="n58-fx-group">' + inner + '</div>' +
+            '<div class="n58-fx-group" aria-hidden="true">' + inner + '</div>';
+          var g0 = track.firstElementChild;
+          for (var j = setCount; j < g0.children.length; j++) g0.children[j].setAttribute('aria-hidden', 'true');
+          track.style.setProperty('--n58-fx-dur', (setW * perGroup / speed) + 's');
+          track.style.animation = '';
+        }
+        build();
+        // Only rebuild on a real WIDTH change. Mobile browsers fire resize when
+        // the address/toolbar shows/hides while scrolling (height-only change) —
+        // rebuilding there restarts the animation from 0 and looks like a glitch.
+        var rt, lastW = fxWrap.clientWidth;
+        window.addEventListener('resize', function () {
+          var w = fxWrap.clientWidth;
+          if (w === lastW) return;
+          lastW = w;
+          clearTimeout(rt); rt = setTimeout(build, 200);
+        }, { passive: true });
+      }
+
+      /* Gallery → native scroll-snap scroller + accessible arrow/dot controls.
+         Idle → gentle JS drift (snap off). Touch/arrows/dots → snap on + native
+         momentum. Idle ~2.6s → drift resumes. Cloned to 3 sets for a seamless
+         loop. Active dot + card targeting use arithmetic (cardStep/baseOffset),
+         NOT per-frame layout reads, so the drift stays free of forced reflow. */
+      function initGallery() {
+        if (!galWrap) return;
+        var cards = galWrap.querySelectorAll('.n58-gallery-card');
+        if (!cards.length) return;
+        var sc = document.createElement('div');
+        sc.className = 'n58-gallery-scroller';
+        sc.setAttribute('data-n58-gallery', '');
+        sc.setAttribute('role', 'region');
+        sc.setAttribute('aria-label', 'Galería de imágenes');
+        sc.setAttribute('tabindex', '0');
+        Array.prototype.forEach.call(cards, function (c) { sc.appendChild(c); });
+        galWrap.parentNode.replaceChild(sc, galWrap);
+
+        var origCount = sc.children.length;
+        if (!origCount) return;
+        var origs = Array.prototype.slice.call(sc.children);
+        for (var s = 0; s < 2; s++) origs.forEach(function (c) {
+          var cl = c.cloneNode(true); cl.setAttribute('aria-hidden', 'true'); sc.appendChild(cl);
+        });
+
+        /* Accessible controls — dots pinned LEFT, arrows RIGHT. Not everyone
+           knows to swipe. Arrow icons are the project's own SVGs (paths read from
+           data-* on the wrap so the deploy build copies + path-rewrites them). */
+        var prevSrc = galWrap.getAttribute('data-n58-arrow-prev') || '';
+        var nextSrc = galWrap.getAttribute('data-n58-arrow-next') || '';
+        function arrowBtn(src, label) {
+          var b = document.createElement('button');
+          b.type = 'button'; b.className = 'n58-gallery-arrow'; b.setAttribute('aria-label', label);
+          var img = document.createElement('img'); img.src = src; img.alt = ''; img.setAttribute('aria-hidden', 'true');
+          b.appendChild(img); return b;
+        }
+        var controls = document.createElement('div');
+        controls.className = 'n58-gallery-controls';
+        var dotsWrap = document.createElement('div');
+        dotsWrap.className = 'n58-gallery-dots';
+        var dots = [];
+        for (var di = 0; di < origCount; di++) {
+          var dot = document.createElement('button');
+          dot.type = 'button'; dot.className = 'n58-gallery-dot'; dot.setAttribute('aria-label', 'Ir a la imagen ' + (di + 1));
+          (function (idx) { dot.addEventListener('click', function () { goToDot(idx); }); })(di);
+          dotsWrap.appendChild(dot); dots.push(dot);
+        }
+        var prevBtn = arrowBtn(prevSrc, 'Imagen anterior');
+        var nextBtn = arrowBtn(nextSrc, 'Imagen siguiente');
+        var arrowsWrap = document.createElement('div');
+        arrowsWrap.className = 'n58-gallery-arrows';
+        arrowsWrap.appendChild(prevBtn); arrowsWrap.appendChild(nextBtn);
+        controls.appendChild(dotsWrap); controls.appendChild(arrowsWrap);
+        sc.parentNode.insertBefore(controls, sc.nextSibling);
+
+        var cardStep = 0, baseOffset = 0, oneSet = 0, lastActive = -1, dotRaf = 0;
+        var drifting = true, idle, acc = null;
+        var DRIFT = 0.5, IDLE_MS = 2600;
+
+        function measure() {
+          var first = sc.children[0];
+          var st = getComputedStyle(sc), gap = parseFloat(st.columnGap) || 0;
+          cardStep = first.getBoundingClientRect().width + gap;
+          baseOffset = first.offsetLeft + first.getBoundingClientRect().width / 2 - sc.clientWidth / 2;
+          oneSet = cardStep * origCount;
+        }
+        function curPhys() { return cardStep ? Math.round((sc.scrollLeft - baseOffset) / cardStep) : 0; }
+        function goToPhys(p) {
+          pause();
+          var total = sc.children.length;
+          if (p < origCount) { sc.scrollLeft += oneSet; p += origCount; }
+          else if (p > total - origCount) { sc.scrollLeft -= oneSet; p -= origCount; }
+          sc.scrollTo({ left: baseOffset + p * cardStep, behavior: 'smooth' });
+        }
+        function goToDot(i) { goToPhys(Math.floor(curPhys() / origCount) * origCount + i); }
+        function updateActive() {
+          if (!cardStep) return;
+          var idx = ((curPhys() % origCount) + origCount) % origCount;
+          if (idx === lastActive) return;
+          lastActive = idx;
+          for (var i = 0; i < dots.length; i++) {
+            var on = i === idx;
+            dots[i].classList.toggle('is-active', on);
+            dots[i].setAttribute('aria-current', on ? 'true' : 'false');
+          }
+        }
+        nextBtn.addEventListener('click', function () { goToPhys(curPhys() + 1); });
+        prevBtn.addEventListener('click', function () { goToPhys(curPhys() - 1); });
+
+        function wrapAcc() {
+          if (oneSet <= 0) return;
+          if (acc >= oneSet * 2) { acc -= oneSet; sc.scrollLeft = acc; }
+          else if (acc <= 0) { acc += oneSet; sc.scrollLeft = acc; }
+        }
+        function wrapUser() {
+          if (oneSet <= 0) return;
+          if (sc.scrollLeft >= oneSet * 2) sc.scrollLeft -= oneSet;
+          else if (sc.scrollLeft <= 0) sc.scrollLeft += oneSet;
+        }
+        function pause() { drifting = false; acc = null; sc.style.scrollSnapType = 'x mandatory'; schedule(); }
+        function schedule() { clearTimeout(idle); idle = setTimeout(function () { sc.style.scrollSnapType = 'none'; drifting = true; }, IDLE_MS); }
+        function tick() {
+          if (drifting) { if (acc === null) acc = sc.scrollLeft; acc += DRIFT; sc.scrollLeft = acc; wrapAcc(); }
+          requestAnimationFrame(tick);
+        }
+        measure();
+        requestAnimationFrame(function () { measure(); sc.scrollLeft = oneSet; updateActive(); requestAnimationFrame(tick); });
+        ['pointerdown', 'touchstart', 'wheel', 'keydown'].forEach(function (ev) { sc.addEventListener(ev, pause, { passive: true }); });
+        sc.addEventListener('scroll', function () {
+          if (!drifting) { wrapUser(); schedule(); }
+          if (!dotRaf) dotRaf = requestAnimationFrame(function () { dotRaf = 0; updateActive(); });
+        }, { passive: true });
+        window.addEventListener('resize', function () { measure(); }, { passive: true });
+      }
+
+      function run() { initTicker(); initGallery(); }
+      if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run);
+      else run();
+    })();
+  </script>
+
+  <!-- FAQ: single-open accordion with a smooth animated expand, + a looping
+       auto-play. When the FAQ scrolls into view, each item's cream loading bar
+       ramps left→right, the item opens, then the next fills — looping until a tap
+       hands control to the user. Heights + bar are animated inline with
+       !important so the motion survives system reduce-motion (brand intent). -->
+  <script>
+    (function () {
+      var list = document.querySelector('.home-faq_list');
+      if (!list) return;
+      var items = [].slice.call(list.querySelectorAll('.flwr_accordion_item'));
+      if (!items.length) return;
+
+      var EASE = 'cubic-bezier(0.16, 1, 0.3, 1)';   // snappy easeOutExpo
+      var OPEN_MS = 440;
+
+      /* Wrap each answer so we can animate its height independently of padding. */
+      items.forEach(function (item) {
+        var content = item.querySelector('.flwr_accordion_content');
+        if (content && !(content.parentElement && content.parentElement.classList.contains('n58-faq-answer'))) {
+          var w = document.createElement('div'); w.className = 'n58-faq-answer';
+          content.parentNode.insertBefore(w, content); w.appendChild(content);
+        }
+        if (item.open) item.classList.add('is-active');
+      });
+      function answerOf(item) { return item.querySelector('.n58-faq-answer'); }
+
+      function openItem(item) {
+        if (item.classList.contains('is-active')) return;
+        items.forEach(function (it) { if (it !== item && it.classList.contains('is-active')) closeItem(it); });
+        item.classList.add('is-active');
+        item.open = true;
+        var a = answerOf(item); if (!a) return;
+        clearTimeout(a.__t);
+        a.style.transition = 'none';
+        a.style.height = '';                 // natural height
+        var target = a.scrollHeight;         // measure BEFORE collapsing
+        a.style.height = '0px';
+        void a.offsetHeight;
+        a.style.setProperty('transition', 'height ' + OPEN_MS + 'ms ' + EASE, 'important');
+        a.style.height = target + 'px';
+        a.__t = setTimeout(function () { a.style.transition = ''; a.style.height = 'auto'; }, OPEN_MS + 40);
+      }
+      function closeItem(item) {
+        if (!item.classList.contains('is-active')) return;
+        item.classList.remove('is-active');
+        var a = answerOf(item); if (!a) { item.open = false; return; }
+        clearTimeout(a.__t);
+        a.style.height = a.scrollHeight + 'px';
+        void a.offsetHeight;
+        a.style.setProperty('transition', 'height ' + OPEN_MS + 'ms ' + EASE, 'important');
+        a.style.height = '0px';
+        a.__t = setTimeout(function () { a.style.transition = ''; a.style.height = ''; item.open = false; }, OPEN_MS + 40);
+      }
+
+      /* Replace the native instant toggle with the animated one. */
+      items.forEach(function (item) {
+        var summary = item.querySelector('.flwr_accordion_trigger');
+        summary.addEventListener('click', function (e) {
+          e.preventDefault();
+          cancelAuto();
+          if (item.classList.contains('is-active')) closeItem(item); else openItem(item);
+        });
+      });
+
+      /* ---- Looping auto-play ---- */
+      var FILL_MS = 2000, HOLD_MS = 1600, started = false, cancelled = false, timer;
+      function barOf(i) { return items[i] && items[i].querySelector('.n58-faq-progress'); }
+      function resetBar(b) { if (b) { b.style.transition = 'none'; b.style.transform = 'scaleX(0)'; b.style.opacity = ''; } }
+      function cancelAuto() {
+        if (cancelled) return;
+        cancelled = true; clearTimeout(timer);
+        items.forEach(function (it) { resetBar(it.querySelector('.n58-faq-progress')); });
+      }
+      function fill(i) {
+        if (cancelled) return;
+        var bar = barOf(i);
+        if (!bar) { step(i); return; }
+        bar.style.transition = 'none'; bar.style.transform = 'scaleX(0)'; bar.style.opacity = '1';
+        void bar.offsetWidth;
+        /* ramped ease-in-out so it accelerates then settles, not a flat linear crawl */
+        bar.style.setProperty('transition', 'transform ' + FILL_MS + 'ms cubic-bezier(0.65, 0, 0.35, 1)', 'important');
+        bar.style.transform = 'scaleX(1)';
+        timer = setTimeout(function () { step(i); }, FILL_MS);
+      }
+      function step(i) {
+        if (cancelled) return;
+        openItem(items[i]);
+        var bar = barOf(i);
+        if (bar) { bar.style.setProperty('transition', 'opacity 300ms', 'important'); bar.style.opacity = '0'; }
+        timer = setTimeout(function () { resetBar(bar); fill((i + 1) % items.length); }, HOLD_MS);
+      }
+
+      if ('IntersectionObserver' in window) {
+        var io = new IntersectionObserver(function (entries) {
+          entries.forEach(function (e) {
+            if (e.isIntersecting && !started) { started = true; io.disconnect(); fill(0); }
+          });
+        }, { threshold: 0.35 });
+        io.observe(list);
+      } else { fill(0); }
+    })();
+  </script>
+
+  <!-- Hide the floating AlaN FAB once the footer's bottom bar is in view, so it
+       stops overlapping the Línea N58 / WhatsApp CTAs. -->
+  <script>
+    (function () {
+      var fab = document.querySelector('.alan-fab');
+      var bar = document.querySelector('.n58-footer-bottom');
+      if (!fab || !bar || !('IntersectionObserver' in window)) return;
+      new IntersectionObserver(function (entries) {
+        fab.classList.toggle('is-hidden', entries[0].isIntersecting);
+      }, { threshold: 0 }).observe(bar);
+    })();
+  </script>
+
+  <!-- AlaN FAB adapts to the section behind it (the piri-piri cursor pattern):
+       over light-theme sections it takes the inverted lime-face look (like the
+       Pago Móvil button); over dark sections it stays dark. Samples the section
+       under the FAB's centre on scroll and walks up to the nearest f-mode-*. -->
+  <script>
+    (function () {
+      var fab = document.querySelector('.alan-fab');
+      if (!fab) return;
+      function themeBehind() {
+        var r = fab.getBoundingClientRect();
+        if (!r.width) return 'light';
+        var els = document.elementsFromPoint(r.left + r.width / 2, r.top + r.height / 2);
+        var behind = els.find(function (e) { return e !== fab && !fab.contains(e); });
+        // Use the whole SECTION's theme (not a nested dark media block inside a
+        // light section), so the FAB matches the section it's travelling over.
+        var sec = behind && behind.closest('section');
+        return (sec && sec.classList.contains('f-mode-dark')) ? 'dark' : 'light';
+      }
+      var raf = 0;
+      function update() { raf = 0; fab.classList.toggle('is-invert', themeBehind() === 'light'); }
+      addEventListener('scroll', function () { if (!raf) raf = requestAnimationFrame(update); }, { passive: true });
+      addEventListener('resize', function () { if (!raf) raf = requestAnimationFrame(update); }, { passive: true });
+      update();
+    })();
+  </script>
+
+  <!-- Touch devices have no :hover, so trigger the button lift + offset-shadow
+       when a button crosses the middle band of the viewport as you scroll (either
+       direction). Desktop keeps real hover. -->
+  <script>
+    (function () {
+      if (!window.matchMedia || !window.matchMedia('(hover: none)').matches) return;
+      if (!('IntersectionObserver' in window)) return;
+      var sel = '.flwr_button_primary, .flwr_button_secondary, .flwr_button_ghost, .flwr_button_alert, .flwr_button_link';
+      var btns = [].slice.call(document.querySelectorAll(sel)).filter(function (b) {
+        return !b.classList.contains('is-outline')      // outline chips have no lift
+          && !b.classList.contains('alan-fab')          // fixed FAB
+          && !b.closest('.flwr_navbar_wrap')            // navbar CTAs
+          && !b.closest('dialog');                      // modal buttons
+      });
+      if (!btns.length) return;
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          e.target.classList.toggle('is-scroll-hover', e.isIntersecting);
+        });
+      }, { rootMargin: '-35% 0px -35% 0px', threshold: 0 });   // middle ~30% band
+      btns.forEach(function (b) { io.observe(b); });
+    })();
+  </script>
+
+  <!-- Button "loading" fill → then act. Clicking a notch CTA floods its face
+       left→right with the button's own brand color like a loading bar (label
+       flips to the opposite color — see .is-filling in project.css). When the
+       charge completes:
+         · data-n58-scroll-next attribute → auto-scrolls to the NEXT section
+         · #anchor href → smooth-scrolls to it
+         · any other link → fades the page out and navigates
+       Hover is untouched (classic lift + offset shadow). Skipped for new-tab,
+       tel:/mailto:, modified clicks (ctrl/cmd/middle) and the AlaN FAB. -->
+  <script>
+    (function () {
+      var SEL = '.flwr_button_primary, .flwr_button_secondary, .flwr_button_ghost, .flwr_button_alert, .flwr_button_link';
+      var prm = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var FILL_MS = prm ? 120 : 620;   /* matches the ::before background-size transition */
+      /* The button's section → the next section-level block to scroll to. */
+      function nextSectionOf(btn) {
+        var sec = btn.closest('section') || btn.closest('main > *');
+        var next = sec ? sec.nextElementSibling : null;
+        while (next && next.offsetHeight === 0) next = next.nextElementSibling;
+        if (!next && sec && sec.parentElement && sec.parentElement.tagName === 'MAIN') {
+          next = document.querySelector('footer');
+        }
+        return next;
+      }
+      document.addEventListener('click', function (e) {
+        if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+        var btn = e.target.closest ? e.target.closest(SEL) : null;
+        if (!btn || btn.classList.contains('alan-fab')) return;
+        var scrollNext = btn.hasAttribute('data-n58-scroll-next');
+        if (!scrollNext && btn.tagName !== 'A') return;
+        var href = btn.getAttribute('href') || '';
+        if (!scrollNext) {
+          if (!href || href === '#' || btn.target === '_blank' || /^(tel:|mailto:|javascript:)/i.test(href)) return;
+        }
+        e.preventDefault();
+        if (btn.classList.contains('is-filling')) return;   /* already charging */
+        btn.classList.add('is-filling');
+        setTimeout(function () {
+          if (scrollNext || href.charAt(0) === '#') {
+            var t = scrollNext ? nextSectionOf(btn) : document.querySelector(href);
+            if (t) t.scrollIntoView({ behavior: prm ? 'auto' : 'smooth', block: 'start' });
+            /* Un-fill (sweeps back out) once the scroll is on its way. */
+            setTimeout(function () { btn.classList.remove('is-filling'); }, 700);
+          } else {
+            var wrap = document.querySelector('[data-flwr]');
+            /* If the CTA lives inside the fullscreen menu <dialog>, the whole
+               page fade happens behind it — close the menu first so the exit
+               reads as one motion. */
+            var dlg = btn.closest('dialog');
+            if (dlg && dlg.open) { try { dlg.close(); } catch (err) {} }
+            if (wrap) wrap.classList.add('n58-page-leave');
+            setTimeout(function () { window.location.href = href; }, prm ? 20 : 240);
+          }
+        }, FILL_MS);
+      }, true);
+      /* Back/forward cache restore — reset any mid-flight state. */
+      window.addEventListener('pageshow', function () {
+        var wrap = document.querySelector('[data-flwr]');
+        if (wrap) wrap.classList.remove('n58-page-leave');
+        [].forEach.call(document.querySelectorAll('.is-filling'), function (b) { b.classList.remove('is-filling'); });
+      });
+    })();
+  </script>
+
+  <!-- Page preloader lift — window.load (+500ms) fades the loader out and
+       un-pauses the hero entrance (.is-booting off); hard fallback at 3s so a
+       hung resource can never trap the page (same timings as the live site). -->
+  <script>
+    (function () {
+      var wrap = document.querySelector('[data-flwr]');
+      var pre = document.querySelector('.n58-preloader');
+      if (!pre || !wrap) return;
+      var done = false;
+      function lift() {
+        if (done) return;
+        done = true;
+        pre.classList.add('is-done');
+        wrap.classList.remove('is-booting');   /* hero entrance starts now */
+        setTimeout(function () { if (pre.parentNode) pre.parentNode.removeChild(pre); }, 450);
+      }
+      window.addEventListener('load', function () { setTimeout(lift, 500); });
+      setTimeout(lift, 3000);
+    })();
+  </script>
+
+  <!-- Spline 3D loader (shared): preloads below-the-fold scenes before arrival; desktop-only. No-op when the page has no [data-n58-spline] stage. -->
+  <script src="assets/spline-loader.js" defer></script>
+
+  <!-- Product tabs auto-play (the FAQ loop, tab-flavored). When the section
+       scrolls into view, the active tab's 4px bar ramps left→right over
+       FILL_MS, then the next product activates — looping through all tabs
+       until any tap/click/key inside the section hands control to the user
+       (bars then fall back to CSS: full on the active tab, empty elsewhere).
+       Bars animate inline with !important so the motion survives system
+       reduce-motion (brand intent, same as the FAQ). -->
+  <script>
+    (function () {
+      var wrap = document.querySelector('.n58-products');
+      if (!wrap) return;
+      var triggers = [].slice.call(wrap.querySelectorAll('.flwr_tabs_trigger'));
+      if (triggers.length < 2) return;
+      var FILL_MS = 4000, timer, cancelled = false, started = false;
+
+      function barOf(t) { return t.querySelector('.n58-tab-progress'); }
+      /* Back to stylesheet control — active bar full, the rest empty. */
+      function clearBar(b) { if (b) { b.style.removeProperty('transition'); b.style.removeProperty('transform'); } }
+      function cancelAuto() {
+        if (cancelled) return;
+        cancelled = true;
+        clearTimeout(timer);
+        triggers.forEach(function (t) { clearBar(barOf(t)); });
+      }
+
+      function fill(i) {
+        if (cancelled) return;
+        triggers[i].click();                       /* flwr runtime activates the tab */
+        triggers.forEach(function (t, j) { if (j !== i) clearBar(barOf(t)); });
+        var bar = barOf(triggers[i]);
+        if (bar) {
+          bar.style.setProperty('transition', 'none', 'important');
+          bar.style.setProperty('transform', 'scaleX(0)', 'important');
+          void bar.offsetWidth;
+          /* ramped ease-in-out, same curve as the FAQ loading bars */
+          bar.style.setProperty('transition', 'transform ' + FILL_MS + 'ms cubic-bezier(0.65, 0, 0.35, 1)', 'important');
+          bar.style.setProperty('transform', 'scaleX(1)', 'important');
+        }
+        timer = setTimeout(function () { fill((i + 1) % triggers.length); }, FILL_MS);
+      }
+
+      /* Any interaction inside the section = the user takes over. */
+      wrap.addEventListener('pointerdown', cancelAuto);
+      triggers.forEach(function (t) { t.addEventListener('keydown', cancelAuto); });
+
+      function start() {
+        if (started || cancelled) return;
+        started = true;
+        var i = 0;
+        triggers.forEach(function (t, j) { if (t.classList.contains('is-active')) i = j; });
+        fill(i);
+      }
+      if ('IntersectionObserver' in window) {
+        var io = new IntersectionObserver(function (entries) {
+          entries.forEach(function (e) { if (e.isIntersecting && !started) { io.disconnect(); start(); } });
+        }, { threshold: 0.35 });
+        io.observe(wrap);
+      } else {
+        window.addEventListener('load', start);
+      }
+    })();
+  </script>
+
+  <!-- Lottie: animated brand logo in the header (matches the live site). -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.12.2/lottie.min.js" defer></script>
+  <script>
+    /* Logo: play forward once on load (no loop), reverse on hover, forward on
+       mouse-leave — matches the live site's lottie-loader behavior. */
+    window.addEventListener('load', function () {
+      if (!window.lottie) return;
+      document.querySelectorAll('[data-n58-lottie]').forEach(function (el) {
+        var anim = lottie.loadAnimation({ container: el, renderer: 'svg', loop: false, autoplay: true, path: el.getAttribute('data-n58-lottie') });
+        el.__flwrLottie = anim;
+        el.addEventListener('mouseenter', function () { anim.setDirection(-1); anim.setSpeed(1); anim.play(); });
+        el.addEventListener('mouseleave', function () { anim.setDirection(1); anim.setSpeed(1); anim.play(); });
+      });
+    });
+  </script>
+
+  <!-- Fullscreen menu: focus the dialog (not the close X) on open so it doesn't
+       open with a focus ring; reset the navbar hamburger state on close. -->
+  <script>
+    (function () {
+      var menu = document.getElementById('n58-menu');
+      if (!menu) return;
+      var ham = document.querySelector('.flwr_navbar_hamburger');
+      if (ham) ham.addEventListener('click', function () {
+        requestAnimationFrame(function () {
+          if (!menu.open) return;
+          try { menu.focus(); } catch (e) {}
+          /* The menu logo lottie was created while the dialog was display:none
+             (0×0); resize it now that it's visible so it renders at full size. */
+          var logo = menu.querySelector('[data-n58-lottie]');
+          if (logo && logo.__flwrLottie) { try { logo.__flwrLottie.resize(); } catch (e) {} }
+        });
+      });
+      menu.addEventListener('close', function () {
+        var nav = document.querySelector('.flwr_navbar_wrap');
+        if (nav) nav.setAttribute('data-flwr-state', '');
+        if (ham) ham.setAttribute('aria-expanded', 'false');
+      });
+    })();
+  </script>
+
+  <!-- Embed: first-visit gate for the anti-fraud dialog (becomes a Webflow code embed on import). -->
+  <script>
+    (function () {
+      var dlg = document.querySelector('.antifraud-dialog');
+      if (!dlg) return;
+      /* Native showModal() blocks clicks behind the dialog but NOT scrolling. Lock
+         the page with the body-fixed technique (bulletproof incl. iOS touch —
+         plain overflow:hidden leaks on iOS). The dialog lives in the top layer, so
+         position:fixed on the body doesn't move it. Restore the scroll on close. */
+      var savedY = 0;
+      function lock() {
+        savedY = window.scrollY || 0;
+        var b = document.body;
+        b.style.position = 'fixed';
+        b.style.top = (-savedY) + 'px';
+        b.style.left = '0';
+        b.style.right = '0';
+        b.style.width = '100%';
+      }
+      function unlock() {
+        var b = document.body;
+        b.style.position = ''; b.style.top = ''; b.style.left = ''; b.style.right = ''; b.style.width = '';
+        window.scrollTo(0, savedY);
+      }
+      dlg.addEventListener('close', unlock);   /* covers the buttons + Escape */
+      function n58ShowAntifraud() {
+        try {
+          if (!localStorage.getItem("n58-antifraud-seen") && typeof dlg.showModal === "function") {
+            dlg.showModal();
+            lock();
+            dlg.focus();
+          }
+        } catch (e) {}
+      }
+      /* Defer to AFTER the page fully loads AND the preloader has lifted, so the
+         modal never flashes over the loading screen. Hard cap so it always shows. */
+      function n58AfterPreloader() {
+        var start = Date.now();
+        (function wait() {
+          if (!document.querySelector(".n58-preloader") || Date.now() - start > 3500) {
+            setTimeout(n58ShowAntifraud, 150);
+          } else {
+            requestAnimationFrame(wait);
+          }
+        })();
+      }
+      if (document.readyState === "complete") n58AfterPreloader();
+      else window.addEventListener("load", n58AfterPreloader);
+      var closeEls = dlg.querySelectorAll('[data-flwr-target="antifraud-close"]');
+      [].forEach.call(closeEls, function (el) {
+        el.addEventListener('click', function () {
+          dlg.close();
+          try { localStorage.setItem('n58-antifraud-seen', '1'); } catch (e) {}
+        });
+      });
+    })();
+  </script>
+
+  <!-- Vanny AI chat widget — one line. Mode (custom, wired to .alan-fab), brand
+       theme and Nugros font all come from the tenant config (Widget Studio), so
+       nothing else is needed here. Local dev server for testing; for production
+       change the src host to https://app.vanny.chat -->
+  <script src="http://localhost:3000/vanny-widget.js" data-tenant="n58" defer></script>
+
+</div>
+</body>
+</html>

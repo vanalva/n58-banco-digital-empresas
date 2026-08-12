@@ -1,0 +1,4511 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   N58 Banco Digital — project.css
+   User-authored classes on top of flwr. ALL properties must be LONGHAND.
+   Reference palette/theme tokens (var(--_palette---*), var(--_theme---*)) —
+   never bare hex. See variables.css for the brand seeds.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ─────────────────────────────────────────────────────────────────────────
+   BASE FONT — flwr ships NO base font-family (it expects the page to set one),
+   so without this everything falls back to the browser serif (Times). Nugros
+   is the single N58 family; headings inherit it (f-text-h* set size/weight only).
+   ───────────────────────────────────────────────────────────────────────── */
+[data-flwr] {
+  font-family: var(--_typography---family--sans);
+  /* Do NOT set overflow-x here — it turns [data-flwr] into a scroll container
+     (spec: overflow-x: hidden implicitly sets overflow-y: auto), which
+     (a) makes container-type: inline-size on .flwr_navbar_wrap clip absolutely-
+         positioned dropdown menus that extend below the 72px navbar box, and
+     (b) makes view-timeline animations use [data-flwr] as the scroll observer
+         instead of the document root, so scroll-linked animations never scrub.
+     Marquee horizontal overflow is gated on .n58-fx-marquee itself (below). */
+  /* Single source of truth for the content gutter — used by .n58-container AND
+     the navbar inner so they share the exact same max-width + page padding. */
+  --n58-container-max: 96rem;   /* 1536px */
+  /* The stock 2px border-width token reads too soft on cards/toggles — bump the
+     token itself to 2.5px so every element that uses it thickens at the source
+     (no per-element hardcoding). [data-flwr] scope beats framework's default. */
+  --_theme---border--width-2: 2.5px;
+  /* Point the DEFAULT (soft) border-width at the 2.5px token too, so everything
+     that reads the token — not a hardcoded value — matches the cards. */
+  --_theme---border--width: var(--_theme---border--width-2);
+
+  /* ── UNIFIED RADIUS SYSTEM ────────────────────────────────────────────────
+     One source of truth for corner roundness, mapped onto flwr's radius scale.
+     Everything that rounds corners reads ONE of these three — no ad-hoc px.
+       card    = large surfaces: media, masks, bleed/hero cards, section cards,
+                 frames  (flwr lg / 0.75rem / 12px). We override flwr's card token
+                 so f-rich-text, map popups, etc. inherit the same value. Kept
+                 fairly tight so it stays in the same restrained family as the
+                 4px controls (3× the control radius) rather than reading soft.
+       control = small elements: button faces, bars, notches, small insets.
+                 Kept CRISP (flwr xs / 0.25rem / 4px) on purpose — buttons must
+                 never read as pills, and thin bars (preloader/progress) turn into
+                 pills the instant the radius reaches half their height, so this
+                 stays well below that.
+       pill    = fully-round: badges, dots, tags, the fx pill (flwr full). */
+  --_component---card--radius: 0.75rem;   /* unified card radius (flwr lg / 12px) */
+  --n58-radius-control: 0.25rem;
+  --n58-radius-pill: 9999px;
+}
+
+/* The framework hardcodes `1px` in the shorthand on several components (navbar,
+   accordion = FAQ toggles, tabs, tables, navbar dropdowns), so the token bump
+   above can't reach them — re-assert the 2.5px token as a longhand width here so
+   toggles + navbar + cards all read the SAME border weight. */
+[data-flwr] .flwr_navbar_wrap,
+[data-flwr] .flwr_navbar_dropdown_menu,
+[data-flwr] .flwr_navbar_dropdown_submenu,
+[data-flwr] .flwr_accordion_item,
+[data-flwr] .flwr_tabs_list,
+[data-flwr] .flwr_table_wrap,
+[data-flwr] .flwr_table_th,
+[data-flwr] .flwr_table_td {
+  border-width: var(--_theme---border--width-2);
+}
+
+/* HEADING LEADING — the framework sets h3/h4 to `snug` (1.25 line-height), which
+   reads too loose beside the tight h1/h2/display (1.1 / 0.9) on this display-first
+   brand. Pull them to the same `tight` so multi-line titles match the main "Lo
+   último en N58"–style headings. Line-height only shifts MULTI-LINE headings, so
+   single-line h3/h4 (product/legal subheads) are visually unchanged. The
+   anti-fraud modal already patched this per-heading with f-leading-tight; this
+   makes it the default so we stop having to. */
+[data-flwr] .f-text-h3,
+[data-flwr] .f-text-h4 {
+  line-height: var(--_typography---leading--tight);
+}
+
+
+/* Margin reset — flwr does NOT reset heading/paragraph margins, so browser
+   defaults (e.g. h1 ≈ 0.67em ≈ 64px at display size) stack on top of flex/grid
+   gaps and produce massive, inconsistent spacing. Zero them; spacing comes from
+   layout gaps only. (Bare-tag reset → lives in a CSS embed on Webflow import.) */
+[data-flwr] h1, [data-flwr] h2, [data-flwr] h3,
+[data-flwr] h4, [data-flwr] h5, [data-flwr] h6,
+[data-flwr] p, [data-flwr] ul, [data-flwr] ol {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   TYPOGRAPHY HARMONIZATION (brand layer over flwr's scale)
+   - Baseline (body · nav links · buttons) unified at size--body (16→18px).
+     flwr ships nav links at size--small (14px) — bump them so links are never
+     smaller than body and match the button size.
+   - Only the DISPLAY size is uppercase (the hero). All other headings keep their
+     authored (regular) capitalization.
+   These ride flwr's tokens, so the styleguide + every page propagate together.
+   ───────────────────────────────────────────────────────────────────────── */
+[data-flwr] .flwr_navbar_link,
+[data-flwr] .flwr_navbar_dropdown_trigger {
+  font-size: var(--_typography---size--body);
+}
+/* Desktop dropdown caret: the brand arrow icon (same shape used across the site)
+   instead of flwr's CSS border-chevron, but painted in the link text color (white)
+   via a mask rather than the icon's baked-in green. Rotated to point down; flips
+   up when the dropdown opens. */
+[data-flwr] .flwr_navbar_dropdown_trigger::after {
+  content: "";
+  display: inline-block;
+  width: 0.6em;
+  height: 0.6em;
+  border-top-width: 0;
+  border-right-width: 0;
+  border-bottom-width: 0;
+  border-left-width: 0;
+  background-color: currentColor;
+  -webkit-mask-image: url(../assets/images/icons/right-arrow-green.svg);
+  mask-image: url(../assets/images/icons/right-arrow-green.svg);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center center;
+  mask-position: center center;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  transform: rotate(90deg);
+  margin-inline-start: 0.35rem;
+  transition-property: transform;
+  transition-duration: var(--_motion---duration-fast);
+  transition-timing-function: var(--_motion---ease-standard);
+}
+[data-flwr] .flwr_navbar_dropdown[data-flwr-state~="open"] .flwr_navbar_dropdown_trigger::after {
+  transform: rotate(-90deg);
+}
+/* Heading weight — h1 stays BOLD (700); display steps down to SEMIBOLD (600) so
+   the oversized display type reads a touch softer than a hard h1. Global, class-
+   level (styleguide included, since it reads the same CSS) — Nugros ships real
+   600 + 700 weights so both render true.
+   NOTE: display headings are NOT force-uppercased anymore — titles render in the
+   case they're authored in (sentence case across the site). */
+[data-flwr] .f-text-display {
+  font-weight: var(--_typography---weight--semibold);
+}
+[data-flwr] .f-text-h1 {
+  font-weight: var(--_typography---weight--bold);
+}
+
+/* Screen-reader-only utility (skip link target, a11y labels) */
+.u-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding-top: 0;
+  padding-right: 0;
+  padding-bottom: 0;
+  padding-left: 0;
+  margin-top: -1px;
+  margin-right: -1px;
+  margin-bottom: -1px;
+  margin-left: -1px;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-top-width: 0;
+  border-right-width: 0;
+  border-bottom-width: 0;
+  border-left-width: 0;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   CONTAINER — caps content width, centers it, and applies the page-margin
+   gutter. flwr's f-layout-constrained only sets layout *variables*; it does not
+   cap or pad, so content was running full-bleed with no gutter.
+   ───────────────────────────────────────────────────────────────────────── */
+.n58-container {
+  box-sizing: border-box;
+  /* Contained-but-generous; section backgrounds stay full-bleed, only content
+     is capped. Shared with the navbar via --n58-container-max. */
+  max-width: var(--n58-container-max);
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: var(--_spacing---page-margin);
+  padding-right: var(--_spacing---page-margin);
+}
+/* Navbar inner shares the exact page gutter. flwr's .flwr_navbar_inner has
+   higher specificity than .n58-container, so re-assert the same max-width +
+   page-margin here (same selector specificity, later in the cascade → wins). */
+[data-flwr] .flwr_navbar_inner {
+  max-width: var(--n58-container-max);
+  padding-inline: var(--_spacing---page-margin);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   FULL-BLEED GUTTER — ONLY for blocks that are DIRECT section children (i.e.
+   they live OUTSIDE .n58-container and would otherwise span edge-to-edge).
+   These get inset to the site gutter and centered.
+
+   DO NOT add elements that already live inside .n58-container here (e.g.
+   .home-media, .n58-spline, .n58-frame-marquee) — the container ALREADY applies
+   the page-margin gutter, so constraining them again shrinks them a second time
+   and they stop filling their column (worst on mobile, where the grid collapses
+   to 1 col and the media should be full container width).
+   ═══════════════════════════════════════════════════════════════════════════ */
+[data-flwr] .n58-fx-bar,
+[data-flwr] .home-bleed {
+  width: calc(100% - 2 * var(--_spacing---page-margin));
+  margin-left: auto;
+  margin-right: auto;
+}
+/* Gallery marquee only — full-bleed edge-to-edge (was inset by the page-margin
+   gutter). Kept separate so it doesn't drag the FX bar / home-bleed full-width. */
+[data-flwr] .n58-gallery-marquee {
+  width: 100%;
+  margin-left: 0;
+  margin-right: 0;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   DARK NAVBAR — matches the live site (animated light logo over an ink bar).
+   f-mode-dark flips --_theme--- tokens but NOT the navbar's tier-3 component
+   tokens (they're pre-resolved at :root), so re-point them here directly.
+   ───────────────────────────────────────────────────────────────────────── */
+[data-flwr] .flwr_navbar_wrap.f-mode-dark {
+  /* Mostly-opaque ink + blur = frosted-glass bar that stays dark over ANY
+     section behind it (so we don't need to ink the whole page wrapper, which
+     was turning the light sections black). */
+  --_component---navbar--surface:          color-mix(in oklch, var(--_palette---neutral--900) 92%, transparent);
+  --_component---navbar--surface-scrolled: color-mix(in oklch, var(--_palette---neutral--900) 97%, transparent);
+  --_component---navbar--text:             var(--_palette---neutral--50);
+  /* flwr pre-resolves --_component---navbar--border at :root (LIGHT mode), so
+     f-mode-dark never re-flips it → a harsh light hairline when scrolled. Re-point
+     it to the LIVE dark-mode subtle border so it matches the FAQ toggles (which
+     use --_theme---border--subtle directly). */
+  --_component---navbar--border:           var(--_theme---border--subtle);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+/* MOBILE SCROLL PERF — drop the navbar's backdrop-filter blur on mobile. A
+   blurred *fixed* bar is re-blurred by the GPU on every single scroll frame,
+   which is the single biggest cause of mobile scroll jank here (the marquee /
+   gallery stutter you feel is mostly the whole page dropping frames while this
+   repaints). Desktop keeps the frosted look; mobile gets a solid opaque bar
+   (no blur = cheap repaint) that reads identically over the dark hero. */
+@media (max-width: 991px) {
+  [data-flwr] .flwr_navbar_wrap.f-mode-dark,
+  [data-flwr] .flwr_navbar_wrap.f-mode-dark.is-scrolled {
+    --_component---navbar--surface:          var(--_palette---neutral--900);
+    --_component---navbar--surface-scrolled:  var(--_palette---neutral--900);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}
+
+/* Right-align the nav: logo stays left, the menu + CTAs group on the right.
+   (flwr puts the menu next to the logo; auto-margin on the menu pushes the
+   whole group right, and we cancel the actions' own auto so they stay adjacent.) */
+[data-flwr] .flwr_navbar_menu { margin-inline-start: auto; }
+[data-flwr] .flwr_navbar_actions { margin-inline-start: var(--_spacing---step--5); }
+
+/* Buttons NEVER wrap to a second line — the label always stays on one line. */
+[data-flwr] .flwr_button_primary,
+[data-flwr] .flwr_button_secondary {
+  white-space: nowrap;
+}
+/* In the navbar the CTAs also keep their full intrinsic width — never squeezed
+   thinner (which is what forced the label onto two lines). Below the swap
+   breakpoint they move into the fullscreen menu instead. */
+[data-flwr] .flwr_navbar_actions .flwr_button_primary,
+[data-flwr] .flwr_navbar_actions .flwr_button_secondary {
+  flex-shrink: 0;
+}
+
+/* Navbar mobile/desktop swap at the Webflow breakpoint (991px), NOT the
+   framework's 65em (~1040px) container-query swap. The framework shows the
+   hamburger below 65em container width while the CTAs only hid at 991px — that
+   left a 992–1039px zone (e.g. iPad landscape at 1024px) where the CTAs floated
+   orphaned beside a stranded hamburger with no nav links. Override the swap with
+   desktop-first media queries (Webflow-safe: max-width only) so the desktop
+   menu, hamburger, and CTAs all switch together at 991px. Base = desktop. */
+[data-flwr] .flwr_navbar_menu { display: flex; }
+[data-flwr] .flwr_navbar_hamburger { display: none; }
+
+/* Hamburger — two notched brand bars (same bars as the menu close). On hover the
+   bars ease apart a touch; the open click hands off to the close X's
+   hamburger→X morph at the identical position, so it reads as one motion. */
+[data-flwr] .flwr_navbar_hamburger {
+  border-top-width: 0;
+  border-right-width: 0;
+  border-bottom-width: 0;
+  border-left-width: 0;
+  background-color: transparent;
+}
+.n58-hamburger_icon {
+  position: relative;
+  display: block;
+  width: 28px;
+  height: 18px;
+}
+[data-flwr] .n58-hamburger_bar {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 100%;
+  height: auto;
+  display: block;
+  transition-property: transform;
+  transition-duration: var(--_motion---duration-base);
+  transition-timing-function: var(--_motion---ease-standard);
+}
+[data-flwr] .n58-hamburger_bar--1 { transform: translateY(-50%) translateY(-5px); }
+[data-flwr] .n58-hamburger_bar--2 { transform: translateY(-50%) translateY(5px); }
+[data-flwr] .n58-hamburger:hover .n58-hamburger_bar--1 { transform: translateY(-50%) translateY(-8px); }
+[data-flwr] .n58-hamburger:hover .n58-hamburger_bar--2 { transform: translateY(-50%) translateY(8px); }
+@media (prefers-reduced-motion: reduce) {
+  [data-flwr] .n58-hamburger_bar { transition-duration: var(--_motion---duration-base) !important; }
+}
+/* Swap to the hamburger EARLY — at ≤1200px, not just 991px. This banking nav is
+   content-heavy (3 dropdowns + Conócenos + two CTAs + logo), so on tablet AND
+   small-desktop / narrow-laptop widths the row ran out of room and the CTA labels
+   wrapped to two lines. Collapsing to the fullscreen menu at 1200px keeps the bar
+   clean. (Custom max-width, above the 3 canonical Webflow breakpoints — this nav
+   is a bespoke fullscreen-menu component whose CSS ships in an embed, so it's not
+   bound by the styleLess 3-breakpoint limit.) */
+@media (max-width: 1200px) {
+  [data-flwr] .flwr_navbar_menu { display: none; }
+  [data-flwr] .flwr_navbar_actions { display: none; }
+  [data-flwr] .flwr_navbar_hamburger { display: inline-flex; }
+}
+
+/* Current page — the nav link for the page you're on reads in the brand lime
+   (subtle, hover still fills solid). Pages set aria-current="page" on their
+   own navbar + fullscreen-menu link. */
+[data-flwr] .flwr_navbar_link[aria-current="page"] {
+  color: var(--_component---navbar--accent);
+}
+[data-flwr] .flwr_fullscreen_menu_link[aria-current="page"] {
+  color: var(--_component---fsmenu--accent);
+}
+
+/* Brand nav hover — solid lime fill + ink text (matches the live site's
+   notch-button-green hover), on links, the dropdown trigger and dropdown items.
+   accent--text is cream (light) which is illegible on the light lime, so use ink. */
+[data-flwr] .flwr_navbar_link:hover,
+[data-flwr] .flwr_navbar_dropdown_trigger:hover,
+[data-flwr] .flwr_navbar_dropdown_item:hover {
+  background-color: var(--_component---navbar--accent);
+  color: var(--_palette---neutral--900);
+}
+
+/* Dropdown backdrop lives as a sibling of the navbar (moved out of the <li> so
+   the navbar's backdrop-filter doesn't trap it, and so the dropdown menu —
+   inside the z-1200 navbar — sits ABOVE the z-1100 backdrop). flwr's base rule
+   styles it; this flips it visible when a dropdown is open. */
+[data-flwr] .flwr_navbar_wrap:has(.flwr_navbar_dropdown[data-flwr-state~="open"]) ~ .flwr_navbar_dropdown_backdrop {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Reset the browser's default 8px body margin (the "border" around the page). */
+body {
+  margin-top: 0;
+  margin-right: 0;
+  margin-bottom: 0;
+  margin-left: 0;
+}
+
+/* Animated Lottie brand logo (header) + static isologo (footer). */
+.n58-lottie-logo {
+  width: 116px;
+  height: 60px;
+}
+.n58-lottie-logo svg,
+.n58-lottie-logo canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+/* ─────────────────────────────────────────────────────────────────────────
+   FOOTER — brand column + balanced link columns + bottom bar.
+   flwr's footer_main adds its own page-margin padding; we zero it and let
+   .n58-container own the gutter so the footer aligns with the rest of the page
+   (no double padding).
+   ───────────────────────────────────────────────────────────────────────── */
+[data-flwr] .flwr_footer_main { padding-inline: 0; }
+
+/* Green footer — matches the live N58 footer (lime brand bg, ink text + border).
+   core--500 is the exact brand lime (#a0dd52 / "te-quiero-verde"). */
+[data-flwr] .n58-footer-green {
+  background-color: var(--_palette---core--500);
+  color: var(--_palette---neutral--900);
+  border-top-width: 2px;
+  border-top-style: solid;
+  border-top-color: var(--_palette---neutral--900);
+}
+[data-flwr] .n58-footer-green .flwr_footer_group_title { color: var(--_palette---neutral--900); }
+[data-flwr] .n58-footer-green .flwr_footer_link {
+  color: color-mix(in oklch, var(--_palette---neutral--900) 76%, transparent);
+}
+[data-flwr] .n58-footer-green .flwr_footer_link:hover { color: var(--_palette---neutral--900); }
+[data-flwr] .n58-footer-green .f-text-color-muted {
+  color: color-mix(in oklch, var(--_palette---neutral--900) 66%, transparent);
+}
+[data-flwr] .n58-footer-green .flwr_footer_bottom {
+  border-top-color: color-mix(in oklch, var(--_palette---neutral--900) 22%, transparent);
+}
+/* Recolor the cream wordmark to the brand ink (#1b2021 warm dark grey, NOT pure
+   black). The Lottie sets fills via the `fill` attribute, so a CSS fill on its
+   shapes wins — no brightness(0) hack. */
+[data-flwr] .n58-footer-green .n58-footer-brandlogo svg * {
+  fill: var(--_palette---neutral--900);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   IMAGE GALLERY — "Auto + snap" native scroller (see the init script in
+   index.html). It gently auto-drifts when idle; on touch the browser's own
+   momentum + scroll-snap take over (one card at a time). Native touch scrolling
+   can't fight the vertical page scroll, so there's no glitch. Full-bleed.
+   ───────────────────────────────────────────────────────────────────────── */
+.n58-gallery-head {
+  display: flex;
+  flex-direction: column;
+  row-gap: var(--_spacing---step--2);
+  margin-bottom: var(--_spacing---step--6);
+}
+.n58-gallery-scroller {
+  display: flex;
+  column-gap: var(--_spacing---step--4);
+  overflow-x: auto;
+  overflow-y: hidden;
+  /* snap-type is 'none' while auto-drifting; the init script flips it to
+     'x mandatory' on touch so a swipe snaps to a single card. */
+  scroll-snap-type: none;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  padding-left: var(--_spacing---page-margin);
+  padding-right: var(--_spacing---page-margin);
+  /* Compositor hint — the scroller is its own layer, so drifting/swiping it
+     doesn't repaint the rest of the page. */
+  will-change: scroll-position;
+}
+.n58-gallery-scroller::-webkit-scrollbar { display: none; }
+/* Suppress the browser focus ring on the scroll region (it's keyboard-scrollable
+   via tabindex, but the ring around the whole strip looks like a bug). */
+[data-flwr] .n58-gallery-scroller:focus,
+[data-flwr] .n58-gallery-scroller:focus-visible { outline-width: 0; outline-style: none; }
+
+/* ─────────────────────────────────────────────────────────────────────────
+   MOBILE FULLSCREEN MENU — flwr fullscreen-menu, N58-styled + animated.
+   flwr already styles the layout (dark inverse surface, giant lime-hover links).
+   Added here: entrance/exit animation (dialog + backdrop fade, staggered links,
+   logo/footer rise), N58 close icon, contact-icon row, full-width CTA stack.
+   Uses the fsmenu enter tokens; survives prefers-reduced-motion (brand intent).
+   ───────────────────────────────────────────────────────────────────────── */
+[data-flwr] .n58-fsmenu {
+  opacity: 0;
+  transition-property: opacity, display, overlay;
+  transition-duration: var(--_component---fsmenu--enter-duration);
+  transition-timing-function: var(--_component---fsmenu--enter-ease);
+  transition-behavior: allow-discrete;
+}
+[data-flwr] .n58-fsmenu[open] { opacity: 1; }
+@starting-style { [data-flwr] .n58-fsmenu[open] { opacity: 0; } }
+
+[data-flwr] .n58-fsmenu::backdrop {
+  opacity: 0;
+  transition-property: opacity, display, overlay;
+  transition-duration: var(--_component---fsmenu--enter-duration);
+  transition-timing-function: var(--_component---fsmenu--enter-ease);
+  transition-behavior: allow-discrete;
+}
+[data-flwr] .n58-fsmenu[open]::backdrop { opacity: 1; }
+@starting-style { [data-flwr] .n58-fsmenu[open]::backdrop { opacity: 0; } }
+
+/* Giant links rise + fade, staggered. */
+[data-flwr] .n58-fsmenu .flwr_fullscreen_menu_link {
+  opacity: 0;
+  transform: translateY(0.9rem);
+  transition-property: opacity, transform, color;
+  transition-duration: var(--_component---fsmenu--enter-duration);
+  transition-timing-function: var(--_component---fsmenu--enter-ease);
+}
+[data-flwr] .n58-fsmenu[open] .flwr_fullscreen_menu_link { opacity: 1; transform: translateY(0); }
+[data-flwr] .n58-fsmenu[open] .flwr_fullscreen_menu_link:nth-child(1) { transition-delay: 0.10s; }
+[data-flwr] .n58-fsmenu[open] .flwr_fullscreen_menu_link:nth-child(2) { transition-delay: 0.16s; }
+[data-flwr] .n58-fsmenu[open] .flwr_fullscreen_menu_link:nth-child(3) { transition-delay: 0.22s; }
+[data-flwr] .n58-fsmenu[open] .flwr_fullscreen_menu_link:nth-child(4) { transition-delay: 0.28s; }
+@starting-style {
+  [data-flwr] .n58-fsmenu[open] .flwr_fullscreen_menu_link { opacity: 0; transform: translateY(0.9rem); }
+}
+
+/* Logo + footer rise after the links. */
+[data-flwr] .n58-fsmenu .flwr_fullscreen_menu_logo,
+[data-flwr] .n58-fsmenu .flwr_fullscreen_menu_footer {
+  opacity: 0;
+  transform: translateY(0.6rem);
+  transition-property: opacity, transform;
+  transition-duration: var(--_component---fsmenu--enter-duration);
+  transition-timing-function: var(--_component---fsmenu--enter-ease);
+}
+[data-flwr] .n58-fsmenu[open] .flwr_fullscreen_menu_logo,
+[data-flwr] .n58-fsmenu[open] .flwr_fullscreen_menu_footer { opacity: 1; transform: translateY(0); }
+[data-flwr] .n58-fsmenu[open] .flwr_fullscreen_menu_footer { transition-delay: 0.34s; }
+@starting-style {
+  [data-flwr] .n58-fsmenu[open] .flwr_fullscreen_menu_logo,
+  [data-flwr] .n58-fsmenu[open] .flwr_fullscreen_menu_footer { opacity: 0; transform: translateY(0.6rem); }
+}
+
+/* N58 details */
+/* Logo + close pinned to the EXACT navbar logo/hamburger positions (measured:
+   logo 116×60 at top 6 / left page-margin; hamburger 40×40 centred in the 72px
+   navbar). So when the menu opens nothing shifts — same logo (lottie, resized on
+   open), and the hamburger appears to morph to the X in place. */
+[data-flwr] .n58-fsmenu-logo {
+  position: absolute;
+  top: 6px;
+  left: var(--_spacing---page-margin);
+  z-index: 2;
+}
+[data-flwr] .n58-menu-close {
+  position: absolute;
+  top: 16px;
+  right: var(--_spacing---page-margin);
+  left: auto;
+  bottom: auto;
+  width: 40px;
+  height: 40px;
+  z-index: 2;
+}
+/* Keep the giant links vertically centred even though the logo left the column —
+   the 0-height headroom occupies the top space-between slot. */
+[data-flwr] .n58-fsmenu-headroom { display: block; flex-shrink: 0; height: 0; }
+
+/* A touch more air between the main categories + a little headroom above the
+   footer so the menu breathes. */
+[data-flwr] .n58-fsmenu .flwr_fullscreen_menu_links { gap: var(--_spacing---step--5); }
+[data-flwr] .n58-fsmenu .flwr_fullscreen_menu_footer { margin-block-start: var(--_spacing---step--7); }
+
+/* Overflow-safe centering. The framework centres content with
+   justify-content: space-between, but that CLIPS overflow at the TOP — when the
+   expandable categories are open the link list grows taller than the viewport,
+   rises UNDER the pinned logo + close-X, and can't be scrolled to reach it.
+   Fix: top-align the column and centre the links with auto margins instead. The
+   auto margins centre the list while it's short and collapse to 0 once it
+   overflows, so the whole list scrolls cleanly (overflow-y:auto is inherited
+   from the framework). The extra top padding reserves room so the first row
+   always clears the pinned logo (bottom ≈ 66px) and the close button. */
+[data-flwr] .n58-fsmenu .flwr_fullscreen_menu_content {
+  justify-content: flex-start;
+  padding-top: 6rem;
+}
+[data-flwr] .n58-fsmenu .flwr_fullscreen_menu_links { margin-top: auto; margin-bottom: auto; }
+
+/* Viewport height: flwr sizes the fullscreen menu at 100vh, which on mobile is
+   the LARGE viewport (the area behind the browser's address/toolbar). That makes
+   the menu taller than the visible screen, so the footer CTAs sit hidden behind
+   the browser chrome. Use dvh (dynamic viewport height) — it tracks the actually
+   visible area and reflows as the toolbar shows/hides. 100vh stays as the
+   fallback for browsers without dvh support. */
+[data-flwr] .n58-fsmenu {
+  height: 100vh;
+  height: 100dvh;
+  max-height: 100vh;
+  max-height: 100dvh;
+}
+
+/* Expandable categories — tap (mobile) toggles via flwr collapse (.is-open);
+   hover (desktop) opens via @media (hover: hover). Sub-links revealed with the
+   grid 0fr→1fr height trick; survives reduced-motion. */
+.n58-fsmenu-group { display: flex; flex-direction: column; }
+[data-flwr] .n58-fsmenu-trigger {
+  /* Inline flow (not flex): the chevron follows the text, so a label that wraps
+     to two lines no longer strands the arrow far to the right — it sits right
+     after the last word. */
+  display: block;
+  width: 100%;
+  background-color: transparent;
+  border-top-width: 0;
+  border-right-width: 0;
+  border-bottom-width: 0;
+  border-left-width: 0;
+  padding-top: 0;
+  padding-right: 0;
+  padding-bottom: 0;
+  padding-left: 0;
+  text-align: left;
+  cursor: pointer;
+  font-family: inherit;
+}
+/* Brand chevron — the same arrow shape used across the site, painted in the menu
+   text color (white) via a mask (not the icon's baked-in green). The inline
+   fallback <path> is hidden and the SVG masks a currentColor fill, so the per-page
+   markup stays untouched. Rotated to point down; flips up on open. */
+.n58-fsmenu-chev {
+  display: inline-block;
+  vertical-align: middle;
+  width: 0.72em;
+  height: 0.72em;
+  margin-inline-start: 0.35em;
+  background-color: currentColor;
+  -webkit-mask-image: url(../assets/images/icons/right-arrow-green.svg);
+  mask-image: url(../assets/images/icons/right-arrow-green.svg);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center center;
+  mask-position: center center;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  transform: rotate(90deg);
+  transition-property: transform;
+  transition-duration: var(--_motion---duration-base);
+  transition-timing-function: var(--_motion---ease-standard);
+}
+.n58-fsmenu-chev > path { display: none; }
+[data-flwr] [data-flwr="collapse"].is-open .n58-fsmenu-chev { transform: rotate(-90deg); }
+.n58-fsmenu-subwrap {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition-property: grid-template-rows;
+  transition-duration: var(--_component---collapse--duration);
+  transition-timing-function: var(--_component---collapse--ease);
+}
+[data-flwr] [data-flwr="collapse"].is-open .n58-fsmenu-subwrap { grid-template-rows: 1fr; }
+.n58-fsmenu-sublist {
+  overflow-x: hidden;
+  overflow-y: hidden;
+  min-height: 0;
+}
+/* Padding lives on this inner element (inside the overflow) so it's clipped to
+   0 when collapsed — no leak — but spaces the links when open. */
+.n58-fsmenu-sublinks {
+  display: flex;
+  flex-direction: column;
+  row-gap: var(--_spacing---step--2);
+  padding-top: var(--_spacing---step--3);
+  padding-left: var(--_spacing---step--3);
+}
+.n58-fsmenu-sublink {
+  font-size: var(--_typography---size--lead);
+  font-weight: var(--_typography---weight--regular);
+  line-height: 1.2;
+  color: var(--_component---fsmenu--text);
+  text-decoration: none;
+  opacity: 0.8;
+  transition-property: color, opacity;
+  transition-duration: var(--_motion---duration-fast);
+  transition-timing-function: var(--_motion---ease-standard);
+}
+[data-flwr] .n58-fsmenu-sublink:hover { color: var(--_component---fsmenu--accent); opacity: 1; }
+@media (hover: hover) {
+  [data-flwr] .n58-fsmenu-group:hover .n58-fsmenu-subwrap { grid-template-rows: 1fr; }
+  [data-flwr] .n58-fsmenu-group:hover .n58-fsmenu-chev { transform: rotate(-90deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-flwr] .n58-fsmenu-subwrap,
+  [data-flwr] .n58-fsmenu-chev {
+    transition-duration: var(--_component---collapse--duration) !important;
+  }
+}
+
+/* Close button — two notched brand bars that morph hamburger ↔ X. The X forms
+   as the menu opens (and reverses on close); hovering spins it. */
+[data-flwr] .n58-menu-close_icon {
+  position: relative;
+  display: block;
+  width: 28px;
+  height: 28px;
+}
+[data-flwr] .n58-menu-close_bar {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 100%;
+  height: auto;
+  display: block;
+  transition-property: transform;
+  transition-duration: var(--_component---fsmenu--enter-duration);
+  transition-timing-function: var(--_component---fsmenu--enter-ease);
+}
+/* Hamburger state (closed / animation start) — two separated horizontal bars. */
+[data-flwr] .n58-menu-close_bar--1 { transform: translateY(-50%) translateY(-5px); }
+[data-flwr] .n58-menu-close_bar--2 { transform: translateY(-50%) translateY(5px); }
+/* X state (menu open) — bars centred + crossed. */
+[data-flwr] .n58-fsmenu[open] .n58-menu-close_bar--1 { transform: translateY(-50%) rotate(45deg); }
+[data-flwr] .n58-fsmenu[open] .n58-menu-close_bar--2 { transform: translateY(-50%) rotate(-45deg); }
+@starting-style {
+  [data-flwr] .n58-fsmenu[open] .n58-menu-close_bar--1 { transform: translateY(-50%) translateY(-5px); }
+  [data-flwr] .n58-fsmenu[open] .n58-menu-close_bar--2 { transform: translateY(-50%) translateY(5px); }
+}
+/* Hover — spin the X (scoped under [open] so it beats the X rule's specificity). */
+[data-flwr] .n58-fsmenu[open] .n58-menu-close:hover .n58-menu-close_bar--1 { transform: translateY(-50%) rotate(135deg); }
+[data-flwr] .n58-fsmenu[open] .n58-menu-close:hover .n58-menu-close_bar--2 { transform: translateY(-50%) rotate(-135deg); }
+/* Dialog takes programmatic focus on open (so the close X isn't ring-focused);
+   it's a container, so suppress its own outline. */
+[data-flwr] .n58-fsmenu:focus,
+[data-flwr] .n58-fsmenu:focus-visible {
+  outline-width: 0;
+  outline-style: none;
+}
+[data-flwr] .n58-fsmenu .flwr_fullscreen_menu_footer {
+  flex-direction: column;
+  align-items: flex-start;
+  row-gap: var(--_spacing---step--5);
+}
+.n58-fsmenu-ctas {
+  display: flex;
+  flex-direction: column;
+  row-gap: var(--_spacing---step--3);
+  width: 100%;
+  max-width: 22rem;
+}
+/* box-sizing: border-box so width:100% INCLUDES the button's 24px horizontal
+   padding — otherwise the notch buttons are (100% + 48px) wide and bleed ~15px
+   past the fullscreen menu's right edge (flwr ships no global border-box reset). */
+[data-flwr] .n58-fsmenu-ctas .flwr_button_primary,
+[data-flwr] .n58-fsmenu-ctas .flwr_button_secondary { box-sizing: border-box; width: 100%; }
+[data-flwr] .n58-fsmenu .flwr_fullscreen_menu_social img {
+  display: block;
+  width: 1.4rem;
+  height: 1.4rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-flwr] .n58-fsmenu,
+  [data-flwr] .n58-fsmenu::backdrop,
+  [data-flwr] .n58-fsmenu .flwr_fullscreen_menu_link,
+  [data-flwr] .n58-fsmenu .flwr_fullscreen_menu_logo,
+  [data-flwr] .n58-fsmenu .flwr_fullscreen_menu_footer,
+  [data-flwr] .n58-menu-close_bar {
+    transition-duration: var(--_component---fsmenu--enter-duration) !important;
+  }
+}
+.n58-gallery-card {
+  position: relative;
+  display: block;
+  flex-grow: 0;
+  flex-shrink: 0;
+  flex-basis: auto;
+  width: 26rem;
+  max-width: 80vw;
+  scroll-snap-align: center;
+  margin-top: 0;
+  margin-right: 0;
+  margin-bottom: 0;
+  margin-left: 0;
+  aspect-ratio: 4 / 5;
+  border-top-left-radius: var(--_component---card--radius);
+  border-top-right-radius: var(--_component---card--radius);
+  border-bottom-left-radius: var(--_component---card--radius);
+  border-bottom-right-radius: var(--_component---card--radius);
+  overflow-x: hidden;
+  overflow-y: hidden;
+}
+.n58-gallery-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.n58-gallery-cap {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding-top: var(--_spacing---step--6);
+  padding-right: var(--_spacing---step--4);
+  padding-bottom: var(--_spacing---step--3);
+  padding-left: var(--_spacing---step--4);
+  color: var(--_palette---neutral--0);
+  font-size: var(--_typography---size--lead);
+  font-weight: var(--_typography---weight--semibold);
+  background-image: linear-gradient(to top, color-mix(in oklch, var(--_palette---neutral--1000) 82%, transparent), transparent);
+}
+/* Mobile gallery controls — prev/next arrows + navigator dots. Built by the
+   mobile init script (so they only exist on mobile, where the gallery is a native
+   snap scroller). Accessibility: not everyone knows they can swipe, so give real
+   <button> controls (arrows scroll one card, dots jump to a card + show which is
+   active). The section is f-mode-dark, so controls read in cream/lime. */
+/* Dots pinned LEFT (aligned to the page gutter), arrows pinned RIGHT. */
+.n58-gallery-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  column-gap: var(--_spacing---step--4);
+  margin-top: var(--_spacing---step--5);
+  padding-left: var(--_spacing---page-margin);
+  padding-right: var(--_spacing---page-margin);
+}
+.n58-gallery-arrows {
+  display: flex;
+  align-items: center;
+  column-gap: var(--_spacing---step--2);
+}
+/* Arrow = the project's own green SVG icon in a transparent tap target. */
+[data-flwr] .n58-gallery-arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 2.75rem;
+  height: 2.75rem;
+  padding-top: 0;
+  padding-right: 0;
+  padding-bottom: 0;
+  padding-left: 0;
+  border-top-width: 0;
+  border-right-width: 0;
+  border-bottom-width: 0;
+  border-left-width: 0;
+  background-color: transparent;
+  cursor: pointer;
+  transition-property: opacity, transform;
+  transition-duration: var(--_motion---duration-fast);
+  transition-timing-function: var(--_motion---ease-standard);
+}
+.n58-gallery-arrow img {
+  display: block;
+  width: auto;
+  height: 1.35rem;
+}
+[data-flwr] .n58-gallery-arrow:hover { opacity: 0.65; }
+[data-flwr] .n58-gallery-arrow:active { transform: scale(0.9); }
+.n58-gallery-dots {
+  display: flex;
+  align-items: center;
+  column-gap: 0.5rem;
+}
+[data-flwr] .n58-gallery-dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  padding-top: 0;
+  padding-right: 0;
+  padding-bottom: 0;
+  padding-left: 0;
+  border-top-width: 0;
+  border-right-width: 0;
+  border-bottom-width: 0;
+  border-left-width: 0;
+  border-top-left-radius: var(--n58-radius-pill);
+  border-top-right-radius: var(--n58-radius-pill);
+  border-bottom-left-radius: var(--n58-radius-pill);
+  border-bottom-right-radius: var(--n58-radius-pill);
+  background-color: color-mix(in oklch, var(--_palette---neutral--0) 35%, transparent);
+  cursor: pointer;
+  transition-property: width, background-color;
+  transition-duration: var(--_motion---duration-base);
+  transition-timing-function: var(--_motion---ease-standard);
+}
+[data-flwr] .n58-gallery-dot.is-active {
+  width: 1.5rem;
+  background-color: var(--_palette---core--500);
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-flwr] .n58-gallery-dot {
+    transition-duration: var(--_motion---duration-base) !important;
+  }
+}
+
+@media (max-width: 991px) {
+  [data-flwr] .n58-gallery-card { width: 22rem; }
+}
+@media (max-width: 767px) {
+  [data-flwr] .n58-gallery-card {
+    width: 78vw;
+    max-width: 78vw;
+  }
+}
+
+.n58-footer-top {
+  display: grid;
+  /* Brand column is wide enough to hold the (long) email contact chip on one
+     line; the link columns share the rest. */
+  grid-template-columns: 20rem 1fr;
+  column-gap: var(--_spacing---step--8);
+  row-gap: var(--_spacing---step--7);
+  align-items: start;
+  padding-bottom: var(--_spacing---step--8);
+}
+.n58-footer-brand {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  row-gap: var(--_spacing---step--4);
+  max-width: 22rem;
+}
+.n58-footer-brandlogo {
+  width: 150px;
+  height: 78px;
+}
+.n58-footer-contact {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  row-gap: var(--_spacing---step--3);
+  max-width: 100%;
+}
+/* Contact chips size to content but never exceed the brand column. The email is
+   long, so these run a step smaller than the default small button + may break as
+   a last resort rather than overflow. */
+.n58-footer-contact .is-outline {
+  max-width: 100%;
+  font-weight: 400;
+}
+.n58-footer-contact .is-outline [data-flwr-target="label"] {
+  overflow-wrap: anywhere;
+}
+/* Beat the framework's `> svg` 1.25em icon sizing — keep contact icons at 1em so
+   the long email chip fits on one line. */
+[data-flwr] .n58-footer-contact .n58-contact-ico {
+  width: 1em;
+  height: 1em;
+  flex-shrink: 0;
+}
+/* 3 columns; each column stacks two link groups (matches the live footer). */
+.n58-footer-cols {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  column-gap: var(--_spacing---step--7);
+  row-gap: var(--_spacing---step--7);
+}
+.n58-footer-col {
+  display: flex;
+  flex-direction: column;
+  /* Fixed (non-fluid) gap so the two stacked groups stay clearly separated even
+     when the fluid spacing steps compress at narrower widths — otherwise the
+     second group's heading blends into the list above it. */
+  row-gap: 3.25rem;
+}
+
+/* Dark full-bleed bottom bar (matches the live footer's dark strip). The footer
+   has no horizontal padding (gutters come from .n58-container), so the bar is
+   already edge-to-edge; only cancel .flwr_footer_main's padding-block-end so the
+   strip reaches the very bottom. The inner .n58-container re-centers the content
+   to align with the columns above. */
+[data-flwr] .n58-footer-bottom {
+  margin-bottom: calc(-1 * var(--_spacing---section--md));
+  background-color: var(--_palette---neutral--900);
+  color: color-mix(in oklch, var(--_palette---neutral--50) 70%, transparent);
+}
+.n58-footer-bottom-inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  column-gap: var(--_spacing---step--6);
+  row-gap: var(--_spacing---step--3);
+  padding-top: var(--_spacing---step--5);
+  padding-bottom: var(--_spacing---step--5);
+}
+.n58-footer-bottom-inner > p { margin: 0; }
+.n58-footer-help {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  column-gap: var(--_spacing---step--3);
+  row-gap: var(--_spacing---step--2);
+  margin-inline-start: auto;
+}
+
+@media (max-width: 991px) {
+  .n58-footer-top { grid-template-columns: 1fr; }
+  .n58-footer-brand { max-width: none; }
+  .n58-footer-cols { grid-template-columns: repeat(2, 1fr); }
+  .n58-footer-help { margin-inline-start: 0; }
+}
+/* Sub-footer (dark bottom bar) on phones — the row layout crammed the help label
+   next to one CTA and wrapped the other awkwardly. Stack everything left-aligned
+   with real breathing room; put the "¿Necesitas ayuda?" label on its own line and
+   the two CTAs in a row beneath it. */
+@media (max-width: 767px) {
+  .n58-footer-bottom-inner {
+    flex-direction: column;
+    align-items: flex-start;
+    row-gap: var(--_spacing---step--4);
+    padding-top: var(--_spacing---step--7);
+    padding-bottom: var(--_spacing---step--7);
+  }
+  .n58-footer-help {
+    width: 100%;
+    column-gap: var(--_spacing---step--3);
+    row-gap: var(--_spacing---step--3);
+  }
+  .n58-footer-help > span { flex-basis: 100%; }
+}
+@media (max-width: 478px) {
+  .n58-footer-cols { grid-template-columns: 1fr; }
+}
+
+/* ═════════════════════════════════════════════════════════════════════════
+   N58 NOTCH BUTTONS — exact recipe from the live site's `.notch-button`:
+   a rectangle with the TOP-RIGHT corner sliced off (clip-path slant), a 2px
+   inset border in currentColor, and a diagonal fill on the cut so the border
+   follows the notch. The fill is background-color; the border/notch is the
+   text color (currentColor). Primary = lime fill / ink, Secondary = magenta
+   fill / cream. Replaces flwr's rounded buttons everywhere (home + styleguide).
+   ───────────────────────────────────────────────────────────────────────── */
+/* Live N58 buttons — built EXACTLY like the original: a real offset duplicate
+   layer behind the button (not a filter). The host is transparent and unclipped;
+   ::before is the notched face (ink fill + colored 2px border + diagonal edge);
+   ::after is the solid colored duplicate, offset down-right and ALWAYS visible,
+   sliding further on hover. Primary = lime, Secondary = magenta.
+   --notch-fill = ink face, --notch-shadow = the colored offset layer. */
+[data-flwr] .flwr_button_primary {
+  --_button-style---surface:       transparent;   /* host transparent — face is on ::before */
+  --_button-style---surface-hover: transparent;
+  --_button-style---text:          var(--_palette---core--500);       /* lime text + border */
+  --_button-style---text-hover:    var(--_palette---core--500);
+  --notch-shadow:                  var(--_palette---core--500);       /* lime offset duplicate */
+}
+[data-flwr] .flwr_button_secondary {
+  --_button-style---surface:       transparent;
+  --_button-style---surface-hover: transparent;
+  --_button-style---text:          var(--_palette---alternate--500);  /* magenta text + border */
+  --_button-style---text-hover:    var(--_palette---alternate--500);
+  --notch-shadow:                  var(--_palette---alternate--500);  /* magenta offset duplicate */
+}
+[data-flwr] .flwr_button_primary,
+[data-flwr] .flwr_button_secondary,
+[data-flwr] .flwr_button_ghost,
+[data-flwr] .flwr_button_alert,
+[data-flwr] .flwr_button_link {
+  --slant-size: 15px;
+  --border-width: 2px;
+  --notch-fill: var(--_palette---neutral--900);   /* ink button face */
+  /* Clean sharp diagonal notch — top-right corner cut (matches the live site). */
+  --notch-clip: polygon(0 0, calc(100% - var(--slant-size)) 0, 100% var(--slant-size), 100% 100%, 0% 100%, 0% 0%);
+  position: relative;
+  z-index: 0;
+  border-top-width: 0;
+  border-right-width: 0;
+  border-bottom-width: 0;
+  border-left-width: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  box-shadow: none;
+  padding-top: 12px;
+  padding-bottom: 12px;
+  padding-left: 24px;
+  padding-right: 24px;
+  overflow-x: visible;
+  overflow-y: visible;
+  cursor: pointer;
+  transition-property: transform;
+  transition-duration: 0.28s;
+  transition-timing-function: cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+/* On hover the button (face + text) lifts up-left; the duplicate behind stays
+   put (see the counter-translate on ::after below), so the colored layer is
+   revealed at the bottom-right. */
+[data-flwr] .flwr_button_primary:hover,
+[data-flwr] .flwr_button_secondary:hover,
+[data-flwr] .flwr_button_ghost:hover,
+[data-flwr] .flwr_button_alert:hover,
+[data-flwr] .flwr_button_link:hover {
+  transform: translate(-8px, -8px);
+}
+/* On click the button presses back DOWN onto its shadow (inverted motion). */
+[data-flwr] .flwr_button_primary:active,
+[data-flwr] .flwr_button_secondary:active,
+[data-flwr] .flwr_button_ghost:active,
+[data-flwr] .flwr_button_alert:active,
+[data-flwr] .flwr_button_link:active {
+  transform: translate(0, 0);
+  transition-duration: 0.09s;
+}
+/* The notched button face: ink fill + 2px notch border (currentColor) + the
+   diagonal edge fill so the border follows the sharp notch. Moves with the host
+   (lifts up-left on hover). */
+[data-flwr] .flwr_button_primary::before,
+[data-flwr] .flwr_button_secondary::before,
+[data-flwr] .flwr_button_ghost::before,
+[data-flwr] .flwr_button_alert::before,
+[data-flwr] .flwr_button_link::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: -1;
+  background-color: var(--notch-fill);
+  /* Layer 1 = the diagonal notch edge. Layer 2 = the click "charging" fill:
+     a currentColor bar that sweeps 0% → 100% width from the left when
+     .is-filling is set (see § BUTTON CHARGING FILL below). */
+  background-image: linear-gradient(to bottom left, currentColor 50%, transparent 50.1%), linear-gradient(currentColor, currentColor);
+  background-position: top right, left center;
+  background-size: calc(var(--slant-size) + 1.3 * var(--border-width)) calc(var(--slant-size) + 1.3 * var(--border-width)), 0% 100%;
+  background-repeat: no-repeat, no-repeat;
+  transition-property: background-size;
+  transition-duration: 0.62s;
+  transition-timing-function: cubic-bezier(0.65, 0, 0.35, 1);
+  clip-path: var(--notch-clip);
+  box-shadow: 0 0 0 var(--border-width) currentColor inset;
+  border-top-left-radius: var(--n58-radius-control);
+  border-top-right-radius: var(--n58-radius-control);
+  border-bottom-left-radius: var(--n58-radius-control);
+  border-bottom-right-radius: var(--n58-radius-control);
+  pointer-events: none;
+}
+/* The brand-colored layer behind the face. At rest it shows as the 2px border
+   (the face is inset over it). It stays fixed (counter-translates the host's
+   lift), so on hover the face slides off it and it's revealed as the offset
+   shadow at the bottom-right. pointer-events: auto keeps it part of the hover +
+   click hit-area, so the lift can't drop the hover (no flicker) and the whole
+   button area — including the revealed shadow — is clickable. */
+[data-flwr] .flwr_button_primary::after,
+[data-flwr] .flwr_button_secondary::after,
+[data-flwr] .flwr_button_ghost::after,
+[data-flwr] .flwr_button_alert::after,
+[data-flwr] .flwr_button_link::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: -2;
+  background-color: var(--notch-shadow, currentColor);
+  clip-path: var(--notch-clip);
+  border-top-left-radius: var(--n58-radius-control);
+  border-top-right-radius: var(--n58-radius-control);
+  border-bottom-left-radius: var(--n58-radius-control);
+  border-bottom-right-radius: var(--n58-radius-control);
+  pointer-events: auto;
+  transform: translate(0, 0);
+  transition-property: transform, background-color;
+  transition-duration: 0.28s, 0.45s;
+  transition-timing-function: cubic-bezier(0.22, 0.61, 0.36, 1), var(--_motion---ease-standard);
+}
+[data-flwr] .flwr_button_primary:hover::after,
+[data-flwr] .flwr_button_secondary:hover::after,
+[data-flwr] .flwr_button_ghost:hover::after,
+[data-flwr] .flwr_button_alert:hover::after,
+[data-flwr] .flwr_button_link:hover::after {
+  transform: translate(8px, 8px);
+}
+[data-flwr] .flwr_button_primary:active::after,
+[data-flwr] .flwr_button_secondary:active::after,
+[data-flwr] .flwr_button_ghost:active::after,
+[data-flwr] .flwr_button_alert:active::after,
+[data-flwr] .flwr_button_link:active::after {
+  transform: translate(0, 0);
+  transition-duration: 0.09s;
+}
+/* Scroll-driven "hover" for touch devices (which have no :hover). A tiny script
+   in index.html adds .is-scroll-hover to a notch button when it reaches the
+   middle of the viewport, mirroring the real :hover lift + offset-shadow reveal
+   so mobile users get the same effect scrolling either direction. Outline chips
+   are excluded in JS (they have no lift). */
+[data-flwr] .flwr_button_primary.is-scroll-hover,
+[data-flwr] .flwr_button_secondary.is-scroll-hover,
+[data-flwr] .flwr_button_ghost.is-scroll-hover,
+[data-flwr] .flwr_button_alert.is-scroll-hover,
+[data-flwr] .flwr_button_link.is-scroll-hover {
+  transform: translate(-8px, -8px);
+}
+[data-flwr] .flwr_button_primary.is-scroll-hover::after,
+[data-flwr] .flwr_button_secondary.is-scroll-hover::after,
+[data-flwr] .flwr_button_ghost.is-scroll-hover::after,
+[data-flwr] .flwr_button_alert.is-scroll-hover::after,
+[data-flwr] .flwr_button_link.is-scroll-hover::after {
+  transform: translate(8px, 8px);
+}
+[data-flwr] .flwr_button_primary.is-small.is-scroll-hover,
+[data-flwr] .flwr_button_secondary.is-small.is-scroll-hover,
+[data-flwr] .flwr_button_ghost.is-small.is-scroll-hover,
+[data-flwr] .flwr_button_alert.is-small.is-scroll-hover,
+[data-flwr] .flwr_button_link.is-small.is-scroll-hover {
+  transform: translate(-5px, -5px);
+}
+/* Parity with the live site (whose JS animations ignore prefers-reduced-motion):
+   flwr zeroes all CSS transitions under reduce-motion, so re-assert the button
+   transition here. Scoped to the buttons only — the rest still respects the
+   user's motion preference. */
+@media (prefers-reduced-motion: reduce) {
+  [data-flwr] .flwr_button_primary,
+  [data-flwr] .flwr_button_secondary,
+  [data-flwr] .flwr_button_ghost,
+  [data-flwr] .flwr_button_alert,
+  [data-flwr] .flwr_button_link,
+  [data-flwr] .flwr_button_primary::after,
+  [data-flwr] .flwr_button_secondary::after,
+  [data-flwr] .flwr_button_ghost::after,
+  [data-flwr] .flwr_button_alert::after,
+  [data-flwr] .flwr_button_link::after {
+    transition-duration: 0.28s !important;   /* beats flwr's 0.01ms !important */
+  }
+  [data-flwr] .flwr_button_primary:active,
+  [data-flwr] .flwr_button_secondary:active,
+  [data-flwr] .flwr_button_ghost:active,
+  [data-flwr] .flwr_button_alert:active,
+  [data-flwr] .flwr_button_link:active,
+  [data-flwr] .flwr_button_primary:active::after,
+  [data-flwr] .flwr_button_secondary:active::after,
+  [data-flwr] .flwr_button_ghost:active::after,
+  [data-flwr] .flwr_button_alert:active::after,
+  [data-flwr] .flwr_button_link:active::after {
+    transition-duration: 0.09s !important;
+  }
+  /* Keep the navbar auto-hide slide smooth even under Reduce Motion (the live
+     site animates it via JS, ignoring the preference). Order matches the
+     transition-property list: transform, bg, border, backdrop. */
+  [data-flwr] .flwr_navbar_wrap[data-flwr-navbar-scroll="auto-hide"] {
+    transition-duration: var(--_motion---duration-slow), var(--_motion---duration-base), var(--_motion---duration-base), var(--_motion---duration-base) !important;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   TAGS — the framework's flwr_tag defaults to an ACCENT (green) soft pill, which
+   reads as washed slop on cream cards. Re-cast as a clean neutral chip: subtle
+   ink-tint surface, muted text, a soft (not fully-round) radius. Semantic
+   variants (is-success/is-alert/…) still override when a real status is needed.
+   ───────────────────────────────────────────────────────────────────────── */
+[data-flwr] .flwr_tag {
+  --_component---tag--surface:       color-mix(in oklch, var(--_theme---text--main) 8%, transparent);
+  --_component---tag--surface-hover: color-mix(in oklch, var(--_theme---text--main) 14%, transparent);
+  --_component---tag--text:          var(--_theme---text--muted);
+  --_component---tag--text-hover:    var(--_theme---text--strong);
+  --_component---tag--radius:        var(--n58-radius-control);
+  font-weight: var(--_typography---weight--semibold);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   BORDER NOTCH — a notched (top-right slice) surface WITH a border that follows
+   the diagonal, using the SAME recipe as the N58 notch buttons (the plain
+   .f-notch clip-path cuts the border off the diagonal; this doesn't). Reusable
+   on any block — the notched face is painted on ::before, behind the content.
+   Tune via the vars:
+     --n58-notch-size          slant length         (default 1.5rem)
+     --n58-notch-bw            border width          (default the 2.5px token)
+     --n58-notch-fill          surface color         (default theme surface)
+     --n58-notch-border-color  border color          (default theme border)
+     --n58-notch-radius        radius of the 3 non-notched corners (default 10px)
+   ───────────────────────────────────────────────────────────────────────── */
+[data-flwr] .n58-notch-border {
+  --n58-notch-clip: polygon(0 0, calc(100% - var(--n58-notch-size, 1.5rem)) 0, 100% var(--n58-notch-size, 1.5rem), 100% 100%, 0% 100%, 0% 0%);
+  position: relative;
+  /* stacking context for the ::before face WITHOUT hijacking a host z-index
+     (e.g. the card-stack layering) — isolate does exactly that. */
+  isolation: isolate;
+  background-color: transparent;
+  border-top-width: 0;
+  border-right-width: 0;
+  border-bottom-width: 0;
+  border-left-width: 0;
+}
+[data-flwr] .n58-notch-border::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: -1;
+  background-color: var(--n58-notch-fill, var(--_theme---surface--main));
+  /* Triangle of border-color in the top-right corner = the border along the
+     diagonal cut (the inset box-shadow below covers the 3 straight sides). */
+  background-image: linear-gradient(to bottom left, var(--n58-notch-border-color, var(--_theme---border--main)) 50%, transparent 50.1%);
+  background-position: top right;
+  background-size: calc(var(--n58-notch-size, 1.5rem) + 1.3 * var(--n58-notch-bw, var(--_theme---border--width-2))) calc(var(--n58-notch-size, 1.5rem) + 1.3 * var(--n58-notch-bw, var(--_theme---border--width-2)));
+  background-repeat: no-repeat;
+  clip-path: var(--n58-notch-clip);
+  box-shadow: inset 0 0 0 var(--n58-notch-bw, var(--_theme---border--width-2)) var(--n58-notch-border-color, var(--_theme---border--main));
+  border-top-left-radius: var(--n58-notch-radius, var(--n58-radius-control));
+  border-top-right-radius: var(--n58-notch-radius, var(--n58-radius-control));
+  border-bottom-left-radius: var(--n58-notch-radius, var(--n58-radius-control));
+  border-bottom-right-radius: var(--n58-notch-radius, var(--n58-radius-control));
+  pointer-events: none;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   HOME — split layouts (2-col desktop → 1-col mobile landscape & down).
+   flwr has no responsive grid utilities, so layout collapse lives here.
+   ───────────────────────────────────────────────────────────────────────── */
+.home-split {
+  display: grid;
+  /* minmax(0, 1fr) so the large display heading can't force a track wider than
+     half and overflow the viewport. */
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  column-gap: var(--_spacing---step--7);
+  row-gap: var(--_spacing---step--6);
+  align-items: center;
+}
+
+.home-stack {
+  display: flex;
+  flex-direction: column;
+  row-gap: var(--_spacing---step--3);
+  align-items: flex-start;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   HERO — every page's hero is min-height:100svh (f-min-h-svh). Center the
+   content block vertically within that height so it no longer sticks to the
+   top. The home hero additionally embeds the FX ticker flush at its base.
+   ───────────────────────────────────────────────────────────────────────── */
+.n58-hero,
+/* Product-detail heroes (13 pages) use tpl-hero-section with the same
+   f-min-h-svh + f-section-lg combo but weren't border-box, so the padding
+   stacked on top of 100svh and pushed the centered content BELOW the viewport
+   middle (unlike the homepage). Same fix. */
+.tpl-hero-section {
+  /* border-box so f-min-h-svh (min-height:100svh) INCLUDES the section padding —
+     otherwise the padding stacks on top of the full svh and the hero overflows
+     the viewport (pushing the home ticker below the fold). */
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* Home hero: the FX ticker is pinned as a full-bleed overlay flush to the
+   bottom edge, OUT of normal flow — so its height doesn't skew the vertical
+   centering. The content stays optically centered in the FULL viewport, with
+   the ticker floating over the lower gap (which is deeper than the ticker). */
+.n58-hero.is-home {
+  position: relative;
+  /* Clip the oversized coins render to the hero box so its top/bottom/right
+     bleed is trimmed at the section edges instead of expanding the document
+     (no global overflow-x clip on the root here — see [data-flwr] note). `clip`
+     (not `hidden`) so the hero never becomes a scroll container, which would
+     break the view()-timeline scroll animations. */
+  overflow-x: clip;
+  overflow-y: clip;
+}
+.n58-hero.is-home > .n58-fx-bar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  /* Float the pill off the bottom edge; left:0/right:0 + max-width + margin
+     auto keep it centered. */
+  bottom: var(--_spacing---step--5);
+}
+@media (max-width: 991px) {
+  /* The stacked mobile layout is taller than the viewport — return the ticker
+     to normal flow so it sits after the content instead of overlapping it. */
+  .n58-hero.is-home > .n58-fx-bar {
+    position: static;
+    margin-top: var(--_spacing---step--5);
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   HOME HERO — "movement coins" render as a full-bleed decorative background,
+   anchored to the right edge and bleeding off it (behind the copy). Replaces
+   the old framed .home-media photo. The 2-column .home-split is kept: the copy
+   sits in the left track, the empty right track is filled by the coins.
+   ───────────────────────────────────────────────────────────────────────── */
+.n58-hero.is-home > .n58-container {
+  position: relative;
+  z-index: 1;   /* keep copy above the coins render */
+  /* The hero section is a flex column; .n58-container's margin-inline:auto would
+     make it shrink-wrap around the .home-split grid and center (pushing the copy
+     right, out of alignment with the logo/other heroes). Force full width so it
+     fills the section and the copy's left edge lines up with the page gutter. */
+  width: 100%;
+}
+.n58-hero_coins {
+  position: absolute;
+  top: 50%;
+  /* Fluid LEFT anchor instead of a fixed right-bleed: the ring's left edge tracks
+     just past the copy column and slides further right (as a share of the
+     viewport) as the screen narrows — so on smaller desktops the heading can
+     *touch* the ring without the ring sitting behind the letters (which read as
+     noise). It stays oversized so it still bleeds off the top, bottom and right. */
+  left: clamp(34rem, 46vw + 6rem, 64rem);
+  translate: 0 -50%;
+  width: clamp(48rem, 66vw, 104rem);
+  height: auto;
+  z-index: 0;
+  pointer-events: none;
+  user-select: none;
+}
+/* Desktop shows the coins render, not the framed photo. */
+.n58-hero .n58-hero_media {
+  display: none;
+}
+/* ≤991px the grid stacks to one column — drop the oversized coins background and
+   restore the original framed photo in the (now stacked) media track. */
+@media (max-width: 991px) {
+  .n58-hero_coins {
+    display: none;
+  }
+  .n58-hero .n58-hero_media {
+    display: block;
+  }
+}
+@media (max-width: 767px) {
+  /* Mobile: let the hero size to its content — no forced full-viewport height. */
+  [data-flwr] .n58-hero.is-home.f-min-h-svh {
+    min-height: 0;
+  }
+  /* Portrait framed photo (≥4:5) so it reads well in the stacked mobile hero. */
+  .n58-hero .home-media_img {
+    aspect-ratio: 4 / 5;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   EMPRESAS BANNER — full-viewport statement over the "movement coins" render.
+   Replaces the standard split hero on empresas: bg = alternate--900 (#2C1638),
+   coins ring centered with the headline sitting in the ring's core.
+   ───────────────────────────────────────────────────────────────────────── */
+.n58-emp-banner {
+  /* border-box so f-min-h-svh includes the section padding (same as .n58-hero). */
+  box-sizing: border-box;
+}
+/* Override f-mode-dark's neutral--900 section fill with the brand violet.
+   [data-flwr] prefix matches f-mode-dark's specificity; project.css wins the
+   cascade tie by loading after framework.css. */
+[data-flwr] .n58-emp-banner {
+  background-color: var(--_palette---alternate--900);
+}
+.n58-emp-banner_stage {
+  position: relative;
+  line-height: 0;   /* kill the inline gap under the image */
+}
+.n58-emp-banner_coins {
+  display: block;
+  width: min(46rem, 84vmin);
+  height: auto;
+}
+.n58-emp-banner_title {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  max-width: min(32rem, 80vmin);
+  text-align: center;
+  line-height: 1.05;
+}
+
+.home-media {
+  box-sizing: border-box;
+  /* Fills its grid column; the gutter comes from .n58-container. */
+  border-top-left-radius: var(--_component---card--radius);
+  border-top-right-radius: var(--_component---card--radius);
+  border-bottom-left-radius: var(--_component---card--radius);
+  border-bottom-right-radius: var(--_component---card--radius);
+  overflow-x: hidden;
+  overflow-y: hidden;
+}
+.home-media_img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+}
+/* ─────────────────────────────────────────────────────────────────────────
+   § PRIVACIDAD — reeded-glass media band. A photo behind a full-frame Vidrio
+   Acanalado sheet (n58-hero-glass.js, data-mode="panel"), copy overlaid on a
+   left→right scrim. The <img> is the mobile / no-WebGL fallback.
+   ───────────────────────────────────────────────────────────────────────── */
+.n58-privacy_frame {
+  position: relative;
+  box-sizing: border-box;
+  width: 100%;
+  aspect-ratio: 16 / 7;
+  display: flex;
+  align-items: center;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  border-top-left-radius: var(--_component---card--radius);
+  border-top-right-radius: var(--_component---card--radius);
+  border-bottom-left-radius: var(--_component---card--radius);
+  border-bottom-right-radius: var(--_component---card--radius);
+}
+.n58-privacy_img {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.n58-privacy_glass {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1;
+}
+.n58-privacy_frame::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 2;
+  background-image: linear-gradient(to right, rgba(22, 21, 22, 0.9) 0%, rgba(22, 21, 22, 0.45) 46%, rgba(22, 21, 22, 0) 74%);
+  pointer-events: none;
+}
+.n58-privacy_copy {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  row-gap: var(--_spacing---step--3);
+  max-width: 36rem;
+  padding-top: var(--_spacing---step--7);
+  padding-right: var(--_spacing---step--7);
+  padding-bottom: var(--_spacing---step--7);
+  padding-left: var(--_spacing---step--7);
+}
+@media (max-width: 767px) {
+  .n58-privacy_frame {
+    aspect-ratio: 3 / 4;
+    align-items: flex-end;
+  }
+  .n58-privacy_frame::after {
+    background-image: linear-gradient(to top, rgba(22, 21, 22, 0.92) 0%, rgba(22, 21, 22, 0.3) 55%, rgba(22, 21, 22, 0) 100%);
+  }
+  .n58-privacy_copy {
+    padding-top: var(--_spacing---step--5);
+    padding-right: var(--_spacing---step--5);
+    padding-bottom: var(--_spacing---step--5);
+    padding-left: var(--_spacing---step--5);
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   § NOVEDADES — post-hero news / announcements swiper (data-flwr="swiper")
+   One infinite, autoplaying flwr swiper whose cards are DELIBERATELY
+   heterogeneous. Every card's width comes from its
+   .is-* rule here, so each card is a different size AND a different internal
+   layout. All longhand (project.css convention); colors from the palette.
+   ───────────────────────────────────────────────────────────────────────── */
+
+/* The swiper is FULL-BLEED: the outer element spans the whole section (no
+   container/page-margin) so the track reaches BOTH viewport edges, while the
+   head + dots stay aligned to the page grid (same max-width + gutter as
+   .n58-container) — heading on the grid, cards edge-to-edge. */
+.n58-news_swiper {
+  width: 100%;
+}
+
+/* Head + dots — constrained to the container grid and centered. */
+.n58-news_head,
+[data-flwr] .n58-news_dots {
+  box-sizing: border-box;
+  max-width: var(--n58-container-max);
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: var(--_spacing---page-margin);
+  padding-right: var(--_spacing---page-margin);
+}
+
+/* Head — eyebrow + title on the left, prev/next arrows on the right. */
+.n58-news_head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  column-gap: var(--_spacing---step--4);
+  margin-bottom: var(--_spacing---step--6);
+}
+.n58-news_nav {
+  display: flex;
+  column-gap: var(--_spacing---step--2);
+  flex-grow: 0;
+  flex-shrink: 0;
+}
+/* Novedades arrows REUSE the gallery arrow (.n58-gallery-arrow — transparent
+   green chevron, hover fades). The swiper runtime force-adds .flwr_swiper_arrow,
+   which carries a base + hover background; neutralize it so the transparent
+   gallery style wins in every state. No new arrow style is defined here. */
+[data-flwr] .n58-news_nav .flwr_swiper_arrow,
+[data-flwr] .n58-news_nav .flwr_swiper_arrow:hover {
+  background-color: transparent;
+}
+
+/* Viewport — .flwr_swiper_wrap already clips (overflow hidden); a touch of
+   vertical padding keeps focus rings from being shaved. */
+/* Full-bleed on BOTH edges. .n58-news_swiper already spans the section edge-to-
+   edge (the section has no container/page-margin), so the wrap simply fills it —
+   slides run off the left AND right viewport edges. This is flwr's f-edge/f-bleed
+   idea, but using width:100% of the already-full-width parent instead of 100vw:
+   this page has no overflow-x clip on the root, and 100vw would count the
+   scrollbar and add a horizontal scrollbar on Windows. The [data-flwr] prefix is
+   REQUIRED so this outranks Swiper's own `.swiper { margin:auto }` (loaded after
+   this file at lower specificity). */
+[data-flwr] .n58-news_wrap {
+  width: 100%;
+  margin-left: 0;
+  margin-right: 0;
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+  padding-left: 0;
+  padding-right: 0;
+  overflow-x: hidden;
+  overflow-y: hidden;
+}
+.n58-news_track {
+  align-items: stretch;
+}
+/* Continuous (marquee-style) auto-scroll: Swiper eases each slide by default, so
+   force LINEAR timing on the slide track → the autoplay (reconfigured to delay:0
+   in the inline script) glides at a constant speed like the gallery marquee. */
+/* Pagination pulled to the LEFT edge (framework centers it). */
+[data-flwr] .n58-news_dots {
+  justify-content: flex-start;
+  margin-top: var(--_spacing---step--5);
+}
+
+/* Slide base — shared box; each variant overrides width, background, layout. */
+.n58-news-slide {
+  box-sizing: border-box;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 0;
+  flex-shrink: 0;
+  flex-basis: auto;
+  row-gap: var(--_spacing---step--4);
+  justify-content: flex-start;
+  width: 24rem;
+  min-height: clamp(24rem, 34vw, 27rem);
+  height: auto;
+  padding-top: var(--_spacing---step--6);
+  padding-right: var(--_spacing---step--6);
+  padding-bottom: var(--_spacing---step--6);
+  padding-left: var(--_spacing---step--6);
+  border-top-left-radius: var(--_component---card--radius);
+  border-top-right-radius: var(--_component---card--radius);
+  border-bottom-left-radius: var(--_component---card--radius);
+  border-bottom-right-radius: var(--_component---card--radius);
+  overflow-x: hidden;
+  overflow-y: hidden;
+}
+.n58-news-slide_body {
+  display: flex;
+  flex-direction: column;
+  row-gap: var(--_spacing---step--2);
+}
+
+/* Shared modifier — main-border ring for slides on a clear/cream background so
+   they separate cleanly from the light section behind them (uses the project's
+   thickened main border token). */
+.n58-news-slide.is-bordered {
+  border-top-width: var(--_theme---border--width);
+  border-right-width: var(--_theme---border--width);
+  border-bottom-width: var(--_theme---border--width);
+  border-left-width: var(--_theme---border--width);
+  border-top-style: solid;
+  border-right-style: solid;
+  border-bottom-style: solid;
+  border-left-style: solid;
+  border-top-color: var(--_theme---border--main);
+  border-right-color: var(--_theme---border--main);
+  border-bottom-color: var(--_theme---border--main);
+  border-left-color: var(--_theme---border--main);
+}
+
+/* Shared modifier — the main brand lime (core/500, NOT the pale core/100). */
+.n58-news-slide.is-lime {
+  background-color: var(--_palette---core--500);
+}
+
+/* ── SLIDE 1 · ANNOUNCEMENT (magenta, text-led) ── */
+.n58-news-slide.is-announce {
+  width: 31rem;
+  justify-content: space-between;
+  background-color: var(--_palette---alternate--900);
+}
+
+/* ── SLIDE 2 · PRODUCT SPLIT (image + copy) ── */
+.n58-news-slide.is-product {
+  width: 36rem;
+  flex-direction: row;
+  row-gap: 0;
+  padding-top: 0;
+  padding-right: 0;
+  padding-bottom: 0;
+  padding-left: 0;
+  background-color: var(--_theme---surface--raised);
+}
+.n58-news-prod_media {
+  flex-grow: 0;
+  flex-shrink: 0;
+  flex-basis: 42%;
+  overflow-x: hidden;
+  overflow-y: hidden;
+}
+.n58-news-prod_media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.n58-news-prod_copy {
+  flex-grow: 1;
+  flex-shrink: 1;
+  flex-basis: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  row-gap: var(--_spacing---step--3);
+  padding-top: var(--_spacing---step--5);
+  padding-right: var(--_spacing---step--5);
+  padding-bottom: var(--_spacing---step--5);
+  padding-left: var(--_spacing---step--5);
+}
+.n58-news-prod_list {
+  margin-top: 0;
+  margin-right: 0;
+  margin-bottom: 0;
+  margin-left: 0;
+  padding-top: 0;
+  padding-right: 0;
+  padding-bottom: 0;
+  padding-left: 0;
+  list-style-type: none;
+  list-style-position: outside;
+  display: flex;
+  flex-direction: column;
+  row-gap: var(--_spacing---step--2);
+}
+.n58-news-prod_list li {
+  position: relative;
+  padding-left: 1.25rem;
+  color: var(--_theme---text--muted);
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+.n58-news-prod_list li::before {
+  content: "";
+  position: absolute;
+  top: 0.5em;
+  left: 0;
+  width: 0.5rem;
+  height: 0.5rem;
+  background-color: var(--_palette---core--500);
+  border-top-left-radius: 9999px;
+  border-top-right-radius: 9999px;
+  border-bottom-left-radius: 9999px;
+  border-bottom-right-radius: 9999px;
+}
+
+/* ── SLIDE 3 · KPI / STAT (lime, big number) ── */
+.n58-news-slide.is-stat {
+  width: 19rem;
+  justify-content: center;
+  row-gap: var(--_spacing---step--2);
+}
+.n58-news-stat_num {
+  margin-top: 0;
+  margin-right: 0;
+  margin-bottom: 0;
+  margin-left: 0;
+  font-size: clamp(4.5rem, 11vw, 6.5rem);
+  line-height: 0.9;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--_palette---neutral--1000);
+}
+.n58-news-stat_num span {
+  display: inline-block;
+  margin-left: 0.15em;
+  font-size: 0.38em;
+  vertical-align: baseline;
+}
+
+/* ── SLIDE 4 · TEAM NOTE (photo + quote) ── */
+.n58-news-slide.is-team {
+  width: 26rem;
+  row-gap: 0;
+  padding-top: 0;
+  padding-right: 0;
+  padding-bottom: 0;
+  padding-left: 0;
+  background-color: var(--_theme---surface--raised);
+}
+.n58-news-team_media {
+  flex-grow: 0;
+  flex-shrink: 0;
+  flex-basis: 56%;
+  overflow-x: hidden;
+  overflow-y: hidden;
+}
+.n58-news-team_media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.n58-news-team_quote {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  row-gap: var(--_spacing---step--2);
+  padding-top: var(--_spacing---step--5);
+  padding-right: var(--_spacing---step--5);
+  padding-bottom: var(--_spacing---step--5);
+  padding-left: var(--_spacing---step--5);
+}
+.n58-news-team_quote blockquote {
+  margin-top: 0;
+  margin-right: 0;
+  margin-bottom: 0;
+  margin-left: 0;
+}
+
+/* ── SLIDE 5 · FEATURE LIST (dark, ink chips behind line-art) ── */
+.n58-news-slide.is-features {
+  width: 25rem;
+  background-color: var(--_palette---neutral--1000);
+}
+.n58-news-feat_list {
+  margin-top: 0;
+  margin-right: 0;
+  margin-bottom: 0;
+  margin-left: 0;
+  padding-top: 0;
+  padding-right: 0;
+  padding-bottom: 0;
+  padding-left: 0;
+  list-style-type: none;
+  list-style-position: outside;
+  display: flex;
+  flex-direction: column;
+  row-gap: var(--_spacing---step--4);
+}
+.n58-news-feat {
+  display: flex;
+  align-items: flex-start;
+  column-gap: var(--_spacing---step--3);
+}
+.n58-news-feat_ico {
+  flex-grow: 0;
+  flex-shrink: 0;
+  flex-basis: auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;
+  height: 3rem;
+  background-color: var(--_palette---core--100);
+  border-top-left-radius: 9999px;
+  border-top-right-radius: 9999px;
+  border-bottom-left-radius: 9999px;
+  border-bottom-right-radius: 9999px;
+}
+.n58-news-feat_ico img {
+  display: block;
+  width: 1.7rem;
+  height: 1.7rem;
+  /* Icons have varied (non-square) viewBoxes; contain keeps each glyph's own
+     aspect ratio inside the square box instead of stretching it. */
+  object-fit: contain;
+}
+.n58-news-feat_txt {
+  display: block;
+  color: var(--_theme---text--muted);
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+.n58-news-feat_txt strong {
+  display: block;
+}
+
+/* ── SLIDE 6 · APP CTA (purple gradient, centered) ── */
+.n58-news-slide.is-app {
+  width: 22rem;
+  align-items: center;
+  justify-content: space-between;
+  text-align: center;
+}
+.n58-news-app_ico {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 4rem;
+  height: 4rem;
+  background-color: var(--_palette---neutral--1000);
+  border-top-left-radius: 9999px;
+  border-top-right-radius: 9999px;
+  border-bottom-left-radius: 9999px;
+  border-bottom-right-radius: 9999px;
+}
+.n58-news-app_ico img {
+  display: block;
+  width: 2rem;
+  height: 2rem;
+}
+.n58-news-app_stores {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  row-gap: var(--_spacing---step--2);
+  width: 100%;
+}
+
+/* ── PHOTO SLIDES (shared) · EDITORIAL + PEOPLE + TEAM-WIDE ──
+   Full-bleed cover image + relative caption pinned to the bottom, sitting over
+   a scrim for legibility. Three humanizing slides ride this base. */
+.n58-news-slide.is-editorial,
+.n58-news-slide.is-people,
+.n58-news-slide.is-teamwide {
+  justify-content: flex-end;
+  padding-top: 0;
+  padding-right: 0;
+  padding-bottom: 0;
+  padding-left: 0;
+}
+.n58-news-edi_img {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+/* Bottom-up scrim for the two portrait-ish photo cards. */
+.n58-news-slide.is-editorial::after,
+.n58-news-slide.is-people::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-image: linear-gradient(to top, rgba(22, 21, 22, 0.9) 0%, rgba(22, 21, 22, 0.15) 55%, rgba(22, 21, 22, 0) 100%);
+}
+.n58-news-edi_cap {
+  position: relative;
+  z-index: 1;
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  row-gap: var(--_spacing---step--1);
+  padding-top: var(--_spacing---step--5);
+  padding-right: var(--_spacing---step--5);
+  padding-bottom: var(--_spacing---step--5);
+  padding-left: var(--_spacing---step--5);
+}
+.n58-news-slide.is-editorial {
+  width: 23rem;
+}
+.n58-news-slide.is-people {
+  width: 30rem;
+}
+
+/* ── TEAM-WIDE · near full-width employee photo (humanizing hero) ──
+   Wide landscape card; caption block anchored bottom-left over a left-side
+   scrim so the headline + button stay readable across the photo. */
+.n58-news-slide.is-teamwide {
+  width: 84vw;
+  max-width: 66rem;
+  min-height: clamp(22rem, 30vw, 28rem);
+}
+.n58-news-slide.is-teamwide::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-image: linear-gradient(to right, rgba(22, 21, 22, 0.88) 0%, rgba(22, 21, 22, 0.55) 42%, rgba(22, 21, 22, 0) 78%);
+}
+.n58-news-wide_cap {
+  position: relative;
+  z-index: 1;
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  row-gap: var(--_spacing---step--3);
+  max-width: 34rem;
+  padding-top: var(--_spacing---step--7);
+  padding-right: var(--_spacing---step--6);
+  padding-bottom: var(--_spacing---step--7);
+  padding-left: var(--_spacing---step--6);
+}
+
+/* Tablet / mobile — shrink slides to viewport-relative widths and stack the
+   two split layouts so nothing is cramped at small sizes. */
+@media (max-width: 767px) {
+  .n58-news_head {
+    flex-direction: column;
+    align-items: flex-start;
+    row-gap: var(--_spacing---step--3);
+  }
+  .n58-news-slide {
+    width: 78vw;
+    min-height: 23rem;
+  }
+  .n58-news-slide.is-announce {
+    width: 84vw;
+  }
+  .n58-news-slide.is-product {
+    width: 84vw;
+    flex-direction: column;
+  }
+  .n58-news-prod_media {
+    flex-basis: auto;
+    height: 11rem;
+  }
+  .n58-news-slide.is-stat {
+    width: 62vw;
+  }
+  .n58-news-slide.is-team {
+    width: 80vw;
+  }
+  .n58-news-team_media {
+    flex-basis: auto;
+    height: 12rem;
+  }
+  .n58-news-slide.is-people {
+    width: 80vw;
+  }
+  .n58-news-slide.is-teamwide {
+    width: 88vw;
+    min-height: 26rem;
+  }
+  .n58-news-wide_cap {
+    max-width: none;
+    padding-top: var(--_spacing---step--5);
+    padding-right: var(--_spacing---step--5);
+    padding-bottom: var(--_spacing---step--5);
+    padding-left: var(--_spacing---step--5);
+  }
+  /* On mobile the wide card's caption needs a bottom-up scrim, not a side one. */
+  .n58-news-slide.is-teamwide::after {
+    background-image: linear-gradient(to top, rgba(22, 21, 22, 0.92) 0%, rgba(22, 21, 22, 0.35) 55%, rgba(22, 21, 22, 0) 100%);
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   § NOVEDADES POPUP — scroll-triggered news modal.
+   Reuses the EXISTING dark modal chrome: .antifraud-dialog f-mode-dark (dark
+   surface--main, card radius, scrim ::backdrop) + the branded .n58-modal-close
+   two-bar "X". The flwr runtime opens it via showModal() past the scroll
+   threshold (data-flwr-trigger="scroll"). Here we only strip the modal's text
+   padding so a one-per-view flwr swiper of announcements fills the card.
+   The [data-flwr] prefix is REQUIRED: .antifraud-dialog is defined later in this
+   file, so these overrides need the higher specificity to win.
+   ───────────────────────────────────────────────────────────────────────── */
+[data-flwr] .n58-news-popup {
+  /* MUST be fixed (not the antifraud .position:relative) so a modal opened via
+     showModal() stays centered in the VIEWPORT — with relative/absolute it sits
+     at its document position and, if the page was already scrolled on load, the
+     modal appears stuck at the top instead of centered. Native :modal centering
+     (inset:0 + margin:auto) then works. The close X (absolute) still anchors here
+     because fixed is a containing block. */
+  position: fixed;
+  /* 100vw (the modal opens with body scroll locked, so no scrollbar) → the same
+     absolute value resolves at both the dialog and the slide level, so each
+     slide's width equals the card width exactly (one clean slide per view). */
+  --n58-popup-w: min(30rem, calc(100vw - 2rem));
+  width: var(--n58-popup-w);
+  max-width: var(--n58-popup-w);
+  max-height: 90vh;
+  /* Drop the antifraud text padding so the swiper photos bleed to the edges. */
+  padding-top: 0;
+  padding-right: 0;
+  padding-bottom: 0;
+  padding-left: 0;
+  /* Clip the bleeding photos to the card's rounded corners. */
+  overflow-x: hidden;
+  overflow-y: hidden;
+}
+.n58-news-popup_swiper {
+  position: relative;
+}
+/* One slide per view: kill the inter-slide gap and pin each slide to card width. */
+[data-flwr] .n58-news-popup_swiper .flwr_swiper_track {
+  column-gap: 0;
+}
+.n58-news-popup_slide {
+  box-sizing: border-box;
+  flex-grow: 0;
+  flex-shrink: 0;
+  flex-basis: auto;
+  width: var(--n58-popup-w);
+  display: flex;
+  flex-direction: column;
+}
+.n58-news-popup_media {
+  width: 100%;
+  overflow-x: hidden;
+  overflow-y: hidden;
+}
+.n58-news-popup_img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 10;
+  /* Adaptive: on short (laptop) viewports the image shrinks so the whole modal
+     (image + body + dots) always fits and never gets cut off at the top. */
+  max-height: 28vh;
+  object-fit: cover;
+}
+.n58-news-popup_body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  row-gap: var(--_spacing---step--3);
+  text-align: center;
+  padding-top: var(--_spacing---step--5);
+  padding-right: var(--_spacing---step--6);
+  padding-bottom: var(--_spacing---step--4);
+  padding-left: var(--_spacing---step--6);
+}
+/* Pagination — centered pills beneath the body, inside the card. */
+[data-flwr] .n58-news-popup_dots {
+  justify-content: center;
+  margin-block-start: 0;
+  padding-bottom: var(--_spacing---step--5);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   § FRAME MARQUEE — 4-direction circulating text frame
+   The brand's lime notched picture-frame sitting ON TOP of a larger cover
+   photo: the photo fills the whole media column; the square lime frame is
+   centered over it and clearly SMALLER, so the photo shows past the frame on
+   all four sides. UPPERCASE ink text circulates clockwise around every edge as
+   one continuous infinite marquee. (Promoted from the isolated lab prototype.)
+
+   WIRING
+   - .n58-frame-marquee        : the photo container. Fills its column
+     (width 100%, aspect-ratio 4/3), and is a SIZE CONTAINER so the frame and
+     its typography scale off the COLUMN, not the viewport.
+   - .n58-frame-marquee_photo  : absolute cover photo (the bigger layer).
+   - .n58-frame-marquee_frame  : the lime box — centered & square, sized
+     min(78cqw, 88cqh) so it is always smaller than the photo. Clipped by a
+     SINGLE-LAYER CSS mask = the exact SVG silhouette (outer rounded square +
+     top-right brand notch + inner rounded window; window = a hole in the mask,
+     so the photo shows through it). The four bands are CHILDREN → they inherit
+     the same clip (text can't spill past the silhouette / into the window).
+     SINGLE mask layer only — no mask-composite (Chrome drops composited masks
+     inside ancestor-clip contexts; known project gotcha).
+   - Four bands (top/right/bottom/left) each hold a marquee track = two
+     PIXEL-IDENTICAL groups (the 3-phrase set once per group); the track
+     translates by exactly -50% (one group) on a linear infinite loop →
+     seamless. CIRCULATION (clockwise): top→right, right→down, bottom→left,
+     left→up. The left band is rotate(180deg), which flips "down" into "up" AND
+     flips its vertical text into correct bottom→top left-spine reading. Square
+     frame → all four bands equal length → ONE shared --fm-dur → same
+     px/second on every edge → the loop reads as one connected ring.
+   - Per-side band thickness (TOP 12.859% for the notch, the other sides
+     10.943%) and the 0.03em uppercase ink-centering nudge are PIXEL-MEASURED
+     (canvas TextMetrics) — do NOT change them.
+
+   WEBFLOW/FLOWRITER CAVEAT: CSS `mask-*` is not a Webflow styleLess property,
+   and neither are `container-type` / `cqw` / `cqh` units. On Flowriter import,
+   the wrapper rule (container-type + the --fm-size cq expression) and the
+   masked .n58-frame-marquee_frame rule (mask + the SVG data-URI) must live in a
+   CSS EMBED, not Webflow classes. Everything else (bands, tracks, keyframes) is
+   styleLess-friendly longhand. Silhouette fallback file (same shape as the
+   inline data-URI): ../assets/images/frame-marquee-mask.svg
+   ───────────────────────────────────────────────────────────────────────── */
+.n58-frame-marquee {
+  /* Size container → the frame + type scale off the COLUMN, not the viewport.
+     (Flowriter routes container-type + cq-unit declarations to a CSS embed
+     automatically — the "Webflow-friendly" 78% rewrite is obsolete AND broken:
+     % resolves against parent FONT-SIZE inside the --fm-font calc → 0.8px text.) */
+  container-type: size;
+  position: relative;
+  box-sizing: border-box;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  /* The bleed photo wears the same rounding as every other mask/image. */
+  border-top-left-radius: var(--_component---card--radius);
+  border-top-right-radius: var(--_component---card--radius);
+  border-bottom-left-radius: var(--_component---card--radius);
+  border-bottom-right-radius: var(--_component---card--radius);
+  overflow-x: hidden;
+  overflow-y: hidden;
+
+  /* Square frame side = min(78% of column width, 82% of column height). Always
+     smaller than the photo → the photo bleeds past the frame on every side. */
+  --fm-size: min(78cqw, 82cqh);
+  /* Band thickness PER SIDE, from the SVG geometry: the TOP band is thicker
+     (96.35/749.3 ≈ 12.859%, the notch eats into it); the other three sides are
+     82/749.3 ≈ 10.943%. Each band matches ITS visible lime strip exactly so
+     that flexbox centering = optical centering per side. */
+  --fm-band-top: calc(var(--fm-size) * 0.12859);
+  --fm-band-side: calc(var(--fm-size) * 0.10943);
+  --fm-font: calc(var(--fm-band-side) * 0.6);
+  --fm-gap: calc(var(--fm-band-side) * 0.9);
+  --fm-dur: 20s;
+  /* Uppercase optical nudge — measured (canvas TextMetrics), not guessed:
+     Nugros 800 caps ink-center sits 0.03em ABOVE the line-box center; shift
+     glyphs 0.03em toward the descent side to ink-center them per band. */
+  --fm-nudge: 0.03em;
+}
+
+.n58-frame-marquee_photo {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+  z-index: 0;
+}
+
+.n58-frame-marquee_frame {
+  /* Silhouette mask (single layer). Inlined data-URI = preferred; the file at
+     ../assets/images/frame-marquee-mask.svg is the same silhouette (fallback). */
+  --fm-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 749.3 749.3'%3E%3Cpath fill='%23fff' fill-rule='evenodd' d='M41,749.3H14.35c-7.92,0-14.35-6.42-14.35-14.35V14.35C0,6.42,6.42,0,14.35,0h647.88c3.81,0,7.46,1.52,10.15,4.21l72.73,72.86c2.69,2.69,4.19,6.34,4.19,10.14v647.75c0,7.92-6.42,14.35-14.35,14.35H41ZM82,96.35v556.6c0,7.92,6.42,14.35,14.35,14.35h556.6c7.92,0,14.35-6.42,14.35-14.35V121.13c0-3.8-1.51-7.45-4.19-10.14l-24.74-24.78c-2.69-2.7-6.34-4.21-10.15-4.21H96.35c-7.92,0-14.35,6.42-14.35,14.35Z'/%3E%3C/svg%3E");
+
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: var(--fm-size);
+  height: var(--fm-size);
+  z-index: 1;
+  background-color: var(--_palette---core--500);
+  /* single-layer mask → exact silhouette (notch + rounded corners + window) */
+  -webkit-mask-image: var(--fm-mask);
+  mask-image: var(--fm-mask);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center center;
+  mask-position: center center;
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+}
+
+/* ── Bands ──────────────────────────────────────────────────────────────── */
+.n58-frame-marquee_band {
+  position: absolute;
+  display: flex;
+  align-items: center;          /* centre text across the band thickness */
+  justify-content: flex-start;
+  overflow-x: hidden;
+  overflow-y: hidden;
+}
+.n58-frame-marquee_band.is-top {
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: var(--fm-band-top);
+}
+.n58-frame-marquee_band.is-bottom {
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: var(--fm-band-side);
+}
+.n58-frame-marquee_band.is-right {
+  top: var(--fm-band-top);
+  bottom: var(--fm-band-side);
+  right: 0;
+  width: var(--fm-band-side);
+  writing-mode: vertical-rl;    /* text reads top → bottom */
+}
+.n58-frame-marquee_band.is-left {
+  top: var(--fm-band-top);
+  bottom: var(--fm-band-side);
+  left: 0;
+  width: var(--fm-band-side);
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);    /* → text reads bottom → top, flow flips to up */
+}
+
+.n58-frame-marquee_track {
+  display: flex;
+  flex-direction: row;          /* under vertical-rl this stacks groups vertically */
+  align-items: center;
+  width: max-content;
+  height: max-content;
+  animation-duration: var(--fm-dur);
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  animation-delay: 0s;
+  will-change: transform;
+}
+.is-top .n58-frame-marquee_track    { animation-name: n58fm-right; }
+.is-bottom .n58-frame-marquee_track { animation-name: n58fm-left; }
+.is-right .n58-frame-marquee_track  { animation-name: n58fm-down; }
+.is-left .n58-frame-marquee_track   { animation-name: n58fm-down; }
+
+.n58-frame-marquee_group {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  flex-shrink: 0;
+}
+.n58-frame-marquee_phrase {
+  flex-shrink: 0;
+  white-space: nowrap;
+  padding-inline-end: var(--fm-gap);   /* logical → gap works in both orientations */
+  font-family: var(--_typography---family--display);
+  font-size: var(--fm-font);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  color: var(--_palette---neutral--900);
+}
+/* Ink-centering nudge (see --fm-nudge above). Applied on the phrase, not the
+   track — the track's transform is owned by the marquee animation.
+   Horizontal bands: descent side = physical down → translateY(+nudge).
+   Vertical bands (writing-mode:vertical-rl): glyphs run rotated 90° cw, so
+   glyph-ascent maps to local +x and descent to local -x → translateX(-nudge).
+   The left band's rotate(180deg) sits on the BAND, so its children share the
+   right band's local frame — one rule covers both and flips with the band. */
+.is-top .n58-frame-marquee_phrase,
+.is-bottom .n58-frame-marquee_phrase {
+  transform: translateY(var(--fm-nudge));
+}
+.is-right .n58-frame-marquee_phrase,
+.is-left .n58-frame-marquee_phrase {
+  transform: translateX(calc(-1 * var(--fm-nudge)));
+}
+
+/* Keyframes — the -50% seam trick (two identical groups). */
+@keyframes n58fm-right {   /* top → flows rightward  */
+  from { transform: translateX(-50%); }
+  to   { transform: translateX(0); }
+}
+@keyframes n58fm-left {    /* bottom → flows leftward */
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+@keyframes n58fm-down {    /* right → down; left (rotated 180°) → up */
+  from { transform: translateY(-50%); }
+  to   { transform: translateY(0); }
+}
+
+/* PRM exemption — brand motion, same decision as .n58-fx-track. flwr zeroes
+   every animation under reduce-motion; re-assert with matching specificity. */
+@media (prefers-reduced-motion: reduce) {
+  [data-flwr] .is-top .n58-frame-marquee_track    { animation-name: n58fm-right !important; animation-duration: var(--fm-dur) !important; animation-timing-function: linear !important; animation-iteration-count: infinite !important; }
+  [data-flwr] .is-bottom .n58-frame-marquee_track { animation-name: n58fm-left  !important; animation-duration: var(--fm-dur) !important; animation-timing-function: linear !important; animation-iteration-count: infinite !important; }
+  [data-flwr] .is-right .n58-frame-marquee_track,
+  [data-flwr] .is-left .n58-frame-marquee_track   { animation-name: n58fm-down  !important; animation-duration: var(--fm-dur) !important; animation-timing-function: linear !important; animation-iteration-count: infinite !important; }
+}
+
+/* Mobile: everything scales off --fm-size, so only the frame ratio + cap size
+   and speed change per breakpoint. */
+@media (max-width: 767px) {
+  .n58-frame-marquee { aspect-ratio: 1 / 1; --fm-size: min(86cqw, 86cqh); --fm-dur: 16s; }
+}
+@media (max-width: 478px) {
+  .n58-frame-marquee { --fm-size: min(90cqw, 90cqh); --fm-dur: 14s; }
+}
+
+/* Full-bleed image-mode section (Pago de Servicios) — text card over image */
+.home-bleed {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 70vh;
+  padding-top: var(--_spacing---step--8);
+  padding-bottom: var(--_spacing---step--8);
+  padding-left: var(--_spacing---step--5);
+  padding-right: var(--_spacing---step--5);
+  background-position: center center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  border-top-left-radius: var(--_component---card--radius);
+  border-top-right-radius: var(--_component---card--radius);
+  border-bottom-left-radius: var(--_component---card--radius);
+  border-bottom-right-radius: var(--_component---card--radius);
+  overflow-x: hidden;
+  overflow-y: hidden;
+}
+.home-bleed_img {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+}
+.home-bleed_scrim {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color: var(--_palette---scrim--strong);
+  z-index: 0;
+}
+.home-bleed_content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  row-gap: var(--_spacing---step--4);
+  align-items: center;
+  text-align: center;
+  max-width: 42rem;
+}
+
+/* App-store badges row */
+.app-badges {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: var(--_spacing---step--3);
+  row-gap: var(--_spacing---step--3);
+  align-items: center;
+}
+.app-badge_img {
+  display: block;
+  height: 2.75rem;
+  width: auto;
+}
+
+/* FAQ list — centered, constrained */
+.home-faq_list {
+  max-width: 48rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   FAQ TOGGLE — brand plus/minus + active (open) state.
+   Icon is two crisp CSS bars (currentColor) so it (a) animates on the GPU — the
+   old <img> bars rasterised on rotate, which stuttered — and (b) adapts to the
+   text colour. Closed = "+"; open = "−" (the vertical arm retracts to centre).
+   Open item flips to the brand magenta with dark ink.
+   ───────────────────────────────────────────────────────────────────────── */
+/* Kill flwr's default ::after "+" glyph on this FAQ list only. */
+[data-flwr] .home-faq_list .flwr_accordion_trigger::after { content: none; }
+/* Let the long question wrap instead of shoving the icon off-screen; relative so
+   the auto-play loading bar can pin to the trigger's bottom edge. */
+[data-flwr] .home-faq_list .flwr_accordion_trigger { align-items: center; position: relative; }
+.n58-faq-q { min-width: 0; }
+
+/* Snappy ease reused across the FAQ (easeOutExpo — fast out, smooth settle). */
+.home-faq_list { --n58-faq-ease: cubic-bezier(0.16, 1, 0.3, 1); }
+
+/* Auto-play loading bar — a full-width cream bar scaled from the left (GPU
+   transform, not width, so it's buttery). JS drives the scaleX + a ramped ease. */
+.n58-faq-progress {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 4px;
+  transform: scaleX(0);
+  transform-origin: left center;
+  background-color: var(--_theme---text--main);
+  pointer-events: none;
+  will-change: transform;
+}
+
+/* Answer wrapper — JS animates its height (0 ↔ auto) for a smooth expand. */
+.n58-faq-answer { overflow: hidden; }
+
+.n58-plus {
+  position: relative;
+  display: block;
+  flex-shrink: 0;
+  width: 1.1rem;
+  height: 1.1rem;
+}
+.n58-plus::before,
+.n58-plus::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  background-color: currentColor;
+  border-top-left-radius: var(--n58-radius-control);
+  border-top-right-radius: var(--n58-radius-control);
+  border-bottom-left-radius: var(--n58-radius-control);
+  border-bottom-right-radius: var(--n58-radius-control);
+  transform: translate(-50%, -50%);
+  transition-property: transform, opacity;
+  transition-duration: 320ms;
+  transition-timing-function: var(--n58-faq-ease);
+  will-change: transform;
+}
+.n58-plus::before { width: 100%; height: 2.5px; }   /* horizontal arm */
+.n58-plus::after  { width: 2.5px; height: 100%; }    /* vertical arm */
+/* Active = minus: the vertical arm cleanly retracts to the centre. */
+[data-flwr] .home-faq_list .flwr_accordion_item.is-active .n58-plus::after {
+  transform: translate(-50%, -50%) scaleY(0);
+  opacity: 0;
+}
+
+/* Active (open) item — brand magenta with dark ink (icon inherits currentColor).
+   Driven by an .is-active class (not [open]) so the colour animates back out
+   during the close, while [open] keeps the answer rendered for its collapse. */
+[data-flwr] .home-faq_list .flwr_accordion_item {
+  transition-property: background-color, border-color;
+  transition-duration: 320ms;
+  transition-timing-function: var(--n58-faq-ease);
+}
+[data-flwr] .home-faq_list .flwr_accordion_item.is-active {
+  background-color: var(--_palette---alternate--500);
+  border-color: var(--_palette---alternate--500);
+}
+[data-flwr] .home-faq_list .flwr_accordion_item.is-active .flwr_accordion_trigger {
+  color: var(--_palette---neutral--900);
+}
+[data-flwr] .home-faq_list .flwr_accordion_item.is-active .flwr_accordion_content,
+[data-flwr] .home-faq_list .flwr_accordion_item.is-active .flwr_accordion_content p {
+  color: color-mix(in oklch, var(--_palette---neutral--900) 82%, transparent);
+}
+
+/* Brand motion survives reduce-motion (icon morph + colour flip; the height +
+   loading-bar transitions are set inline with !important by the script). */
+@media (prefers-reduced-motion: reduce) {
+  [data-flwr] .home-faq_list .flwr_accordion_item,
+  [data-flwr] .n58-plus::before,
+  [data-flwr] .n58-plus::after { transition-duration: 320ms !important; }
+}
+
+/* Floating "AlaN" chatbot trigger */
+/* AlaN chat FAB — pinned bottom-right. Needs [data-flwr] specificity (0,2,0)
+   to beat the notch button's own `position: relative` on
+   [data-flwr] .flwr_button_primary; otherwise `fixed` is overridden and the
+   button slides off-screen as a relatively-positioned element. */
+[data-flwr] .alan-fab {
+  position: fixed;
+  right: var(--_spacing---step--5);
+  bottom: var(--_spacing---step--5);
+  left: auto;
+  top: auto;
+  z-index: 60;
+  transition: opacity 0.3s var(--_motion---ease-standard),
+              transform 0.3s var(--_motion---ease-standard),
+              color 0.3s var(--_motion---ease-standard),
+              visibility 0s linear 0s;
+}
+/* Smooth the FAB's per-section theme swap (is-invert toggled by the scroll script)
+   — animate the notch face + shadow, and darken the cream mascot so it reads on
+   the lime (light-section) face. */
+[data-flwr] .alan-fab::before,
+[data-flwr] .alan-fab::after {
+  transition: background-color 0.3s var(--_motion---ease-standard),
+              transform 0.28s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+[data-flwr] .alan-fab.is-invert [data-flwr-target="icon-leading"] {
+  filter: brightness(0);
+}
+/* Hidden once the footer bottom bar is reached, so it stops overlapping the
+   footer's Línea N58 / WhatsApp CTAs (toggled by an IntersectionObserver in
+   index.html). */
+[data-flwr] .alan-fab.is-hidden {
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(0.75rem);
+  pointer-events: none;
+  transition: opacity 0.3s var(--_motion---ease-standard),
+              transform 0.3s var(--_motion---ease-standard),
+              visibility 0s linear 0.3s;
+}
+/* Smaller mascot icon for this FAB (framework default is 1.25em). */
+[data-flwr] .alan-fab [data-flwr-target="icon-leading"] {
+  height: 1em;
+}
+
+/* Small notch button — pairs with the framework's .is-small size modifier:
+   slimmer slant, tighter padding, smaller font + a gentler hover lift. Used for
+   the footer contact chips (phone / email) and any other compact CTA. */
+[data-flwr] .flwr_button_primary.is-small,
+[data-flwr] .flwr_button_secondary.is-small,
+[data-flwr] .flwr_button_ghost.is-small,
+[data-flwr] .flwr_button_alert.is-small,
+[data-flwr] .flwr_button_link.is-small {
+  --slant-size: 9px;
+  padding-top: 7px;
+  padding-bottom: 7px;
+  padding-left: 14px;
+  padding-right: 14px;
+  font-size: var(--_typography---size--small);
+}
+[data-flwr] .flwr_button_primary.is-small:hover,
+[data-flwr] .flwr_button_secondary.is-small:hover,
+[data-flwr] .flwr_button_ghost.is-small:hover,
+[data-flwr] .flwr_button_alert.is-small:hover,
+[data-flwr] .flwr_button_link.is-small:hover {
+  transform: translate(-5px, -5px);
+}
+
+/* In this project buttons are notch-shaped. Outline keeps the notch face
+   (::before) but renders it hollow — transparent face at rest so only the notch
+   border (currentColor) + the rounded/slanted shape show; on hover the ink face
+   fills in (notch + rounded corners preserved). The offset-shadow duplicate
+   (::after) and the hover lift are dropped. Border/text colours come from the
+   framework .is-outline / .is-outline-ink rules. */
+[data-flwr] :is(.flwr_button_primary, .flwr_button_secondary, .flwr_button_ghost, .flwr_button_alert, .flwr_button_link).is-outline {
+  border-width: 0;
+  background-color: transparent;
+  --notch-fill: transparent;
+  transition-property: color;
+  transition-duration: 0.2s;
+  transition-timing-function: var(--_motion---ease-standard);
+}
+[data-flwr] :is(.flwr_button_primary, .flwr_button_secondary, .flwr_button_ghost, .flwr_button_alert, .flwr_button_link).is-outline::before {
+  /* Keep the charging-fill sweep alive on outline chips too (2nd value pair). */
+  transition-property: background-color, background-size;
+  transition-duration: 0.2s, 0.62s;
+  transition-timing-function: var(--_motion---ease-standard), cubic-bezier(0.65, 0, 0.35, 1);
+}
+[data-flwr] :is(.flwr_button_primary, .flwr_button_secondary, .flwr_button_ghost, .flwr_button_alert, .flwr_button_link).is-outline::after {
+  display: none;
+}
+[data-flwr] :is(.flwr_button_primary, .flwr_button_secondary, .flwr_button_ghost, .flwr_button_alert, .flwr_button_link).is-outline:is(:hover, :focus-visible) {
+  background-color: transparent;
+  --notch-fill: var(--_palette---neutral--900);
+}
+[data-flwr] :is(.flwr_button_primary, .flwr_button_secondary, .flwr_button_ghost, .flwr_button_alert, .flwr_button_link).is-outline:is(:hover, :active) {
+  transform: none;
+}
+
+/* Notch inverted fill — the variant colour becomes the notch face; the label,
+   border + notch edge read as ink; the offset-shadow duplicate flips to ink so it
+   reads as a shadow behind the coloured face. Notch + lift kept. For CTAs on
+   light / brand sections (host bg stays transparent — the face is ::before). */
+[data-flwr] :is(.flwr_button_primary, .flwr_button_secondary, .flwr_button_ghost, .flwr_button_alert, .flwr_button_link).is-invert {
+  background-color: transparent;
+  --notch-fill: var(--_button-style---text);
+  --notch-shadow: var(--_palette---neutral--900);
+  color: var(--_palette---neutral--900);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   FX TICKER — CSS compositor marquee (NOT the JS engine). A tiny init script in
+   index.html clones the item set into two equal groups wide enough to fill the
+   viewport, then this CSS animation scrolls the track by exactly one group
+   (translateX 0 → -50%) — seamless, and running on the compositor thread so it
+   stays smooth on mobile while the page scrolls. No per-frame JavaScript.
+   ───────────────────────────────────────────────────────────────────────── */
+.n58-fx-bar {
+  /* Desktop uses the flwr JS marquee (item spacing = this gap var). Mobile swaps
+     to the CSS marquee below, which spaces items via .n58-fx-group. */
+  --_component---marquee--gap: 3rem;
+  /* Centered rounded pill — capped to the content width and floated off the
+     edges (gutter + centering come from the FULL-BLEED GUTTER rule above). */
+  box-sizing: border-box;
+  max-width: calc(var(--n58-container-max) - 2 * var(--_spacing---page-margin));
+  /* Vertical breathing room so the label/value don't touch the pill edges.
+     Applies to both the desktop flwr marquee and the mobile CSS one. No
+     horizontal padding — the marquee scrolls edge-to-edge and the rounded
+     corners clip it. */
+  padding-top: var(--_spacing---step--4);
+  padding-bottom: var(--_spacing---step--4);
+  padding-left: 0;
+  padding-right: 0;
+  background-color: var(--_palette---neutral--900);
+  color: var(--_palette---neutral--0);
+  /* Full pill outline (replaces the old top/bottom-only rules). */
+  border-top-width: 2px;
+  border-right-width: 2px;
+  border-bottom-width: 2px;
+  border-left-width: 2px;
+  border-top-style: solid;
+  border-right-style: solid;
+  border-bottom-style: solid;
+  border-left-style: solid;
+  border-top-color: var(--_palette---neutral--800);
+  border-right-color: var(--_palette---neutral--800);
+  border-bottom-color: var(--_palette---neutral--800);
+  border-left-color: var(--_palette---neutral--800);
+  border-top-left-radius: var(--n58-radius-pill);
+  border-top-right-radius: var(--n58-radius-pill);
+  border-bottom-left-radius: var(--n58-radius-pill);
+  border-bottom-right-radius: var(--n58-radius-pill);
+  /* Clip the scrolling marquee to the rounded ends. */
+  overflow-x: hidden;
+  overflow-y: hidden;
+}
+.n58-fx-marquee {
+  overflow-x: hidden;
+  overflow-y: hidden;
+}
+.n58-fx-track {
+  display: flex;
+  width: max-content;
+  animation-name: n58-fx-scroll;
+  animation-duration: var(--n58-fx-dur, 40s);
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  /* Keep it on its own compositor layer so scrolling the page doesn't repaint it. */
+  will-change: transform;
+}
+.n58-fx-group {
+  display: flex;
+  align-items: center;
+  column-gap: 3rem;
+  padding-left: 3rem;   /* keeps spacing across the group seam */
+}
+@keyframes n58-fx-scroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+.n58-fx-marquee:hover .n58-fx-track { animation-play-state: paused; }
+/* PRM exemption — flwr zeroes every animation under reduce-motion (see
+   framework.css). This ticker is brand motion (the live site runs it regardless),
+   so re-assert it with the same specificity + !important, matching the button
+   exemption pattern used elsewhere in this file. */
+@media (prefers-reduced-motion: reduce) {
+  [data-flwr] .n58-fx-track {
+    animation-name: n58-fx-scroll !important;
+    animation-duration: var(--n58-fx-dur, 40s) !important;
+    animation-timing-function: linear !important;
+    animation-iteration-count: infinite !important;
+  }
+}
+.n58-fx-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  row-gap: 0.35rem;
+}
+.n58-fx-label {
+  font-size: 1rem;
+  font-weight: 500;
+  line-height: 1;
+  color: var(--_palette---alternate--500);
+}
+.n58-fx-value {
+  font-size: 1.5rem;
+  font-weight: 500;
+  line-height: 1;
+  color: var(--_palette---neutral--0);
+}
+.n58-fx-sep {
+  height: 1.5rem;
+  width: auto;
+  flex-shrink: 0;
+  align-self: center;
+}
+
+/* Anti-fraud dialog (first-visit). Native <dialog>; cookie-gated by embed JS. */
+.antifraud-dialog {
+  box-sizing: border-box;
+  /* min() keeps a 1rem gutter on each side on mobile (calc(100% - 2rem)) while
+     capping at 30rem on desktop — with border-box the padding stays inside the
+     width, so the dialog can't overflow the viewport. */
+  width: min(30rem, calc(100% - 2rem));
+  padding-top: var(--_spacing---step--6);
+  padding-bottom: var(--_spacing---step--6);
+  padding-left: var(--_spacing---step--5);
+  padding-right: var(--_spacing---step--5);
+  border-top-width: 0;
+  border-right-width: 0;
+  border-bottom-width: 0;
+  border-left-width: 0;
+  border-top-left-radius: var(--_component---card--radius);
+  border-top-right-radius: var(--_component---card--radius);
+  border-bottom-left-radius: var(--_component---card--radius);
+  border-bottom-right-radius: var(--_component---card--radius);
+  background-color: var(--_theme---surface--main);
+  color: var(--_theme---text--main);
+}
+.antifraud-dialog::backdrop {
+  background-color: var(--_palette---scrim--strong);
+}
+/* The dialog takes programmatic focus on open (so the CTA isn't ringed). It's a
+   container, not a tabbed control, so suppress its own focus outline. */
+[data-flwr] .antifraud-dialog:focus,
+[data-flwr] .antifraud-dialog:focus-visible {
+  outline-width: 0;
+  outline-style: none;
+}
+/* Close (X) button — top-right of the modal. */
+.antifraud-dialog { position: relative; }
+/* ─────────────────────────────────────────────────────────────────────────
+   SHARED MODAL CLOSE — brand two-bar "X" (the same notched cream bars the
+   fullscreen menu uses), so every dialog/modal closes with the same control.
+   Markup: <button class="n58-modal-close"><span class="n58-close-x">2× bar
+   imgs</span></button>. Bars sit crossed at rest; hover spins the X.
+   ───────────────────────────────────────────────────────────────────────── */
+[data-flwr] .n58-modal-close {
+  position: absolute;
+  top: var(--_spacing---step--4);
+  right: var(--_spacing---step--4);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  padding-top: 0;
+  padding-right: 0;
+  padding-bottom: 0;
+  padding-left: 0;
+  border-top-width: 0;
+  border-right-width: 0;
+  border-bottom-width: 0;
+  border-left-width: 0;
+  border-top-left-radius: var(--n58-radius-pill);
+  border-top-right-radius: var(--n58-radius-pill);
+  border-bottom-left-radius: var(--n58-radius-pill);
+  border-bottom-right-radius: var(--n58-radius-pill);
+  background-color: transparent;
+  cursor: pointer;
+  z-index: 2;
+}
+[data-flwr] .n58-close-x {
+  position: relative;
+  display: block;
+  width: 26px;
+  height: 26px;
+}
+[data-flwr] .n58-close-x_bar {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 100%;
+  height: auto;
+  display: block;
+  transition-property: transform;
+  transition-duration: var(--_motion---duration-base);
+  transition-timing-function: var(--_motion---ease-standard);
+}
+[data-flwr] .n58-close-x_bar--1 { transform: translateY(-50%) rotate(45deg); }
+[data-flwr] .n58-close-x_bar--2 { transform: translateY(-50%) rotate(-45deg); }
+[data-flwr] .n58-modal-close:hover .n58-close-x_bar--1 { transform: translateY(-50%) rotate(135deg); }
+[data-flwr] .n58-modal-close:hover .n58-close-x_bar--2 { transform: translateY(-50%) rotate(-135deg); }
+@media (prefers-reduced-motion: reduce) {
+  [data-flwr] .n58-close-x_bar { transition-duration: var(--_motion---duration-base) !important; }
+}
+/* Left-aligned modal body. The close X sits in the top-right corner; with
+   left-aligned content that reads as a standard corner-close (a centered layout
+   made the corner X look off-balance). Reserve right-side room on the title so
+   its first line wraps before the X instead of running under it — derived from
+   the close button's geometry (top: step-4 offset + 2.5rem width + gap). */
+.antifraud-body {
+  width: 100%;
+  text-align: left;
+}
+[data-flwr] .antifraud-dialog #antifraud-title {
+  box-sizing: border-box;
+  width: 100%;
+  padding-right: calc(var(--_spacing---step--4) + 2.75rem);
+}
+
+.antifraud-urls {
+  display: flex;
+  flex-direction: column;
+  row-gap: var(--_spacing---step--2);
+  width: 100%;
+  margin-top: var(--_spacing---step--3);
+  padding-top: var(--_spacing---step--3);
+  padding-bottom: var(--_spacing---step--3);
+  border-top-width: 1px;
+  border-top-style: solid;
+  border-top-color: var(--_theme---border--subtle);
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+  border-bottom-color: var(--_theme---border--subtle);
+}
+
+@media (max-width: 767px) {
+  .home-split { grid-template-columns: 1fr; }
+}
+/* Tablet + mobile: the image-mode card sizes by aspect-ratio, no viewport-height
+   minimum (the pinned scene is desktop-only — see § STICKY MASK SCENE). */
+@media (max-width: 991px) {
+  /* Portrait card on small screens (≥ 4:5 tall — was 4:3 landscape). Content
+     taller than the ratio still grows the box (min-height:auto), so 4:5 is a
+     floor, not a cap. */
+  .home-bleed { min-height: 0; aspect-ratio: 4 / 5; }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   n58-badge — the N58 chamfered shape as a HIGHLIGHT behind display text
+   (NB: flwr already ships a `flwr_tag` soft-pill component, so this project
+    shape is namespaced `n58-` to avoid colliding with it.)
+   ───────────────────────────────────────────────────────────────────────────
+   Wrap one or two words of a heading. The shape is painted on a ::before layer
+   BEHIND the text, so big type overhangs it (like a marker stroke) and is never
+   clipped. It grows with the words — the caps never distort:
+
+     <h1>Finanzas del <span class="n58-badge is-alternate">país.</span></h1>
+
+   • Exact SVG silhouette — rounded corners + the subtle curved 45° cuts — built
+     from two FIXED end-cap SVGs + a stretchable solid middle, composited as a
+     mask (works in every modern browser incl. Firefox). The caps never resize;
+     only the middle rectangle grows with the word. A clip-path chamfer is the
+     no-mask fallback (sharp un-cut corners) — still on-brand, just no 12px rounds.
+   • Everything is in `em`, so the bar + cut scale with the heading's font-size.
+     Cut ratio 0.567 = 58.72 / 103.57 from the source SVG → a true 45°.
+   • Combo class sets the FILL only; the TEXT color is inherited from the heading
+     (that's why the same purple reads dark on a light page and cream over a
+     photo). Add a flwr text-color utility on the heading to change the ink.
+
+   Tuning knobs (set inline or per section):
+     --n58-badge-h      bar height as a fraction of the text         (0.66em)
+     --n58-badge-drop   how far the bar sits below the baseline       (0)
+     --n58-badge-bleed  how far the fill extends past the words       (0.18em)
+   ═════════════════════════════════════════════════════════════════════════ */
+.n58-badge {
+  --n58-badge-h: 0.66em;
+  --n58-badge-chamfer: calc(var(--n58-badge-h) * 0.567);  /* 45° cut, exact SVG ratio */
+  --n58-badge-drop: 0em;
+  --n58-badge-bleed: 0.18em;
+  --n58-badge-fill: var(--_palette---alternate--500);     /* default ≈ the SVG purple */
+
+  position: relative;
+  display: inline-block;
+  isolation: isolate;            /* keep the -1 layer behind the text, not the page */
+}
+.n58-badge::before {
+  content: "";
+  position: absolute;
+  z-index: -1;                   /* behind the glyphs */
+  left: calc(-1 * var(--n58-badge-bleed));
+  right: calc(-1 * var(--n58-badge-bleed));
+  bottom: var(--n58-badge-drop);
+  height: var(--n58-badge-h);
+  background-color: var(--n58-badge-fill);
+  /* Firefox fallback: straight 45° chamfers, sharp un-cut corners. */
+  clip-path: polygon(
+    0 0,
+    calc(100% - var(--n58-badge-chamfer)) 0,
+    100% var(--n58-badge-chamfer),
+    100% 100%,
+    var(--n58-badge-chamfer) 100%,
+    0 calc(100% - var(--n58-badge-chamfer))
+  );
+}
+
+/* Exact silhouette (rounded corners + curved cuts) wherever CSS masks are
+   supported (all modern browsers, incl. Firefox). The shape is composited from
+   THREE mask layers that UNION (default add):
+     1. left end-cap SVG   — fixed width (= the chamfer), pinned to the left
+     2. right end-cap SVG  — fixed width, pinned to the right
+     3. a solid middle bar — stretches to fill the gap between the caps
+   So the caps NEVER distort; only the middle rectangle grows with the word.
+   Each cap viewBox is 58.72×103.57 (the exact slice of the source SVG), drawn at
+   `--n58-badge-chamfer × 100%` → its 0.567 aspect is preserved → true 45°. */
+@supports (mask-image: url("a")) or (-webkit-mask-image: url("a")) {
+  .n58-badge::before {
+    clip-path: none;
+    -webkit-mask:
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 58.72 103.57'%3E%3Cpath fill='black' d='M58.72,0 H12.21 C5.47,0,0,5.47,0,12.21 v32.55 c0,3.24,1.29,6.34,3.57,8.63 17.61,17.65 28.89,28.94 46.5,46.58 2.29,2.3 5.4,3.59 8.65,3.59 Z'/%3E%3C/svg%3E") left center / var(--n58-badge-chamfer) 100% no-repeat,
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 58.72 103.57'%3E%3Cpath fill='black' d='M46.51,103.57 c6.75,0,12.21,-5.47,12.21,-12.21 v-32.55 c0,-3.24,-1.29,-6.34,-3.57,-8.63 -17.61,-17.65,-28.89,-28.94,-46.5,-46.58 -2.29,-2.3,-5.4,-3.59,-8.65,-3.59 V103.57 Z'/%3E%3C/svg%3E") right center / var(--n58-badge-chamfer) 100% no-repeat,
+      linear-gradient(#000, #000) center / calc(100% - 2 * var(--n58-badge-chamfer) + 2px) 100% no-repeat;
+    mask:
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 58.72 103.57'%3E%3Cpath fill='black' d='M58.72,0 H12.21 C5.47,0,0,5.47,0,12.21 v32.55 c0,3.24,1.29,6.34,3.57,8.63 17.61,17.65 28.89,28.94 46.5,46.58 2.29,2.3 5.4,3.59 8.65,3.59 Z'/%3E%3C/svg%3E") left center / var(--n58-badge-chamfer) 100% no-repeat,
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 58.72 103.57'%3E%3Cpath fill='black' d='M46.51,103.57 c6.75,0,12.21,-5.47,12.21,-12.21 v-32.55 c0,-3.24,-1.29,-6.34,-3.57,-8.63 -17.61,-17.65,-28.89,-28.94,-46.5,-46.58 -2.29,-2.3,-5.4,-3.59,-8.65,-3.59 V103.57 Z'/%3E%3C/svg%3E") right center / var(--n58-badge-chamfer) 100% no-repeat,
+      linear-gradient(#000, #000) center / calc(100% - 2 * var(--n58-badge-chamfer) + 2px) 100% no-repeat;
+  }
+}
+
+/* Display-scale variant — for badges inside f-text-display / f-text-h1
+   headings. At that size the default bar reads too high and too thin against
+   the uppercase caps: sit the shape LOWER (below the baseline) and make it a
+   touch taller + wider so the glyphs overhang like a real marker stroke. */
+.n58-badge.is-display {
+  /* Display headings run leading--tight/squashed (line-height ≤0.95), which
+     shrinks the inline box the bar anchors to — so the drop must go well
+     negative to reproduce the eyebrow badges' geometry (their 1.5 line-height
+     gives them ~0.25em of free hang below the em box). Tuned live against
+     the "PARA TI" hero at 112px. */
+  --n58-badge-h: 0.72em;
+  --n58-badge-drop: -0.2em;
+  --n58-badge-bleed: 0.22em;
+}
+/* The display badge overhangs 0.2em below its heading's box — give any
+   element carrying one matching extra clearance (adds to the stack gap) so
+   the shape never touches the block underneath. em-based → scales with the
+   heading size. */
+[data-flwr] :is(h1, h2, h3, h4, p):has(.n58-badge.is-display) {
+  margin-bottom: 0.28em;
+}
+
+/* Color variants — combo class sets the FILL only (text color inherits). */
+.n58-badge.is-core        { --n58-badge-fill: var(--_palette---core--500);        }
+.n58-badge.is-alternate   { --n58-badge-fill: var(--_palette---alternate--500);   }
+.n58-badge.is-alternate-2 { --n58-badge-fill: var(--_palette---alternate-2--500); }
+.n58-badge.is-accent      { --n58-badge-fill: var(--_palette---accent--500);      }
+.n58-badge.is-accent-2    { --n58-badge-fill: var(--_palette---accent-2--500);    }
+.n58-badge.is-alert       { --n58-badge-fill: var(--_palette---alert--500);       }
+.n58-badge.is-neutral     { --n58-badge-fill: var(--_palette---neutral--500);     }
+.n58-badge.is-inverse     { --n58-badge-fill: var(--_palette---neutral--900);     }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   HOME MOTION — micro-interactions + scroll choreography
+   ───────────────────────────────────────────────────────────────────────────
+   All scroll-linked motion uses native CSS scroll-driven animations (the flwr
+   way — compositor thread, zero JS). Every scrubbed keyframe animates FROM a
+   hidden state TO the element's natural state, so browsers without
+   `animation-timeline` (and reduce-motion users, via the media gate) simply
+   render the final, static design. Anything whose END state is not the natural
+   design (hero exit, progress bar, sticky mask scene) is additionally guarded
+   behind @supports (animation-timeline: view()).
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ─────────────────────────────────────────────────────────────────────────
+   § BUTTON CHARGING FILL — click a notch CTA and its face floods left→right
+   with the button's own brand color (currentColor), like a loading bar; the
+   label flips to the face color as the sweep passes. The nav-fill script in
+   index.html adds .is-filling on click and performs the navigation (or the
+   smooth #anchor scroll) when the sweep completes. The sweep itself is the
+   2nd background layer declared on the notch ::before above.
+   ───────────────────────────────────────────────────────────────────────── */
+/* The fill is a CLICK interaction only — hover keeps the classic lift +
+   offset-shadow untouched. On click the nav-fill script adds .is-filling: the
+   face floods left→right with the button's own brand color like a loading
+   bar; when the charge completes the script scrolls to the next section
+   (data-n58-scroll-next / #anchor) or fades out and navigates. Outline chips
+   excluded (transparent face — the label would vanish); the AlaN FAB excluded
+   (it runs its own per-section inversion). */
+[data-flwr] :is(.flwr_button_primary, .flwr_button_secondary, .flwr_button_ghost, .flwr_button_alert, .flwr_button_link).is-filling:not(.is-outline):not(.alan-fab)::before {
+  background-size: calc(var(--slant-size) + 1.3 * var(--border-width)) calc(var(--slant-size) + 1.3 * var(--border-width)), 100% 100%;
+}
+/* Offset shadow flips to the resting face color (ink → brand on .is-invert)
+   while charging, so the filled button keeps its two-tone offset look. */
+[data-flwr] :is(.flwr_button_primary, .flwr_button_secondary, .flwr_button_ghost, .flwr_button_alert, .flwr_button_link).is-filling:not(.is-outline):not(.alan-fab)::after {
+  background-color: var(--notch-fill);
+}
+/* Label flips to the resting face color just as the bar passes under it. */
+[data-flwr] :is(.flwr_button_primary, .flwr_button_secondary, .flwr_button_ghost, .flwr_button_alert, .flwr_button_link).is-filling:not(.is-outline):not(.alan-fab) [data-flwr-target="label"] {
+  color: var(--notch-fill);
+  transition-property: color;
+  transition-duration: 0.22s;
+  transition-delay: 0.16s;
+  transition-timing-function: var(--_motion---ease-standard);
+}
+/* Brand motion survives reduce-motion like the rest of the button system (the
+   JS shortens its wait to ~120ms there, so the fill still reads, just quicker). */
+@media (prefers-reduced-motion: reduce) {
+  [data-flwr] :is(.flwr_button_primary, .flwr_button_secondary, .flwr_button_ghost, .flwr_button_alert, .flwr_button_link)::before {
+    transition-duration: 0.12s !important;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   § PAGE PRELOADER + TRANSITIONS — the ink loading screen ported from the
+   live site (280×14 lime-bordered bar, ~2s ease-out fill) covers the page
+   from first paint; the lift script fades it on window.load (+500ms, 3s hard
+   fallback). While the wrapper is .is-booting the hero entrance is paused so
+   it plays the moment the loader lifts. .n58-page-leave = fade out before a
+   CTA-driven navigation (nav-fill script).
+   ───────────────────────────────────────────────────────────────────────── */
+[data-flwr].n58-page {
+  transition-property: opacity;
+  transition-duration: 0.24s;
+  transition-timing-function: var(--_motion---ease-accelerate);
+}
+[data-flwr].n58-page-leave { opacity: 0; }
+
+[data-flwr] .n58-preloader {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--_palette---neutral--900);
+  z-index: 2000;                /* above navbar (1200) + scroll progress (1300) */
+  transition-property: opacity, visibility;
+  transition-duration: 0.3s;
+  transition-timing-function: var(--_motion---ease-standard);
+}
+[data-flwr] .n58-preloader.is-done {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+/* The bar wears the notch-button face: 5px rounded corners + the sliced
+   top-right corner. Same recipe as the buttons — border drawn as an inset
+   ring (box-shadow) + a corner-triangle gradient supplying the diagonal edge,
+   everything cut by the notch clip-path. slant 9px = the .is-small button. */
+.n58-preloader_bar {
+  --slant-size: 9px;
+  --border-width: 2px;
+  position: relative;
+  width: 280px;
+  height: 18px;
+  color: var(--_palette---core--500);
+  background-image: linear-gradient(to bottom left, currentColor 50%, transparent 50.1%);
+  background-position: top right;
+  background-size: calc(var(--slant-size) + 1.3 * var(--border-width)) calc(var(--slant-size) + 1.3 * var(--border-width));
+  background-repeat: no-repeat;
+  box-shadow: 0 0 0 var(--border-width) currentColor inset;
+  clip-path: polygon(0 0, calc(100% - var(--slant-size)) 0, 100% var(--slant-size), 100% 100%, 0% 100%, 0% 0%);
+  border-top-left-radius: var(--n58-radius-control);
+  border-top-right-radius: var(--n58-radius-control);
+  border-bottom-left-radius: var(--n58-radius-control);
+  border-bottom-right-radius: var(--n58-radius-control);
+  overflow-x: hidden;
+  overflow-y: hidden;
+}
+.n58-preloader_fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--_palette---core--500);
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  animation-name: n58-preloader-load;
+  animation-duration: 2s;
+  animation-timing-function: var(--_motion---ease-decelerate);
+  animation-fill-mode: forwards;
+}
+@keyframes n58-preloader-load {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+/* Loading feedback is brand motion — keep the bar moving under reduce-motion
+   (same exemption pattern as the ticker/buttons). */
+@media (prefers-reduced-motion: reduce) {
+  [data-flwr] .n58-preloader_fill {
+    animation-name: n58-preloader-load !important;
+    animation-duration: 2s !important;
+    animation-fill-mode: forwards !important;
+  }
+}
+/* Hold the hero entrance while the loader covers the page; the lift script
+   removes .is-booting and the stagger plays from frame zero. */
+@media (prefers-reduced-motion: no-preference) {
+  [data-flwr].is-booting .n58-hero .home-stack > *,
+  [data-flwr].is-booting .n58-hero .home-media,
+  [data-flwr].is-booting .n58-hero .n58-hero_coins {
+    animation-play-state: paused;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   § SCROLL PROGRESS — 3px lime bar pinned to the top edge, scrubbed by the
+   root scroll. Hidden entirely where scroll timelines are unsupported.
+   ───────────────────────────────────────────────────────────────────────── */
+.n58-scroll-progress { display: none; }
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: scroll()) {
+    [data-flwr] .n58-scroll-progress {
+      display: block;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background-color: var(--_palette---core--500);
+      transform: scaleX(0);
+      transform-origin: 0 50%;
+      z-index: 1300;              /* above the z-1200 navbar */
+      pointer-events: none;
+      animation-name: n58-progress;
+      animation-timing-function: linear;
+      animation-fill-mode: both;
+      animation-timeline: scroll(root block);
+    }
+  }
+}
+@keyframes n58-progress {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   § IMAGE HOVER — a soft lime border DRAWS itself clockwise around the image
+   (conic-gradient ring masked to a 2.5px inner outline; the sweep angle is a
+   registered @property so it transitions smoothly), paired with a slow zoom.
+   The zoom uses the standalone `scale` property so it composes with — and is
+   never clobbered by — the reveal animations that own `transform`.
+   Desktop-pointer only (hover: hover) so touch never gets a stuck ring.
+   ───────────────────────────────────────────────────────────────────────── */
+@property --n58-ring {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: 0%;
+}
+.home-media { position: relative; }
+@media (hover: hover) {
+  .home-media::after,
+  .n58-gallery-card::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    box-sizing: border-box;
+    /* The rim is a REAL rounded border (so it follows the corner arcs instead
+       of getting clipped by them); the draw-around sweep comes from a single
+       conic-gradient mask layer. Single layer = no mask-composite, which
+       Chrome drops inside clip-path'd ancestors (the notched cards) — there
+       the f-notch clip cuts the border at the diagonal and ::before paints
+       the missing diagonal segment. */
+    border-top-width: 2.5px;
+    border-right-width: 2.5px;
+    border-bottom-width: 2.5px;
+    border-left-width: 2.5px;
+    border-top-style: solid;
+    border-right-style: solid;
+    border-bottom-style: solid;
+    border-left-style: solid;
+    border-top-color: var(--n58-ring-color, var(--_palette---core--500));
+    border-right-color: var(--n58-ring-color, var(--_palette---core--500));
+    border-bottom-color: var(--n58-ring-color, var(--_palette---core--500));
+    border-left-color: var(--n58-ring-color, var(--_palette---core--500));
+    /* Inherit the media's ACTUAL radius so the ring corners always match — the
+       hero frames use 22px (.tpl-media-frame), plain media uses card--radius; a
+       fixed radius here mismatched and overflowed at the corners. */
+    border-top-left-radius: inherit;
+    border-top-right-radius: inherit;
+    border-bottom-left-radius: inherit;
+    border-bottom-right-radius: inherit;
+    -webkit-mask-image: conic-gradient(from 0deg at 50% 50%, #000 var(--n58-ring), transparent var(--n58-ring));
+    mask-image: conic-gradient(from 0deg at 50% 50%, #000 var(--n58-ring), transparent var(--n58-ring));
+    pointer-events: none;
+    z-index: 2;
+    transition-property: --n58-ring;
+    transition-duration: 0.85s;
+    transition-timing-function: var(--_motion---ease-emphasized);
+  }
+  .home-media:hover::after,
+  .n58-gallery-card:hover::after { --n58-ring: 100%; }
+
+  /* Notched cards (f-notch*): the clip-path slices the rim strips at the
+     top-right corner, leaving a bare gap along the notch diagonal. Paint the
+     missing diagonal segment on ::before with the same corner-triangle trick
+     the notch buttons use (a triangle bled 3.5px past the clip diagonal → the
+     clip leaves a ~2.5px diagonal band). It fades in just as the clockwise
+     sweep reaches the corner, and back out as the ring retracts. */
+  .n58-gallery-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-image: linear-gradient(to bottom left, var(--n58-ring-color, var(--_palette---core--500)) 50%, transparent 50.1%);
+    background-position: top right;
+    background-size: calc(var(--f-notch-size, 1rem) + 3.5px) calc(var(--f-notch-size, 1rem) + 3.5px);
+    background-repeat: no-repeat;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 2;
+    transition-property: opacity;
+    transition-duration: 0.2s;
+    transition-delay: 0.5s;           /* on retract: vanish near the end */
+    transition-timing-function: var(--_motion---ease-standard);
+  }
+  .n58-gallery-card:hover::before {
+    opacity: 1;
+    transition-duration: 0.18s;
+    transition-delay: 0.12s;          /* as the sweep passes the corner */
+  }
+
+  /* Slow settle zoom under the ring. */
+  .home-media_img,
+  .n58-gallery-card img {
+    transition-property: scale;
+    transition-duration: 1.1s;
+    transition-timing-function: var(--_motion---ease-emphasized);
+  }
+  .home-media:hover .home-media_img { scale: 1.05; }
+  .n58-gallery-card:hover img { scale: 1.06; }
+
+  /* Caption nudges up with the ring. */
+  .n58-gallery-cap {
+    transition-property: translate;
+    transition-duration: 0.6s;
+    transition-timing-function: var(--_motion---ease-emphasized);
+  }
+  .n58-gallery-card:hover .n58-gallery-cap { translate: 0 -0.35rem; }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   § HERO — staggered entrance on load (heading → copy → CTAs; image
+   mask-reveals + settles), and a scroll-out exit where the whole split
+   softly rises and fades as the hero leaves the viewport.
+   ───────────────────────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: no-preference) {
+  [data-flwr] .n58-hero .home-stack > * {
+    animation-name: n58-hero-in;
+    animation-duration: 0.8s;
+    animation-timing-function: var(--_motion---ease-emphasized);
+    animation-fill-mode: both;
+    animation-delay: 0.08s;
+  }
+  [data-flwr] .n58-hero .home-stack > *:nth-child(2) { animation-delay: 0.2s; }
+  [data-flwr] .n58-hero .home-stack > *:nth-child(3) { animation-delay: 0.32s; }
+  [data-flwr] .n58-hero .home-media {
+    animation-name: n58-hero-media-in;
+    animation-duration: 1.1s;
+    animation-timing-function: var(--_motion---ease-emphasized);
+    animation-fill-mode: both;
+    animation-delay: 0.25s;
+  }
+  /* Coins render: a slow fade + settle in, THEN a perpetual, very slow rotation
+     of the whole ring. Two animations compose on independent transform properties
+     — entrance drives opacity + scale; the spin drives rotate — neither touches
+     the positioning translate, so the ring keeps its anchored place while turning. */
+  [data-flwr] .n58-hero .n58-hero_coins {
+    animation-name: n58-hero-coins-in, n58-hero-coins-spin;
+    animation-duration: 1.4s, 120s;
+    animation-timing-function: var(--_motion---ease-emphasized), linear;
+    animation-fill-mode: both, none;
+    animation-delay: 0.2s, 0s;
+    animation-iteration-count: 1, infinite;
+  }
+
+  /* Exit — scrubbed by the hero's own view timeline as it leaves the top. */
+  @supports (animation-timeline: view()) {
+    [data-flwr] .n58-hero .home-split {
+      animation-name: n58-hero-out;
+      animation-timing-function: linear;
+      animation-fill-mode: both;
+      animation-timeline: view();
+      animation-range: exit 5% exit 85%;
+    }
+  }
+}
+@keyframes n58-hero-in {
+  from { opacity: 0; transform: translateY(1.6rem); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes n58-hero-media-in {
+  from { opacity: 0; clip-path: inset(8% 8% 8% 8% round var(--_component---card--radius)); transform: scale(1.04); }
+  to   { opacity: 1; clip-path: inset(0% 0% 0% 0% round var(--_component---card--radius)); transform: scale(1); }
+}
+@keyframes n58-hero-out {
+  from { opacity: 1;    transform: translateY(0)      scale(1); }
+  to   { opacity: 0.15; transform: translateY(-3rem)  scale(0.97); }
+}
+@keyframes n58-hero-coins-in {
+  from { opacity: 0; scale: 1.06; }
+  to   { opacity: 1; scale: 1; }
+}
+/* Super-slow perpetual rotation of the coins ring (120s per revolution). Uses the
+   individual `rotate` property so it composes with the `translate` anchor + the
+   entrance `scale` without any of them clobbering each other. */
+@keyframes n58-hero-coins-spin {
+  from { rotate: 0deg; }
+  to   { rotate: 360deg; }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   § SCROLL REVEALS — scrubbed entrance choreography.
+   .n58-reveal          one element rises in (is-2/-3/-4 push the range later
+                        for sibling stagger — e.g. the footer columns).
+   .n58-reveal-stack    each direct child rises with a cascaded range.
+   .n58-reveal-media    the image mask-wipes up from its bottom edge while the
+                        photo settles from 1.18× ("mask reveal").
+   .n58-reveal-list     each item (FAQ rows) rises as it crosses in.
+   Fallback everywhere: no timeline support → final state, fully visible.
+   ───────────────────────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: no-preference) {
+  [data-flwr] .n58-reveal {
+    animation-name: n58-rise;
+    animation-timing-function: linear;
+    animation-fill-mode: both;
+    animation-timeline: view();
+    animation-range: entry 0% cover 30%;
+  }
+  [data-flwr] .n58-reveal.is-2 { animation-range: entry 8% cover 36%; }
+  [data-flwr] .n58-reveal.is-3 { animation-range: entry 16% cover 42%; }
+  [data-flwr] .n58-reveal.is-4 { animation-range: entry 24% cover 48%; }
+
+  [data-flwr] .n58-reveal-stack > * {
+    animation-name: n58-rise;
+    animation-timing-function: linear;
+    animation-fill-mode: both;
+    animation-timeline: view();
+    animation-range: entry 0% cover 25%;
+  }
+  [data-flwr] .n58-reveal-stack > *:nth-child(2)    { animation-range: entry 8% cover 33%; }
+  [data-flwr] .n58-reveal-stack > *:nth-child(3)    { animation-range: entry 16% cover 41%; }
+  [data-flwr] .n58-reveal-stack > *:nth-child(n+4)  { animation-range: entry 24% cover 49%; }
+
+  [data-flwr] .n58-reveal-media {
+    animation-name: n58-mask-wipe;
+    animation-timing-function: linear;
+    animation-fill-mode: both;
+    animation-timeline: view();
+    animation-range: entry 0% cover 35%;
+  }
+  [data-flwr] .n58-reveal-media .home-media_img {
+    animation-name: n58-img-settle;
+    animation-timing-function: linear;
+    animation-fill-mode: both;
+    animation-timeline: view();
+    animation-range: entry 0% cover 45%;
+  }
+
+  [data-flwr] .n58-reveal-list > * {
+    animation-name: n58-rise;
+    animation-timing-function: linear;
+    animation-fill-mode: both;
+    animation-timeline: view();
+    animation-range: entry 0% cover 30%;
+  }
+}
+@keyframes n58-rise {
+  from { opacity: 0; transform: translateY(2.2rem); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes n58-mask-wipe {
+  from { clip-path: inset(100% 0% 0% 0%); }
+  to   { clip-path: inset(0% 0% 0% 0%); }
+}
+@keyframes n58-img-settle {
+  from { transform: scale(1.18); }
+  to   { transform: scale(1); }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   § STICKY MASK SCENE — Pago de Servicios (+ its siblings on conocenos,
+   productos-empresas, productos-personas). The tall .n58-bleed-pin wrapper
+   names a view timeline; the inner card pins (sticky, 100dvh) while the scroll
+   SCRUBS THE CARD'S REAL WIDTH/HEIGHT — the gallery-card recipe, animated: an
+   actually-sized flex-centered element wearing a constant 28px radius + a
+   static top-right notch polygon, growing from a small centered card to a
+   large framed cover. The photo settles from 1.25×, and a BADGE-SLOT TEASER
+   plays first: the lime marker shape wipes open left→right, the section title
+   rises out of it through a slot clip that releases as it lands (text ends
+   high, only its bottom slice inside the bar), then the whole teaser exits and
+   the real copy rises in.
+   FALLBACK (no scroll timelines, or reduce-motion): the pin keeps its natural
+   height and section padding, the teaser stays hidden, and the card renders as
+   the classic static gutter-aligned full-width card (base .home-bleed: rounded,
+   overflow-clipped) — no pin, no notch animation, no extra scroll length.
+   ───────────────────────────────────────────────────────────────────────── */
+.n58-bleed-pin {
+  position: relative;
+  /* Fallback = the old section framing: section rhythm + page gutter. */
+  padding-top: var(--_spacing---section--lg);
+  padding-bottom: var(--_spacing---section--lg);
+  padding-left: var(--_spacing---page-margin);
+  padding-right: var(--_spacing---page-margin);
+}
+.n58-bleed-pin .home-bleed {
+  max-width: var(--n58-container-max);
+  margin-left: auto;
+  margin-right: auto;
+}
+.n58-bleed-sticky {
+  position: sticky;
+  top: 0;
+}
+
+/* ── Badge-slot teaser (static structure) ──────────────────────────────────
+   The teaser overlay is hidden by default so browsers WITHOUT scroll timelines
+   (and reduce-motion users) never see it over the static card — it is only
+   shown + choreographed inside the gate below.
+   The teaser IS a real .n58-badge: an inline-block unit sized BY THE TITLE
+   TEXT, whose ::before is the badge shape (width derives from the text box +
+   bleed with the fixed-width SVG end-cap masks, so the shape matches the text
+   width at every viewport). The unit carries f-text-h2 so the em-based badge
+   knobs resolve against the title's own size. */
+.n58-bleed-slot { display: none; }
+.n58-bleed-slot-unit {
+  /* Landed composition: big cream title floating ABOVE, lime marker anchoring
+     only its bottom slice — the bar spans −0.25em→+0.30em around the text box
+     bottom, so only the lower ~25–35% of the glyphs sit inside the bar. */
+  --n58-badge-h: 0.55em;
+  --n58-badge-drop: -0.25em;
+  --n58-badge-bleed: 0.35em;
+}
+.n58-bleed-slot-mask { display: inline-block; }
+.n58-bleed-slot-title {
+  display: inline-block;
+  white-space: nowrap;
+  /* Rest state = hidden below the slot line ("inside" the badge); the scrubbed
+     rise (in the gate) tweens this to translateY(0). */
+  transform: translateY(108%);
+  will-change: transform;
+}
+
+/* Native CSS scroll-driven scene — ONLY on fine-pointer devices (desktop). It's
+   gated away from touch on purpose: even Safari versions that report
+   animation-timeline support have driven this unreliably on phones, so all touch
+   devices use the JS driver below (n58-bleed-scene.js) instead. */
+@media (prefers-reduced-motion: no-preference) and (pointer: fine) {
+  @supports (animation-timeline: view()) {
+    .n58-bleed-pin {
+      height: 260vh;
+      padding-top: 0;
+      padding-bottom: 0;
+      padding-left: 0;
+      padding-right: 0;
+      view-timeline-name: --n58-bleed;
+      view-timeline-axis: block;
+    }
+    /* Sticky flex-centers the real-size card. */
+    .n58-bleed-sticky {
+      height: 100vh;
+      height: 100dvh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow-x: clip;
+      overflow-y: clip;
+    }
+    /* ── Real-size card grow — the gallery-card recipe, animated ────────────
+       The card is an ACTUALLY-SIZED element whose real width/height scrub on
+       the timeline (keyframes below). A constant 28px border-radius rounds the
+       box + children (base .home-bleed overflow hidden); a STATIC percent-based
+       notch polygon cuts only the top-right --n58-bleed-slant slice — the two
+       clips INTERSECT, so the radius survives at every corner the polygon
+       doesn't bite. Notch + radius ride along at every frame (exactly how
+       .n58-gallery-card is built). Same contain 10%→55% range as the old grow;
+       only the animated property changed (real size, not a clip inset). */
+    [data-flwr] .home-bleed.n58-bleed-grow {
+      /* Start: small centered card. */
+      --n58-bleed-inset-y: 24vh;
+      --n58-bleed-inset-x: 18vw;
+      /* End: STOP here — a large framed card, NOT edge-to-edge full screen.
+         ONE fixed length for all four sides so the cream frame is EQUAL all
+         around (vh≠vw on a landscape screen made the sides thicker). Raise for a
+         thicker frame, lower toward 0 to fill more. */
+      --n58-bleed-end: 2.25rem;
+      /* Roundness + notch stay constant the whole scroll. */
+      --n58-bleed-radius: var(--_component---card--radius);
+      --n58-bleed-slant: 2rem;
+      /* border-box is load-bearing: the base .home-bleed padding would otherwise
+         inflate the sized box past its calc footprint. */
+      box-sizing: border-box;
+      max-width: none;
+      min-height: 0;
+      /* The card centres in the sticky, but the fixed navbar overlays its top —
+         so bias the copy down to centre it in the VISIBLE area below the navbar
+         (also reads more optically-centred under the big heading). Tune this:
+         raise toward the full navbar height to sit lower, 0 for true centre. */
+      --n58-bleed-content-drop: calc(var(--_component---navbar--height-total) / 2);
+      padding-top: calc(var(--_spacing---step--8) + var(--n58-bleed-content-drop));
+      border-top-left-radius: var(--n58-bleed-radius);
+      border-top-right-radius: var(--n58-bleed-radius);
+      border-bottom-left-radius: var(--n58-bleed-radius);
+      border-bottom-right-radius: var(--n58-bleed-radius);
+      clip-path: polygon(0 0, calc(100% - var(--n58-bleed-slant)) 0, 100% var(--n58-bleed-slant), 100% 100%, 0% 100%, 0% 0%);
+      animation-name: n58-bleed-size;
+      animation-timing-function: linear;
+      animation-fill-mode: both;
+      animation-timeline: --n58-bleed;
+      /* Hold the small centered card for the first beat of the pin, THEN grow. */
+      animation-range: contain 10% contain 55%;
+    }
+    [data-flwr] .n58-bleed-grow .home-bleed_img {
+      animation-name: n58-bleed-img;
+      animation-timing-function: linear;
+      animation-fill-mode: both;
+      animation-timeline: --n58-bleed;
+      animation-range: contain 0% contain 65%;
+    }
+
+    /* ── Badge-slot teaser — show + choreograph ────────────────────────────
+       Overlay lives ON the card (inside .home-bleed, clipped by the notch mask).
+       Whole-teaser EXIT is scrubbed contain 24%→34%. */
+    .n58-bleed-slot {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      z-index: 2;
+      pointer-events: none;
+      animation-name: n58-bleed-slot-out;
+      animation-timing-function: linear;
+      animation-fill-mode: both;
+      animation-timeline: --n58-bleed;
+      animation-range: contain 24% contain 34%;
+    }
+    /* Shape wipes in LEFT→RIGHT (right inset shrinks 100%→0). No scale, so the
+       SVG end caps are revealed at full fidelity, never squashed. fill-mode both
+       back-fills the fully-clipped "from" so nothing shows early. */
+    .n58-bleed-slot-unit::before {
+      animation-name: n58-bleed-slot-wipe;
+      animation-timing-function: linear;
+      animation-fill-mode: both;
+      animation-timeline: --n58-bleed;
+      animation-range: entry 40% contain 6%;
+    }
+    /* Title climbs out of the slot (paper-from-slot). */
+    .n58-bleed-slot-title {
+      animation-name: n58-bleed-slot-rise;
+      animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+      animation-fill-mode: both;
+      animation-timeline: --n58-bleed;
+      animation-range: contain 6% contain 20%;
+    }
+    /* Slot clip exists ONLY during the rise: its bottom edge holds at the bar's
+       vertical middle (hiding the title "inside" the shape), then RELEASES
+       downward past the bar right as the rise completes, so the landed title is
+       fully unclipped on top of the shape. Negative top/side insets keep
+       ascenders + cap overhang unclipped mid-rise. */
+    .n58-bleed-slot-mask {
+      animation-name: n58-bleed-slot-release;
+      animation-timing-function: linear;
+      animation-fill-mode: both;
+      animation-timeline: --n58-bleed;
+      animation-range: contain 18% contain 24%;
+    }
+
+    /* Real copy rises in AFTER the teaser exits (base mechanism = n58-rise;
+       ranges pushed later so the handoff doesn't overlap the teaser exit). */
+    [data-flwr] .n58-bleed-grow .home-bleed_content > * {
+      animation-name: n58-rise;
+      animation-timing-function: linear;
+      animation-fill-mode: both;
+      animation-timeline: --n58-bleed;
+      animation-range: contain 36% contain 68%;
+    }
+    [data-flwr] .n58-bleed-grow .home-bleed_content > *:nth-child(2) { animation-range: contain 44% contain 76%; }
+    [data-flwr] .n58-bleed-grow .home-bleed_content > *:nth-child(3) { animation-range: contain 52% contain 84%; }
+
+    /* Mobile scene tuning — KEEP the scroll scene (don't disable it), but retune
+       the geometry for a phone. The desktop insets (18vw / 24vh) shrink the start
+       card far below the heading width, clipping the teaser title. Start near
+       full width and grow mostly in height, so the copy always fits inside the
+       card at every frame. Shorter pin = snappier scrub on a small screen. */
+    @media (max-width: 991px) {
+      [data-flwr] .home-bleed.n58-bleed-grow {
+        --n58-bleed-inset-x: 3vw;
+        --n58-bleed-inset-y: 9vh;
+        --n58-bleed-end: 0.75rem;
+      }
+      .n58-bleed-pin { height: 220vh; }
+    }
+  }
+}
+
+/* Browsers WITHOUT scroll-driven animations (e.g. older iOS Safari) can't run
+   the pinned mask-grow scene at all. Give ONLY those browsers the plain static
+   framed card — at every width — so the base position:sticky never leaves the
+   card stuck/"fixed" on those devices. Capable browsers (incl. modern mobile
+   Chrome/Safari) run the scroll scene above on ALL screen sizes. */
+@supports not (animation-timeline: view()) {
+  /* Default (JS not running): plain static framed card, no pin, no stuck sticky. */
+  .n58-bleed-sticky {
+    position: static;
+    height: auto;
+  }
+  [data-flwr] .home-bleed.n58-bleed-grow {
+    width: auto;
+    height: auto;
+    min-height: 0;
+    max-width: var(--n58-container-max);
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .n58-bleed-slot { display: none; }
+}
+
+/* JS-DRIVEN PIN (touch devices + any browser without native scroll timelines) —
+   n58-bleed-scene.js adds .n58-bleed-js and feeds per-phase scroll-progress vars
+   (--n58-p-*) per pin. We rebuild the ENTIRE desktop choreography from those vars
+   with plain calc() interpolation, so the full scene plays reliably on EVERY
+   phone regardless of Safari's animation-timeline support/bugs. Every phase below
+   mirrors a native @keyframes above (n58-bleed-size / -img / -slot-wipe / -rise /
+   -release / -slot-out / n58-rise). Class-gated (not @supports), so it activates
+   wherever the JS decides native won't run.
+
+   Mobile geometry: the card starts almost FLAT (~4:2) and grows tall — that's the
+   phone read of the desktop "small card → big framed card" grow. */
+.n58-bleed-js.n58-bleed-pin {
+  /* Short pin = minimal dead scroll. Just enough travel to scrub the whole
+     choreography at a comfortable pace. */
+  height: 175vh;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 0;
+  padding-right: 0;
+}
+.n58-bleed-js .n58-bleed-sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100svh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow-x: clip;
+  overflow-y: clip;
+}
+/* Card grow — starts a bit taller than a hard 4:2 (inset-y 26vh → the card fills
+   more of the viewport, so far less cream above/below the centered card) and
+   grows to the tall framed card (inset 0.75rem). */
+[data-flwr] .n58-bleed-js .home-bleed.n58-bleed-grow {
+  box-sizing: border-box;
+  min-height: 0;
+  max-width: none;
+  margin-left: 0;
+  margin-right: 0;
+  --n58-js-inset-x: calc(3vw + (0.75rem - 3vw) * var(--n58-p-size, 0));
+  --n58-js-inset-y: calc(26vh + (0.75rem - 26vh) * var(--n58-p-size, 0));
+  width: calc(100% - 2 * var(--n58-js-inset-x));
+  height: calc(100% - 2 * var(--n58-js-inset-y));
+  border-top-left-radius: var(--_component---card--radius);
+  border-top-right-radius: var(--_component---card--radius);
+  border-bottom-left-radius: var(--_component---card--radius);
+  border-bottom-right-radius: var(--_component---card--radius);
+  clip-path: polygon(0 0, calc(100% - 2rem) 0, 100% 2rem, 100% 100%, 0% 100%, 0% 0%);
+}
+/* Photo settles from 1.25× → 1× (mirrors n58-bleed-img). */
+[data-flwr] .n58-bleed-js .home-bleed_img {
+  transform: scale(calc(1.25 + (1 - 1.25) * var(--n58-p-img, 0)));
+  transform-origin: center center;
+}
+/* Badge-slot teaser — visible on the JS path and choreographed by calc(). */
+.n58-bleed-js .n58-bleed-slot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 2;
+  pointer-events: none;
+  /* whole teaser fades + lifts out (mirrors n58-bleed-slot-out). */
+  opacity: calc(1 - var(--n58-p-out, 0));
+  transform: translateY(calc(var(--n58-p-out, 0) * -1.4rem));
+}
+/* Shape wipes in left→right — the SVG end-caps reveal at full fidelity. */
+.n58-bleed-js .n58-bleed-slot-unit::before {
+  clip-path: inset(0 calc((1 - var(--n58-p-wipe, 0)) * 100%) 0 0);
+}
+/* Word climbs out of the slot (mirrors n58-bleed-slot-rise; ease applied in JS). */
+.n58-bleed-js .n58-bleed-slot-title {
+  transform: translateY(calc((1 - var(--n58-p-rise, 0)) * 108%));
+}
+/* Slot clip releases downward past the bar (mirrors n58-bleed-slot-release). */
+.n58-bleed-js .n58-bleed-slot-mask {
+  clip-path: inset(-0.6em -0.3em calc(0.03em - 1.23em * var(--n58-p-release, 0)) -0.3em);
+}
+/* Real copy rises in, staggered (mirrors n58-rise + the nth-child ranges). */
+[data-flwr] .n58-bleed-js .home-bleed_content > * {
+  opacity: var(--n58-p-copy1, 0);
+  transform: translateY(calc((1 - var(--n58-p-copy1, 0)) * 2.2rem));
+}
+[data-flwr] .n58-bleed-js .home-bleed_content > *:nth-child(2) {
+  opacity: var(--n58-p-copy2, 0);
+  transform: translateY(calc((1 - var(--n58-p-copy2, 0)) * 2.2rem));
+}
+[data-flwr] .n58-bleed-js .home-bleed_content > *:nth-child(3) {
+  opacity: var(--n58-p-copy3, 0);
+  transform: translateY(calc((1 - var(--n58-p-copy3, 0)) * 2.2rem));
+}
+
+/* ── Keyframes ─────────────────────────────────────────────────────────────
+   Real card size: the card's actual width/height scrub from the resting
+   footprint (container − 2·inset per axis) to the framed end size
+   (container − 2·end). Percentages resolve against the flex-centering sticky
+   (100vw/100dvh), so scrollbars are handled for free. The static notch polygon
+   + border radii re-resolve at every frame. */
+@keyframes n58-bleed-size {
+  from {
+    width: calc(100% - 2 * var(--n58-bleed-inset-x, 18vw));
+    height: calc(100% - 2 * var(--n58-bleed-inset-y, 24vh));
+  }
+  to {
+    width: calc(100% - 2 * var(--n58-bleed-end, 2.25rem));
+    height: calc(100% - 2 * var(--n58-bleed-end, 2.25rem));
+  }
+}
+@keyframes n58-bleed-img {
+  from { transform: scale(1.25); }
+  to   { transform: scale(1); }
+}
+/* Teaser shape reveal wipe LEFT→RIGHT (right inset 100%→0). */
+@keyframes n58-bleed-slot-wipe {
+  from { clip-path: inset(0 100% 0 0); }
+  to   { clip-path: inset(0 0 0 0); }
+}
+/* Title climbs from hidden-below (108%) to resting overhang (0). */
+@keyframes n58-bleed-slot-rise {
+  from { transform: translateY(108%); }
+  to   { transform: translateY(0); }
+}
+/* Slot clip release — bottom edge holds at the bar's vertical middle (+0.03em
+   above the text box bottom) through the rise, then drops past the bar. */
+@keyframes n58-bleed-slot-release {
+  from { clip-path: inset(-0.6em -0.3em 0.03em -0.3em); }
+  to   { clip-path: inset(-0.6em -0.3em -1.2em -0.3em); }
+}
+/* Whole teaser fades + lifts as the real content takes over. */
+@keyframes n58-bleed-slot-out {
+  from { opacity: 1; transform: translateY(0); }
+  to   { opacity: 0; transform: translateY(-1.4rem); }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   § SPLINE SECTION — Operaciones Cambiarias (ported from the live site).
+   Centered copy + the coin scene stage below. The stage shows the static
+   poster; on desktop the spline-loader script injects <spline-viewer>, shows
+   the lime loading bar + % counter, then crossfades poster → scene
+   (.is-loaded). Mobile / no-JS / failures simply keep the poster.
+   ───────────────────────────────────────────────────────────────────────── */
+.n58-spline-head {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  row-gap: var(--_spacing---step--3);
+  text-align: center;
+  margin-bottom: var(--_spacing---step--6);
+}
+.n58-spline {
+  position: relative;
+  width: 100%;
+  /* Split-layout hero scenes (phone/bag/folder). The art is a padded square at
+     object-fit:contain, so its rendered size is capped by the SHORTER axis. At
+     60vh the height was the limiter and the scene read small, lost in the empty
+     column — give it a tall stage so the square fills the column WIDTH instead. */
+  height: 78vh;
+  min-height: 34rem;
+  overflow-x: hidden;
+  overflow-y: hidden;
+}
+/* Full-bleed centered 3D scenes (the Operaciones coin on index + the empresas
+   scene) live OUTSIDE .n58-container in a .n58-spline-section. The art is a 1590²
+   SQUARE at object-fit:contain, so its size is capped by the smaller axis. Give
+   these a much taller stage so the scene reads BIG, not lost in dead space — on
+   desktop the height is the limiter; on phones the stage is full-viewport-width
+   so any height ≥ the width makes the coin fill edge-to-edge. Split-layout splines
+   (bag/phone/folder in a 2-col hero) keep the compact 60vh above. */
+.n58-spline-section .n58-spline {
+  height: 82vh;
+  min-height: 42rem;
+}
+.n58-spline_poster {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transition-property: opacity, transform;
+  transition-duration: 0.6s;
+  transition-timing-function: var(--_motion---ease-decelerate);
+}
+[data-flwr] .n58-spline spline-viewer {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  opacity: 0;
+  transform: translateY(20px);
+  transition-property: opacity, transform;
+  transition-duration: 0.6s;
+  transition-timing-function: var(--_motion---ease-decelerate);
+}
+/* Crossfade: poster drifts up + out while the scene rises in (live-site feel). */
+[data-flwr] .n58-spline.is-loaded .n58-spline_poster {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+[data-flwr] .n58-spline.is-loaded spline-viewer {
+  opacity: 1;
+  transform: translateY(0);
+}
+/* Mini loading bar + % counter (same design language as the page preloader,
+   200×16 like the live site's spline preloader). Built by the loader script. */
+.n58-spline_preloader {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  pointer-events: none;
+  transition-property: opacity;
+  transition-duration: 0.5s;
+  transition-timing-function: var(--_motion---ease-decelerate);
+}
+.n58-spline_preloader.is-done { opacity: 0; }
+/* Same notch-button face as the page preloader bar (smaller). */
+.n58-spline_bar {
+  --slant-size: 9px;
+  --border-width: 2px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 200px;
+  height: 20px;
+  color: var(--_palette---core--500);
+  background-image: linear-gradient(to bottom left, currentColor 50%, transparent 50.1%);
+  background-position: top right;
+  background-size: calc(var(--slant-size) + 1.3 * var(--border-width)) calc(var(--slant-size) + 1.3 * var(--border-width));
+  background-repeat: no-repeat;
+  box-shadow: 0 0 0 var(--border-width) currentColor inset;
+  clip-path: polygon(0 0, calc(100% - var(--slant-size)) 0, 100% var(--slant-size), 100% 100%, 0% 100%, 0% 0%);
+  border-top-left-radius: var(--n58-radius-control);
+  border-top-right-radius: var(--n58-radius-control);
+  border-bottom-left-radius: var(--n58-radius-control);
+  border-bottom-right-radius: var(--n58-radius-control);
+  overflow-x: hidden;
+  overflow-y: hidden;
+}
+.n58-spline_fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--_palette---core--500);
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  transition-property: transform;
+  transition-duration: 0.3s;
+  transition-timing-function: var(--_motion---ease-standard);
+}
+.n58-spline_pct {
+  position: relative;
+  z-index: 1;
+  font-size: var(--_typography---size--tiny);
+  font-weight: var(--_typography---weight--semibold);
+  color: var(--_palette---core--500);
+  /* Readable while the lime fill passes underneath. */
+  mix-blend-mode: difference;
+}
+@media (max-width: 991px) {
+  .n58-spline { height: 58vh; min-height: 26rem; }
+  .n58-spline-section .n58-spline { height: 64vh; min-height: 28rem; }
+}
+@media (max-width: 767px) {
+  .n58-spline { height: 54vh; min-height: 22rem; }
+  .n58-spline-section .n58-spline { height: 58vh; min-height: 24rem; }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   § PRODUCT TABS — the multi-product browser (flwr tabs component). The
+   runtime (data-flwr="tabs") wires clicks, ARIA and arrow keys; the framework
+   styles the trigger row + active underline. Here: N58 sizing on the
+   triggers, wrap-friendly tab row, and a rise-in that re-runs on every
+   switch (display:none → block restarts the animation).
+   ───────────────────────────────────────────────────────────────────────── */
+.n58-products-head {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  row-gap: var(--_spacing---step--2);
+  margin-bottom: var(--_spacing---step--6);
+}
+[data-flwr] .n58-products { row-gap: var(--_spacing---step--6); }
+[data-flwr] .n58-products .flwr_tabs_list {
+  flex-wrap: wrap;
+  column-gap: var(--_spacing---step--5);
+  row-gap: var(--_spacing---step--2);
+}
+[data-flwr] .n58-products .flwr_tabs_trigger {
+  position: relative;
+  font-size: var(--_typography---size--lead);
+  font-weight: var(--_typography---weight--semibold);
+}
+/* The 4px loading bar (same bar as the FAQ toggles) replaces the framework's
+   active underline: during auto-play the script ramps it 0→100% as a
+   countdown to the next product; once the user takes over it becomes the
+   static active marker (full on the active tab via the rule below). */
+[data-flwr] .n58-products .flwr_tabs_trigger::after { content: none; }
+.n58-tab-progress {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 4px;
+  background-color: var(--_theme---text--main);
+  transform: scaleX(0);
+  transform-origin: left center;
+  pointer-events: none;
+  will-change: transform;
+  transition-property: transform;
+  transition-duration: 320ms;
+  transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+}
+[data-flwr] .n58-products .flwr_tabs_trigger.is-active .n58-tab-progress {
+  transform: scaleX(1);
+}
+@media (prefers-reduced-motion: no-preference) {
+  [data-flwr] .n58-products .flwr_tabs_panel.is-active .n58-products_split {
+    animation-name: n58-tab-in;
+    animation-duration: 0.5s;
+    animation-timing-function: var(--_motion---ease-emphasized);
+    animation-fill-mode: both;
+  }
+}
+@keyframes n58-tab-in {
+  from { opacity: 0; transform: translateY(1.2rem); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   § ALAN ARCADE — "El desafío de AlaN" (canvas mini-game, Easter egg)
+   ───────────────────────────────────────────────────────────────────────────
+   All gameplay + art is drawn inside the <canvas> by ../assets/alan-arcade.js;
+   these rules are only the responsive wrapper, the start overlay and the
+   coarse-pointer touch buttons. Single-class selectors + longhand only
+   (Webflow/Flowriter styleLess rules). The canvas keeps the N58 monogram's
+   native aspect ratio (1116.97 / 582.9) so terrain + physics never distort.
+   ───────────────────────────────────────────────────────────────────────── */
+.n58-arcade-head {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  row-gap: var(--_spacing---step--2);
+  margin-bottom: var(--_spacing---step--5);
+}
+.alan-arcade {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1116.97 / 582.9;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  background-color: var(--_palette---neutral--1000);
+  border-top-width: 1px;
+  border-right-width: 1px;
+  border-bottom-width: 1px;
+  border-left-width: 1px;
+  border-top-style: solid;
+  border-right-style: solid;
+  border-bottom-style: solid;
+  border-left-style: solid;
+  border-top-color: var(--_palette---neutral--800);
+  border-right-color: var(--_palette---neutral--800);
+  border-bottom-color: var(--_palette---neutral--800);
+  border-left-color: var(--_palette---neutral--800);
+  border-top-left-radius: var(--_component---card--radius);
+  border-top-right-radius: var(--_component---card--radius);
+  border-bottom-right-radius: var(--_component---card--radius);
+  border-bottom-left-radius: var(--_component---card--radius);
+  touch-action: manipulation;
+}
+.alan-arcade_canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  cursor: pointer;
+  touch-action: none;
+}
+.alan-arcade_overlay {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-top: var(--_spacing---step--3);
+  padding-right: var(--_spacing---step--3);
+  padding-bottom: var(--_spacing---step--3);
+  padding-left: var(--_spacing---step--3);
+  border-top-style: none;
+  border-right-style: none;
+  border-bottom-style: none;
+  border-left-style: none;
+  background-color: rgba(12, 14, 15, 0.62);
+  color: var(--_palette---neutral--0);
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  transition-property: background-color;
+  transition-duration: 220ms;
+  transition-timing-function: ease;
+}
+.alan-arcade_overlay:hover {
+  background-color: rgba(12, 14, 15, 0.5);
+}
+.alan-arcade_overlay.is-hidden {
+  display: none;
+}
+.alan-arcade_overlay-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  row-gap: var(--_spacing---step--2);
+  text-align: center;
+}
+/* Start button uses the real flwr_button_primary component (class in the HTML)
+   so it matches the site's design system exactly — no bespoke pill here. */
+.alan-arcade_hint {
+  font-size: var(--_typography---size--small);
+  color: var(--_palette---neutral--200);
+}
+.alan-arcade_touch {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: none;
+  align-items: flex-end;
+  column-gap: var(--_spacing---step--2);
+  padding-top: var(--_spacing---step--3);
+  padding-right: var(--_spacing---step--4);
+  padding-bottom: var(--_spacing---step--4);
+  padding-left: var(--_spacing---step--4);
+  pointer-events: none;
+}
+.alan-arcade_touch.is-touch {
+  display: flex;
+}
+.alan-arcade_touch-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 62px;
+  height: 62px;
+  border-top-style: none;
+  border-right-style: none;
+  border-bottom-style: none;
+  border-left-style: none;
+  border-top-left-radius: 50%;
+  border-top-right-radius: 50%;
+  border-bottom-right-radius: 50%;
+  border-bottom-left-radius: 50%;
+  background-color: rgba(255, 239, 233, 0.16);
+  color: var(--_palette---neutral--0);
+  font-size: 24px;
+  line-height: 1;
+  pointer-events: auto;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.alan-arcade_touch-btn:active {
+  background-color: rgba(160, 221, 82, 0.4);
+}
+.alan-arcade_touch-btn--jump {
+  margin-left: auto;
+  width: 74px;
+  height: 74px;
+  background-color: rgba(160, 221, 82, 0.24);
+}
+
+/* Mobile fullscreen (landscape). On tap-to-play the whole arcade becomes a
+   fixed overlay filling the screen; on a portrait phone .is-rotated turns it
+   90° so the game always plays landscape (pure CSS — works on iOS, no
+   permissions). The close button returns to the page. */
+.alan-arcade.is-fullscreen {
+  position: fixed;
+  top: 0;
+  right: auto;
+  bottom: auto;
+  left: 0;
+  z-index: 2147483000;
+  width: 100vw;
+  height: 100dvh;
+  border-top-width: 0;
+  border-right-width: 0;
+  border-bottom-width: 0;
+  border-left-width: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+  background-color: var(--_palette---neutral--1000);
+}
+.alan-arcade.is-fullscreen.is-rotated {
+  left: 100vw;
+  width: 100dvh;
+  height: 100vw;
+  transform: rotate(90deg);
+  transform-origin: 0 0;
+}
+.alan-arcade_close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 4;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-top-style: none;
+  border-right-style: none;
+  border-bottom-style: none;
+  border-left-style: none;
+  border-top-left-radius: 50%;
+  border-top-right-radius: 50%;
+  border-bottom-right-radius: 50%;
+  border-bottom-left-radius: 50%;
+  background-color: rgba(255, 239, 233, 0.16);
+  color: var(--_palette---neutral--0);
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+  pointer-events: auto;
+  -webkit-tap-highlight-color: transparent;
+}
+.alan-arcade_close.is-visible {
+  display: flex;
+}
+
+@media (max-width: 767px) {
+  .alan-arcade {
+    border-top-left-radius: var(--_component---card--radius);
+    border-top-right-radius: var(--_component---card--radius);
+    border-bottom-right-radius: var(--_component---card--radius);
+    border-bottom-left-radius: var(--_component---card--radius);
+  }
+}
+@media (max-width: 478px) {
+  .alan-arcade_touch-btn {
+    width: 54px;
+    height: 54px;
+    font-size: 21px;
+  }
+  .alan-arcade_touch-btn--jump {
+    width: 64px;
+    height: 64px;
+  }
+}
+
+/* === Conócenos redesign === */
+.n58-stats-row {
+  min-height: 16rem;
+  align-items: flex-end;
+}
+
+.n58-stat-card {
+  --n58-notch-fill: var(--_palette---neutral--900);
+  --n58-notch-border-color: var(--_theme---border--subtle);
+  --stat-flood: var(--_palette---core--500);
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex-grow: 0;
+  flex-shrink: 0;
+  flex-basis: auto;
+  width: calc((100% - 3 * var(--_spacing---step--4)) / 4);
+  min-height: 13rem;
+  row-gap: var(--_spacing---step--4);
+  padding-top: var(--_spacing---step--5);
+  padding-right: var(--_spacing---step--5);
+  padding-bottom: var(--_spacing---step--5);
+  padding-left: var(--_spacing---step--5);
+  transition-property: min-height;
+  transition-duration: 260ms;
+  transition-timing-function: var(--_motion---ease-standard);
+}
+
+/* Ink-line illustration set (alpha-*.svg, hard-filled #1b2021 ink). On dark
+   surfaces add .is-invert (filter is styleLess-safe; mask-* is embed-only). */
+.n58-illu {
+  display: block;
+  width: 4rem;
+  height: 4rem;
+  object-fit: contain;
+}
+
+.n58-illu.is-invert {
+  filter: invert(1);
+}
+
+.n58-stat-card:hover .n58-illu.is-invert {
+  filter: invert(0);
+}
+
+.n58-stat-card.is-active .n58-illu.is-invert {
+  filter: invert(0);
+}
+
+.n58-stat-card.is-core { --stat-flood: var(--_palette---core--500); }
+.n58-stat-card.is-alternate { --stat-flood: var(--_palette---alternate--500); }
+.n58-stat-card.is-alert { --stat-flood: var(--_palette---alert--500); }
+.n58-stat-card.is-alternate-2 { --stat-flood: var(--_palette---alternate-2--300); }
+
+.n58-stat-card:hover {
+  --n58-notch-fill: var(--stat-flood);
+  --n58-notch-border-color: var(--stat-flood);
+  min-height: 16rem;
+}
+
+.n58-stat-card.is-active {
+  --n58-notch-fill: var(--stat-flood);
+  --n58-notch-border-color: var(--stat-flood);
+  min-height: 16rem;
+}
+
+[data-flwr] .n58-stat-card::before {
+  transition-property: background-color, box-shadow;
+  transition-duration: 260ms;
+  transition-timing-function: var(--_motion---ease-standard);
+}
+
+.n58-stat-figure {
+  transition-property: color, transform;
+  transition-duration: 260ms;
+  transition-timing-function: var(--_motion---ease-standard);
+}
+
+.n58-stat-label {
+  transition-property: color;
+  transition-duration: 260ms;
+  transition-timing-function: var(--_motion---ease-standard);
+}
+
+.n58-stat-card:hover .n58-stat-figure {
+  color: var(--_palette---neutral--900);
+  transform: translateY(-0.25rem);
+}
+
+.n58-stat-card:hover .n58-stat-label {
+  color: var(--_palette---neutral--900);
+}
+
+.n58-stat-card.is-active .n58-stat-figure {
+  color: var(--_palette---neutral--900);
+  transform: translateY(-0.25rem);
+}
+
+.n58-stat-card.is-active .n58-stat-label {
+  color: var(--_palette---neutral--900);
+}
+
+.n58-arch-marquee {
+  --arch-lift: 5.5rem;
+  --arch-radius-f: 1;
+  --arch-scale-max: 0.04;
+  padding-top: 7.5rem;
+  padding-right: 0;
+  padding-bottom: 16rem;
+  padding-left: 0;
+}
+
+.n58-alan-teaser {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  row-gap: var(--_spacing---step--3);
+  margin-top: -13rem;
+  text-align: center;
+}
+
+.n58-alan-teaser_spline {
+  width: 100%;
+  max-width: 26rem;
+  height: 22rem;
+  min-height: 22rem;
+}
+
+.n58-arch-marquee .flwr_marquee_track {
+  display: flex;
+  align-items: center;
+  column-gap: var(--_spacing---step--4);
+  padding-top: 0;
+  padding-right: var(--_spacing---page-margin);
+  padding-bottom: 0;
+  padding-left: var(--_spacing---page-margin);
+}
+
+.n58-arch-marquee .n58-gallery-card {
+  width: 23rem;
+  max-width: 72vw;
+}
+
+[data-n58-arch-gallery-section] .n58-gallery-dot {
+  background-color: var(--_theme---border--subtle);
+}
+
+[data-n58-arch-gallery-section] .n58-gallery-dot.is-active {
+  background-color: var(--_palette---core--500);
+}
+
+[data-flwr] .n58-arch-slide {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-grow: 0;
+  flex-shrink: 0;
+  flex-basis: auto;
+  padding-top: 0.5rem;
+  padding-right: 0;
+  padding-bottom: 0.5rem;
+  padding-left: 0;
+}
+
+/* The arch transform lives on the CARD, not the slide: the marquee engine
+   measures track children (slides) to size the seamless wrap, so slides must
+   keep clean untransformed layout boxes — rotated slides inflate the measured
+   set width on rebuild/resize and break the loop with a seam gap. The --arch-*
+   custom props are set on the slide by n58-arch-gallery.js and inherit down. */
+.n58-arch-slide .n58-gallery-card {
+  transform: translateY(var(--arch-y, 0px)) rotate(var(--arch-rot, 0deg)) scale(var(--arch-scale, 1)) translateZ(0);
+  transform-origin: center center;
+  will-change: transform;
+}
+
+.n58-timeline-controls {
+  display: flex;
+  align-items: center;
+  column-gap: var(--_spacing---step--2);
+}
+
+.n58-timeline {
+  display: flex;
+  column-gap: var(--_spacing---step--4);
+  list-style-type: none;
+  list-style-position: outside;
+  padding-top: 0;
+  padding-right: 0;
+  padding-bottom: 0;
+  padding-left: 0;
+  margin-top: 0;
+  margin-right: 0;
+  margin-bottom: 0;
+  margin-left: 0;
+}
+
+.n58-timeline-item {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 0;
+  flex-shrink: 0;
+  flex-basis: auto;
+  width: 22rem;
+  row-gap: var(--_spacing---step--3);
+  padding-top: var(--_spacing---step--4);
+  padding-right: var(--_spacing---step--5);
+  padding-bottom: var(--_spacing---step--5);
+  padding-left: 0;
+  border-top-width: var(--_theme---border--width-2);
+  border-right-width: 0;
+  border-bottom-width: 0;
+  border-left-width: 0;
+  border-top-style: solid;
+  border-right-style: none;
+  border-bottom-style: none;
+  border-left-style: none;
+  border-top-color: var(--_theme---border--subtle);
+  border-right-color: transparent;
+  border-bottom-color: transparent;
+  border-left-color: transparent;
+}
+
+.n58-role-card {
+  --n58-notch-fill: var(--_palette---neutral--900);
+  --n58-notch-border-color: var(--_theme---border--subtle);
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 0;
+  flex-shrink: 0;
+  flex-basis: auto;
+  width: calc((100% - 3 * var(--_spacing---step--4)) / 4);
+  min-height: 15rem;
+  row-gap: var(--_spacing---step--4);
+  padding-top: var(--_spacing---step--5);
+  padding-right: var(--_spacing---step--5);
+  padding-bottom: var(--_spacing---step--5);
+  padding-left: var(--_spacing---step--5);
+}
+
+
+@media (max-width: 991px) {
+  .n58-stats-row {
+    min-height: 0;
+  }
+  .n58-stat-card {
+    width: calc((100% - var(--_spacing---step--4)) / 2);
+  }
+  .n58-stat-card:hover {
+    min-height: 13rem;
+  }
+  .n58-stat-card.is-active {
+    min-height: 13rem;
+  }
+  .n58-arch-marquee {
+    padding-top: var(--_spacing---step--3);
+    padding-bottom: var(--_spacing---step--5);
+  }
+  .n58-alan-teaser {
+    margin-top: var(--_spacing---step--5);
+  }
+  .n58-role-card {
+    width: calc((100% - var(--_spacing---step--4)) / 2);
+  }
+}
+
+@media (max-width: 767px) {
+  .n58-stat-card {
+    width: 100%;
+  }
+  .n58-timeline-item {
+    width: 16rem;
+  }
+  .n58-role-card {
+    width: 100%;
+  }
+}
+
+@media (max-width: 478px) {
+  .n58-timeline-item {
+    width: 14.5rem;
+  }
+}

@@ -1,0 +1,53 @@
+/* ═══════════════════════════════════════════
+   N58 — Custom Font: Nugros
+   Source: brand kit (references/content/fonts/)
+   On Webflow import: this file goes to a CSS embed block.
+   ═══════════════════════════════════════════ */
+
+@font-face {
+    font-family: 'Nugros';
+    src: url('../assets/fonts/Nugros-Regular.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Nugros';
+    src: url('../assets/fonts/Nugros-Medium.woff2') format('woff2');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Nugros';
+    src: url('../assets/fonts/Nugros-SemiBold.woff2') format('woff2');
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Nugros';
+    src: url('../assets/fonts/Nugros-Bold.woff2') format('woff2');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Nugros';
+    src: url('../assets/fonts/Nugros-ExtraBold.woff2') format('woff2');
+    font-weight: 800;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Nugros';
+    src: url('../assets/fonts/Nugros-Black.woff2') format('woff2');
+    font-weight: 900;
+    font-style: normal;
+    font-display: swap;
+}
