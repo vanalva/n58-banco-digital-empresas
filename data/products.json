@@ -889,6 +889,11 @@
         "Conoce cómo proteger tu cuenta, tus datos y cada transacción."
       ]
     ],
-    "compliance_status": "pending-review"
+    "compliance_status": "pending-review",
+    "images": {
+      "hero": "n-emprende.webp",
+      "features": "n-emprende-taller.webp",
+      "requirements": "n-emprende-equipo.webp"
+    }
   }
 ]
