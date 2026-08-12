@@ -3,12 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- Old export shipped this page titled "Personas Productos" — fixed. -->
-  <title>Productos y Servicios para tu negocio — N58 Banco Digital</title>
-  <meta name="description" content="Impulsa el crecimiento de tu negocio con nuestras herramientas financieras. Cuentas, créditos, tarjetas, inversiones y más, con opciones digitales que facilitan la gestión de tu empresa.">
-  <link rel="canonical" href="https://www.n58bancodigital.com/productos-empresas">
-  <meta property="og:title" content="Productos y Servicios para tu negocio — N58 Banco Digital">
-  <meta property="og:description" content="Impulsa el crecimiento de tu negocio con nuestras herramientas financieras. Cuentas, créditos, tarjetas, inversiones y más, con opciones digitales que facilitan la gestión de tu empresa.">
+  <title>N Emprende para Empresas — N58 Banco Digital</title>
+  <meta name="description" content="Si tu negocio ha sido afectado, N Emprende te acompaña con recursos para fortalecerlo: formación, mentorías, herramientas y un plan a tu medida.">
+  <link rel="canonical" href="https://www.n58bancodigital.com/producto/pago-movil-personas">
+  <meta property="og:title" content="N Emprende para Empresas — N58 Banco Digital">
+  <meta property="og:description" content="Si tu negocio ha sido afectado, N Emprende te acompaña con recursos para fortalecerlo: formación, mentorías, herramientas y un plan a tu medida.">
   <meta property="og:type" content="website">
 
   <!-- Fonts: Nugros (custom @font-face) loaded first, then framework → project overrides. -->
@@ -18,11 +17,20 @@
   <link rel="stylesheet" href="css/framework.css?v=1a765f0c">
   <link rel="stylesheet" href="css/variables.css?v=402f79dd">
   <link rel="stylesheet" href="css/project.css?v=17f2c04a">
+  <link rel="stylesheet" href="css/tpl-producto.css?v=91166e78">
+  <!-- Swiper.js — required by the flwr marquee engine used by the FX ticker. -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.css">
 </head>
 <body>
 <div data-flwr class="f-mode-light n58-page">
 
-  <!-- ════════════════ PAGE PRELOADER (shared — see index.html) ════════════════ -->
+  <!-- ════════════════ PAGE PRELOADER (ported from the live site) ════════════════
+       Ink overlay + lime loading bar (280×14, 2px border, ~2s ease-out fill).
+       The inline script below marks the wrapper .is-booting synchronously so
+       the hero entrance holds until the loader lifts; the lift script near the
+       end of <body> adds .is-done on window.load (+500ms, 3s hard fallback),
+       then removes the node. JS-off: the <noscript> style hides the loader and
+       the hero entrance plays normally. -->
   <div class="n58-preloader" aria-hidden="true">
     <div class="n58-preloader_bar"><div class="n58-preloader_fill"></div></div>
   </div>
@@ -101,11 +109,14 @@
   <!-- Dropdown dimming backdrop — sibling of the navbar (see project.css). -->
   <div class="flwr_navbar_dropdown_backdrop" aria-hidden="true"></div>
 
-  <!-- Scroll progress — thin lime bar pinned to the top edge. -->
+  <!-- Scroll progress — thin lime bar pinned to the top edge, scrubbed by the
+       root scroll via a CSS scroll timeline (compositor thread, zero JS). -->
   <div class="n58-scroll-progress" aria-hidden="true"></div>
 
-  <!-- ════════════════ MOBILE FULLSCREEN MENU (shared) ════════════════ -->
+  <!-- ════════════════ MOBILE FULLSCREEN MENU (flwr fullscreen-menu) ════════════════ -->
   <dialog id="n58-menu" class="flwr_fullscreen_menu_wrap n58-fsmenu" data-flwr="fullscreen-menu" tabindex="-1" aria-label="Menú principal">
+    <!-- Logo + close are pinned to the EXACT navbar logo/hamburger positions so
+         nothing jumps when the menu opens (the hamburger morphs to X in place). -->
     <div class="n58-fsmenu-logo n58-lottie-logo" data-n58-lottie="assets/n58-logo-lottie.json" role="img" aria-label="N58 Banco Digital"></div>
     <button type="button" class="flwr_fullscreen_menu_close n58-menu-close" data-flwr-target="close" aria-label="Cerrar menú">
       <span class="n58-menu-close_icon" aria-hidden="true">
@@ -187,345 +198,191 @@
 
   <main role="main" id="main-content">
 
-    <!-- ════════════════ 01 · HERO [dark] · Spline 3D (scene: empresas) ════════════════
-         Same staggered entrance + scroll-out exit as home (.n58-hero). The right
-         slot is a Spline stage riding the .home-media hero mask-reveal; the
-         shared spline-loader script hydrates it on desktop (poster on mobile). -->
-    <section class="f-section-lg f-mode-dark n58-hero f-min-h-svh">
-      <div class="n58-container">
-        <div class="home-split">
-          <div class="home-stack">
-            <h1 class="f-text-display f-text-color-strong">Productos y Servicios<br>para tu <span class="n58-badge is-alternate is-display f-text-color-strong">negocio</span></h1>
-            <p class="f-text-lead f-text-color-muted f-max-w-40ch">Impulsa el crecimiento de tu negocio con nuestras herramientas financieras. Cuentas, créditos, inversiones y más, con opciones digitales que facilitan la gestión de tu empresa.</p>
+    <!-- ════════════════════════════════════════════════════════════════════════
+         VARIANT MANIFEST — tpl-producto (N58 Producto detail template)
+         ────────────────────────────────────────────────────────────────────────
+         Put the `is-*` knobs on the template root:
+           <div class="tpl-producto  is-hero-split  is-media-right  is-cards-grid
+                       is-beneficios-tabs  is-accent-core"> … </div>
+         They set CSS custom properties, so they COMPOSE freely. Section theme is
+         driven by flwr `f-mode-light|dark` on each <section> (never on <body>).
+
+         ── HERO layout ──────────────────────────────────────────────────────────
+           is-hero-split     · text + media side-by-side (DEFAULT)
+           is-hero-stacked   · text block, media full-width below it
+           is-hero-centered  · centered text, media below, narrower
+
+         ── MEDIA side (hero + requisitos split order) ───────────────────────────
+           is-media-right    · media column after text (DEFAULT)  → --tpl-media-order:2
+           is-media-left     · media column before text           → --tpl-media-order:0
+
+         ── CARACTERÍSTICAS cards ────────────────────────────────────────────────
+           is-cards-grid     · 3 equal columns, vertical cards (DEFAULT)
+           is-cards-row      · one horizontal row, number beside title (compact)
+           is-cards-stagger  · 3 columns with an alternating vertical offset
+
+         ── BENEFICIOS display (only one renderer shows; all 3 live in the DOM) ───
+           is-beneficios-tabs      · flwr tabs (DEFAULT)
+           is-beneficios-accordion · flwr <details> accordion
+           is-beneficios-grid      · 3 icon panels
+
+         ── ACCENT (sets --tpl-accent + soft tint; used on kickers, card numbers,
+            top-rules, dividers, tab underline, checks, button tints) ─────────────
+           is-accent-core       · verde   var(--_palette---core--500)  (DEFAULT)
+           is-accent-alternate  · magenta var(--_palette---alternate--500)
+           is-accent-alternate-2· morado  var(--_palette---alternate-2--500)
+           is-accent-alert      · coral   var(--_palette---alert--500)
+
+         ── DEFAULT combo (this page) ────────────────────────────────────────────
+           is-hero-split is-media-right is-cards-grid is-beneficios-tabs is-accent-core
+
+         ── EXAMPLE per-CMS-item combos an editor can paste ──────────────────────
+           • Cuenta Corriente (empresas, calmer):
+               is-hero-stacked is-media-left is-cards-row is-beneficios-accordion is-accent-alternate-2
+           • Créditos (bold, offer-led):
+               is-hero-centered is-media-right is-cards-stagger is-beneficios-grid is-accent-alternate
+           • Alertas / Seguridad (attention):
+               is-hero-split is-media-left is-cards-grid is-beneficios-tabs is-accent-alert
+    ════════════════════════════════════════════════════════════════════════════ -->
+
+    <div class="tpl-producto is-hero-split is-media-right is-cards-grid is-beneficios-stack is-accent-core" data-product-slug="n-emprende-empresas" data-product-audience="empresas" data-compliance-status="pending-review">
+
+      <!-- ════════════════ 01 · HERO [dark] ════════════════
+           Product statement hero. Layout (split/stacked/centered) + media side +
+           accent are all variant-driven. Stat row echoes the homepage rhythm. -->
+      <section class="f-section-lg f-mode-dark tpl-hero-section f-min-h-svh f-flex f-flex-column f-justify-center" aria-label="N Emprende">
+        <div class="n58-container"><div class="tpl-hero">
+          <div class="tpl-hero_text n58-reveal-stack">
+            <p class="f-text-small f-text-color-accent">Empresas · N Emprende</p>
+            <h1 class="f-text-display f-text-color-strong tpl-hero_title">N Emprende</h1>
+            <p class="f-text-lead f-text-color-muted f-max-w-40ch">Si tu negocio ha sido afectado, N Emprende te acompaña con recursos para fortalecerlo: formación, mentorías, herramientas y un plan a tu medida.</p>
             <div class="f-flex f-flex-wrap f-gap-3 f-margin-top-2">
-              <a href="https://onboarding.n58bancodigital.com" class="flwr_button_primary" data-flwr-trigger="hover focus"><span data-flwr-target="label">Abre tu cuenta</span></a>
-              <a href="https://banca.n58bancodigital.com" class="flwr_button_secondary" data-flwr-trigger="hover focus"><span data-flwr-target="label">Banca en línea</span></a>
+              <a href="mailto:info@n58bancodigital.com" class="flwr_button_primary" data-flwr-trigger="hover focus"><span data-flwr-target="label">Postularme</span></a>
+              <a href="#tpl-caracteristicas" class="flwr_button_secondary" data-flwr-trigger="hover focus"><span data-flwr-target="label">Leer más</span></a>
             </div>
           </div>
-          <div class="home-split_media">
-            <div class="home-media n58-spline" data-n58-spline="https://prod.spline.design/gejtHSZE9xARo2pW/scene.splinecode">
-              <img src="assets/images/photos/n58-bag-fallback.webp" alt="Bolsa de capital N58 en 3D" class="n58-spline_poster" loading="eager" decoding="async">
-            </div>
-          </div>
+          <div class="tpl-hero_media"><div class="home-media n58-reveal-media tpl-media-frame"><img src="assets/images/photos/n-emprende.webp" alt="N Emprende para Empresas en N58 Banco Digital" class="home-media_img" loading="eager"></div></div>
+        </div></div>
+      </section>
+<div class="n58-product-marquee f-mode-dark" aria-hidden="true"><div class="n58-product-marquee_track"><span class="n58-product-marquee_item">N Emprende</span><span class="n58-product-marquee_star" aria-hidden="true">✦</span><span class="n58-product-marquee_item">N Emprende</span><span class="n58-product-marquee_star" aria-hidden="true">✦</span><span class="n58-product-marquee_item">N Emprende</span><span class="n58-product-marquee_star" aria-hidden="true">✦</span><span class="n58-product-marquee_item">N Emprende</span><span class="n58-product-marquee_star" aria-hidden="true">✦</span><span class="n58-product-marquee_item">N Emprende</span><span class="n58-product-marquee_star" aria-hidden="true">✦</span><span class="n58-product-marquee_item">N Emprende</span><span class="n58-product-marquee_star" aria-hidden="true">✦</span></div></div>
+
+      <!-- ════════════════ 02 · CARACTERÍSTICAS [light] ════════════════
+           3 feature cards. Arrangement (grid/row/stagger) is variant-driven; the
+           accent tints the index number + top rule of each card. -->
+      <section id="tpl-caracteristicas" class="f-section-lg tpl-feats-section" aria-label="Características de N Emprende">
+        <div class="n58-container"><div class="tpl-sec-head n58-reveal"><p class="f-text-small"><span class="n58-badge is-core f-text-color-strong">Características</span></p><h2 class="f-text-h1">Todo lo que hace<br>especial a N Emprende</h2></div>
+          <ul class="tpl-feats n58-reveal-list" role="list"><li class="tpl-feat"><div class="tpl-feat_flip"><div class="tpl-feat_face tpl-feat_front"><span class="tpl-feat_num" aria-hidden="true">01</span><div class="tpl-feat_body"><h3 class="f-text-h4 tpl-feat_title">Educación financiera</h3><p class="f-text-body f-text-color-muted">Formación para ordenar las cuentas de tu negocio y tomar mejores decisiones.</p></div><a href="mailto:info@n58bancodigital.com" class="tpl-feat_link">Conoce más</a><span class="tpl-feat_progress" aria-hidden="true"></span></div><div class="tpl-feat_face tpl-feat_back"><img src="assets/images/photos/n-emprende.webp" alt="Educación financiera" class="tpl-feat_img" loading="lazy" decoding="async"><div class="tpl-feat_back_body"><h3 class="f-text-h4 tpl-feat_title tpl-feat_back_title">Educación financiera</h3><p class="f-text-body tpl-feat_back_desc">Formación para ordenar las cuentas de tu negocio y tomar mejores decisiones.</p></div></div></div></li><li class="tpl-feat"><div class="tpl-feat_flip"><div class="tpl-feat_face tpl-feat_front"><span class="tpl-feat_num" aria-hidden="true">02</span><div class="tpl-feat_body"><h3 class="f-text-h4 tpl-feat_title">Mentorías personalizadas</h3><p class="f-text-body f-text-color-muted">Acompañamiento de nuestro equipo, según el momento en que esté tu negocio.</p></div><a href="mailto:info@n58bancodigital.com" class="tpl-feat_link">Conoce más</a><span class="tpl-feat_progress" aria-hidden="true"></span></div><div class="tpl-feat_face tpl-feat_back"><img src="assets/images/photos/n-emprende.webp" alt="Mentorías personalizadas" class="tpl-feat_img" loading="lazy" decoding="async"><div class="tpl-feat_back_body"><h3 class="f-text-h4 tpl-feat_title tpl-feat_back_title">Mentorías personalizadas</h3><p class="f-text-body tpl-feat_back_desc">Acompañamiento de nuestro equipo, según el momento en que esté tu negocio.</p></div></div></div></li><li class="tpl-feat"><div class="tpl-feat_flip"><div class="tpl-feat_face tpl-feat_front"><span class="tpl-feat_num" aria-hidden="true">03</span><div class="tpl-feat_body"><h3 class="f-text-h4 tpl-feat_title">Herramientas digitales</h3><p class="f-text-body f-text-color-muted">Recursos para gestionar tu emprendimiento y llevarlo al día.</p></div><a href="mailto:info@n58bancodigital.com" class="tpl-feat_link">Conoce más</a><span class="tpl-feat_progress" aria-hidden="true"></span></div><div class="tpl-feat_face tpl-feat_back"><img src="assets/images/photos/n-emprende.webp" alt="Herramientas digitales" class="tpl-feat_img" loading="lazy" decoding="async"><div class="tpl-feat_back_body"><h3 class="f-text-h4 tpl-feat_title tpl-feat_back_title">Herramientas digitales</h3><p class="f-text-body tpl-feat_back_desc">Recursos para gestionar tu emprendimiento y llevarlo al día.</p></div></div></div></li><li class="tpl-feat"><div class="tpl-feat_flip"><div class="tpl-feat_face tpl-feat_front"><span class="tpl-feat_num" aria-hidden="true">04</span><div class="tpl-feat_body"><h3 class="f-text-h4 tpl-feat_title">Diagnóstico del negocio</h3><p class="f-text-body f-text-color-muted">Analizamos tu negocio para entender qué necesita antes de proponer un plan.</p></div><a href="mailto:info@n58bancodigital.com" class="tpl-feat_link">Conoce más</a><span class="tpl-feat_progress" aria-hidden="true"></span></div><div class="tpl-feat_face tpl-feat_back"><img src="assets/images/photos/n-emprende.webp" alt="Diagnóstico del negocio" class="tpl-feat_img" loading="lazy" decoding="async"><div class="tpl-feat_back_body"><h3 class="f-text-h4 tpl-feat_title tpl-feat_back_title">Diagnóstico del negocio</h3><p class="f-text-body tpl-feat_back_desc">Analizamos tu negocio para entender qué necesita antes de proponer un plan.</p></div></div></div></li><li class="tpl-feat"><div class="tpl-feat_flip"><div class="tpl-feat_face tpl-feat_front"><span class="tpl-feat_num" aria-hidden="true">05</span><div class="tpl-feat_body"><h3 class="f-text-h4 tpl-feat_title">Acompañamiento a medida</h3><p class="f-text-body f-text-color-muted">Un plan diseñado para tu caso, no una receta general.</p></div><a href="mailto:info@n58bancodigital.com" class="tpl-feat_link">Conoce más</a><span class="tpl-feat_progress" aria-hidden="true"></span></div><div class="tpl-feat_face tpl-feat_back"><img src="assets/images/photos/n-emprende.webp" alt="Acompañamiento a medida" class="tpl-feat_img" loading="lazy" decoding="async"><div class="tpl-feat_back_body"><h3 class="f-text-h4 tpl-feat_title tpl-feat_back_title">Acompañamiento a medida</h3><p class="f-text-body tpl-feat_back_desc">Un plan diseñado para tu caso, no una receta general.</p></div></div></div></li></ul>
+          <div class="f-flex f-justify-center f-margin-top-6 n58-reveal is-2"><a href="mailto:info@n58bancodigital.com" class="flwr_button_primary is-invert" data-flwr-trigger="hover focus"><span data-flwr-target="label">Postularme a N Emprende</span></a></div>
         </div>
-      </div>
-    </section>
+      </section>
+      <!-- Feature flip auto-play: same timing pattern as the FAQ auto-play — each
+           card's timer bar fills, the card flips to its photo back, holds, then the
+           next card takes over, looping. First pointer/click hands control to the
+           user (hover flips manually). Self-guarding; skipped under reduce-motion. -->
+      <script>
+        (function () {
+          var list = document.querySelector('.tpl-feats');
+          if (!list) return;
+          var flips = [].slice.call(list.querySelectorAll('.tpl-feat_flip'));
+          if (!flips.length) return;
+          var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+          var FILL_MS = 2600, HOLD_MS = 2200, cancelled = false, started = false, timer;
+          function progOf(i) { return flips[i] && flips[i].querySelector('.tpl-feat_progress'); }
+          function resetProg(b) { if (b) { b.style.transition = 'none'; b.style.transform = 'scaleX(0)'; } }
+          function cancelAuto() {
+            if (cancelled) return;
+            cancelled = true; clearTimeout(timer);
+            flips.forEach(function (f) { f.classList.remove('is-flipped'); resetProg(f.querySelector('.tpl-feat_progress')); });
+          }
+          function fill(i) {
+            if (cancelled) return;
+            var b = progOf(i);
+            if (b) {
+              b.style.transition = 'none'; b.style.transform = 'scaleX(0)'; void b.offsetWidth;
+              b.style.setProperty('transition', 'transform ' + FILL_MS + 'ms cubic-bezier(0.65, 0, 0.35, 1)');
+              b.style.transform = 'scaleX(1)';
+            }
+            timer = setTimeout(function () { step(i); }, FILL_MS);
+          }
+          function step(i) {
+            if (cancelled) return;
+            flips.forEach(function (f, j) { f.classList.toggle('is-flipped', j === i); });
+            timer = setTimeout(function () {
+              if (cancelled) return;
+              flips[i].classList.remove('is-flipped');
+              resetProg(progOf(i));
+              fill((i + 1) % flips.length);
+            }, HOLD_MS);
+          }
+          flips.forEach(function (f) {
+            f.addEventListener('click', cancelAuto);
+            f.addEventListener('pointerenter', cancelAuto);
+          });
+          function start() { if (started || cancelled || reduce) return; started = true; fill(0); }
+          if ('IntersectionObserver' in window) {
+            var io = new IntersectionObserver(function (es) {
+              es.forEach(function (e) { if (e.isIntersecting) { start(); io.disconnect(); } });
+            }, { threshold: 0.4 });
+            io.observe(list);
+          } else { start(); }
+        })();
+      </script>
 
-    <!-- ════════════════ 02 · CUENTAS [light] · flwr tabs · CMS: Productos Empresas ════════════════
-         The old export's "Cuentas" long-form block, upgraded to the home
-         product-browser pattern: one tab per sub-product with the auto-playing
-         .n58-tab-progress bars (the shared tabs script drives them). -->
-    <section id="cuentas" class="f-section-lg n58-products-section" aria-label="Cuentas">
-      <div class="n58-container">
-        <div class="n58-products-head n58-reveal">
-          <p class="f-text-small"><span class="n58-badge is-core f-text-color-strong">Cuentas</span></p>
-          <h2 class="f-text-h1">La gestión de tu dinero,<br>al ritmo de tu empresa</h2>
-          <p class="f-text-body f-text-color-muted f-max-w-40ch">Ya sea que busques una cuenta corriente o en moneda extranjera, en N58 tienes acceso a soluciones modernas y seguras con flexibilidad, control y comodidad desde cualquier lugar.</p>
-        </div>
-        <div class="flwr_tabs_wrap n58-products n58-reveal is-2" data-flwr="tabs">
-          <div class="flwr_tabs_list" role="tablist" aria-label="Tipos de cuenta N58 para empresas">
-            <button type="button" class="flwr_tabs_trigger" role="tab" id="n58-prod-tab-1" aria-controls="n58-prod-panel-1" aria-selected="true">Cuenta Corriente<span class="n58-tab-progress" aria-hidden="true"></span></button>
-            <button type="button" class="flwr_tabs_trigger" role="tab" id="n58-prod-tab-2" aria-controls="n58-prod-panel-2" aria-selected="false">Cuenta en Moneda Extranjera<span class="n58-tab-progress" aria-hidden="true"></span></button>
-          </div>
-          <div class="flwr_tabs_panel is-active" role="tabpanel" id="n58-prod-panel-1" aria-labelledby="n58-prod-tab-1">
-            <div class="home-split n58-products_split">
-              <div class="home-stack">
-                <h3 class="f-text-h2">La operación diaria,<br>bajo control</h3>
-                <p class="f-text-body f-text-color-muted f-max-w-40ch">Cobra y paga en bolívares sin fricción: transferencias, nómina y proveedores desde una sola cuenta, con reportes claros de cada movimiento en tu Banca en Línea.</p>
-                <div class="f-flex f-gap-3">
-                  <a href="https://onboarding.n58bancodigital.com" class="flwr_button_primary is-invert" data-flwr-trigger="hover focus"><span data-flwr-target="label">Abre tu cuenta</span></a>
-                </div>
-              </div>
-              <div class="home-split_media">
-                <div class="home-media">
-                  <img src="assets/images/photos/cuenta-corriente.webp" alt="Cuenta Corriente empresarial N58 gestionada desde el celular" class="home-media_img" loading="lazy">
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="flwr_tabs_panel" role="tabpanel" id="n58-prod-panel-2" aria-labelledby="n58-prod-tab-2">
-            <div class="home-split n58-products_split">
-              <div class="home-stack">
-                <h3 class="f-text-h2">Divisas para operar<br>sin fronteras</h3>
-                <p class="f-text-body f-text-color-muted f-max-w-40ch">Protege la liquidez de tu empresa en moneda extranjera: recibe fondos, resguarda tu capital y realiza operaciones cambiarias con total seguridad desde tu Banca en Línea.</p>
-                <div class="f-flex f-gap-3">
-                  <a href="https://onboarding.n58bancodigital.com" class="flwr_button_primary is-invert" data-flwr-trigger="hover focus"><span data-flwr-target="label">Abre tu cuenta</span></a>
-                </div>
-              </div>
-              <div class="home-split_media">
-                <div class="home-media">
-                  <img src="assets/images/photos/cuenta-moneda-extranjera.webp" alt="Empresario consultando su Cuenta en Moneda Extranjera N58" class="home-media_img" loading="lazy">
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
+      <!-- ════════════════ 03 · BENEFICIOS [dark] ════════════════
+           Three renderers live in the DOM — tabs / accordion / grid — and the
+           variant class reveals exactly one. Same content in each, so switching
+           display is a one-class change per CMS item. -->
+      <section class="f-section-lg f-mode-dark tpl-benef-section" aria-label="Beneficios"><div class="n58-container">
+        <div class="tpl-benef_stack n58-reveal is-2"><div class="tpl-benef_stack_info"><p class="f-text-small f-text-color-accent">Beneficios</p><h2 class="f-text-h1 f-text-color-strong">Beneficios de<br>N Emprende</h2><p class="f-text-body f-text-color-muted f-max-w-40ch">Ventajas pensadas para que aproveches este producto N58.</p><div class="tpl-benef_dots" role="tablist" aria-label="Beneficios"><button type="button" class="tpl-benef_dot" data-benef="b0" aria-label="Diagnóstico de tu negocio"></button><button type="button" class="tpl-benef_dot" data-benef="b1" aria-label="Plan a tu medida"></button><button type="button" class="tpl-benef_dot" data-benef="b2" aria-label="Mentorías y formación"></button><button type="button" class="tpl-benef_dot" data-benef="b3" aria-label="Opción de financiamiento"></button></div></div><div class="tpl-benef_deck flwr_card_stack_wrap is-direction-br"><div class="flwr_card_stack_list"><div class="flwr_card_stack_slide tpl-benef_slide n58-notch-border" data-benef="b0"><div class="tpl-benef_slide_in"><h3 class="f-text-h2 tpl-benef_slide_title"><span class="tpl-benef_hl">Diagnóstico de tu negocio</span></h3><p class="f-text-body tpl-benef_slide_desc">Revisamos en qué punto estás antes de recomendarte nada.</p></div></div><div class="flwr_card_stack_slide tpl-benef_slide n58-notch-border" data-benef="b1"><div class="tpl-benef_slide_in"><h3 class="f-text-h2 tpl-benef_slide_title"><span class="tpl-benef_hl">Plan a tu medida</span></h3><p class="f-text-body tpl-benef_slide_desc">Diseñamos el acompañamiento según lo que arroje ese diagnóstico.</p></div></div><div class="flwr_card_stack_slide tpl-benef_slide n58-notch-border" data-benef="b2"><div class="tpl-benef_slide_in"><h3 class="f-text-h2 tpl-benef_slide_title"><span class="tpl-benef_hl">Mentorías y formación</span></h3><p class="f-text-body tpl-benef_slide_desc">Acceso a educación financiera, mentorías y herramientas digitales.</p></div></div><div class="flwr_card_stack_slide tpl-benef_slide n58-notch-border" data-benef="b3"><div class="tpl-benef_slide_in"><h3 class="f-text-h2 tpl-benef_slide_title"><span class="tpl-benef_hl">Opción de financiamiento</span></h3><p class="f-text-body tpl-benef_slide_desc">Si cumples con los criterios de evaluación, puedes optar por financiamiento a través de N Emprende.</p></div></div></div></div></div>
+      </div></section>
+      <!-- Beneficios stacking-cards auto-play: cycles the flwr card-stack every 5s
+           (like the live site), syncs the segment dots to the top card, pauses on
+           hover, jumps on dot click. Self-guarding; no auto-cycle under reduce-motion. -->
+      <script>
+        (function () {
+          var stack = document.querySelector('.tpl-benef_stack');
+          if (!stack) return;
+          var wrap = stack.querySelector('.flwr_card_stack_wrap');
+          var list = wrap && wrap.querySelector('.flwr_card_stack_list');
+          var dots = [].slice.call(stack.querySelectorAll('.tpl-benef_dot'));
+          if (!wrap || !list || !dots.length) return;
+          var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+          function topKey() { var t = list.lastElementChild; return t ? t.getAttribute('data-benef') : null; }
+          function syncDots() { var k = topKey(); dots.forEach(function (d) { d.classList.toggle('is-active', d.getAttribute('data-benef') === k); }); }
+          syncDots();
+          new MutationObserver(syncDots).observe(list, { childList: true });
+          var timer = null;
+          function stop() { if (timer) { clearInterval(timer); timer = null; } }
+          function start() { if (reduce) return; stop(); timer = setInterval(function () { if (window.flwr && window.flwr.cardStack) window.flwr.cardStack.next(wrap); }, 5000); }
+          dots.forEach(function (d) {
+            d.addEventListener('click', function () {
+              var slide = list.querySelector('.flwr_card_stack_slide[data-benef="' + d.getAttribute('data-benef') + '"]');
+              if (slide) slide.click();
+              start();
+            });
+          });
+          wrap.addEventListener('pointerenter', stop);
+          wrap.addEventListener('pointerleave', start);
+          if ('IntersectionObserver' in window) {
+            new IntersectionObserver(function (es) {
+              es.forEach(function (e) { if (e.isIntersecting) start(); else stop(); });
+            }, { threshold: 0.3 }).observe(stack);
+          } else { start(); }
+        })();
+      </script>
 
-    <!-- ════════════════ 03 · CRÉDITOS [dark] ════════════════ -->
-    <section id="creditos" class="f-section-lg f-mode-dark" aria-label="Créditos">
-      <div class="n58-container">
-        <div class="home-split">
-          <div class="home-split_media">
-            <div class="home-media n58-reveal-media">
-              <img src="assets/images/photos/dinero-en-manu.webp" alt="Financiamiento para impulsar tu empresa" class="home-media_img" loading="lazy">
-            </div>
-          </div>
-          <div class="home-stack n58-reveal-stack">
-            <p class="f-text-small"><span class="n58-badge is-alternate f-text-color-strong">Créditos</span></p>
-            <h2 class="f-text-h1 f-text-color-strong">Financiamiento que<br>acompaña tu crecimiento</h2>
-            <p class="f-text-body f-text-color-muted f-max-w-40ch">Nuestros microcréditos están diseñados para apoyar a emprendedores y pequeñas empresas: líneas accesibles, flexibles y adaptadas a tus necesidades, para capital de trabajo, inventario o expansión.</p>
-            <div class="f-flex f-flex-wrap f-gap-3">
-              <a href="https://onboarding.n58bancodigital.com" class="flwr_button_primary" data-flwr-trigger="hover focus"><span data-flwr-target="label">¡Pide tu crédito ya!</span></a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
+      <!-- ════════════════ 04 · REQUISITOS [light] ════════════════
+           Split: media + a two-step checklist. Media side follows the same
+           --tpl-media-order knob as the hero. Accent tints the checks + step pips. -->
+      <section class="f-section-lg tpl-reqs-section" aria-label="Requisitos"><div class="n58-container"><div class="tpl-reqs"><div class="tpl-reqs_media"><div class="home-media n58-reveal-media tpl-media-frame"><img src="assets/images/photos/n-emprende.webp" alt="Requisitos para N Emprende" class="home-media_img" loading="lazy"></div><span class="tpl-reqs_stat" aria-hidden="true"><span class="tpl-reqs_stat-num">3</span><span class="tpl-reqs_stat-lbl">recaudos</span></span></div><div class="tpl-reqs_body n58-reveal-stack"><p class="f-text-small"><span class="n58-badge is-core f-text-color-strong">Requisitos</span></p><h2 class="f-text-h1">Lo que necesitas<br>para comenzar</h2><p class="f-text-body f-text-color-muted f-max-w-40ch">N Emprende · Empresas. Confirma los recaudos vigentes antes de iniciar.</p><ul class="tpl-reqs_list" role="list"><li class="tpl-req"><span class="tpl-req_check" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="m5 12.5 4.5 4.5L19 7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="f-text-body">Tener un negocio o emprendimiento en marcha.</span></li><li class="tpl-req"><span class="tpl-req_check" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="m5 12.5 4.5 4.5L19 7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="f-text-body">Postularte escribiendo a info@n58bancodigital.com.</span></li><li class="tpl-req"><span class="tpl-req_check" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="m5 12.5 4.5 4.5L19 7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="f-text-body">Cumplir con los criterios de evaluación de N Emprende.</span></li></ul><div class="f-flex f-flex-wrap f-gap-3 f-margin-top-2"><a href="mailto:info@n58bancodigital.com" class="flwr_button_primary is-invert" data-flwr-trigger="hover focus"><span data-flwr-target="label">Postularme</span></a></div></div></div></div></section>
+<section id="tpl-recursos" class="tpl-resources-section" aria-label="Información relacionada"><div class="n58-container"><div class="tpl-resources n58-reveal"><header class="tpl-resources_head"><p class="f-text-small f-text-color-accent">Antes de comenzar</p><h2 class="f-text-h2">Todo claro antes<br>de dar el siguiente paso.</h2><p class="f-text-body f-text-color-muted">Consulta la información vigente vinculada a N Emprende.</p></header><nav class="tpl-resources_links" aria-label="Recursos relacionados"><a class="tpl-resource-card" href="limites-diarios.html"><span class="tpl-resource-card_num" aria-hidden="true">01</span><span class="tpl-resource-card_body"><strong class="f-text-h4">Límites diarios</strong><span class="f-text-small f-text-color-muted">Revisa los montos máximos vigentes para cada tipo de operación.</span></span><svg class="tpl-resource-card_arrow" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14m-5-5 5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a><a class="tpl-resource-card" href="documentos-legales.html"><span class="tpl-resource-card_num" aria-hidden="true">02</span><span class="tpl-resource-card_body"><strong class="f-text-h4">Tarifas y comisiones</strong><span class="f-text-small f-text-color-muted">Consulta costos, cargos y condiciones antes de operar.</span></span><svg class="tpl-resource-card_arrow" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14m-5-5 5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a><a class="tpl-resource-card" href="documentos-legales.html"><span class="tpl-resource-card_num" aria-hidden="true">03</span><span class="tpl-resource-card_body"><strong class="f-text-h4">Seguridad y prevención</strong><span class="f-text-small f-text-color-muted">Conoce cómo proteger tu cuenta, tus datos y cada transacción.</span></span><svg class="tpl-resource-card_arrow" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14m-5-5 5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a></nav></div></div></section>
 
-    <!-- ════════════════ 04 · TARJETAS [light] ════════════════ -->
+      <!-- ════════════════ 05 · FAQ [dark] · CMS: FAQs (Pago Móvil subset) ════════════════
+           Site-wide FAQ collection, filtered to a representative Pago Móvil set.
+           Uses .home-faq_list so the shared single-open + auto-play script drives it. -->
+      <section class="f-section-lg f-mode-dark tpl-faq-section" aria-label="Preguntas Frecuentes"><div class="n58-container"><div class="f-flex f-flex-column f-items-center f-gap-2 f-text-center f-margin-bottom-6 n58-reveal"><p class="f-text-small f-text-color-accent">N Emprende</p><h2 class="f-text-h1 f-text-color-strong">Preguntas<br>Frecuentes</h2><p class="f-text-body f-text-color-muted">Resolvemos las dudas más comunes sobre N Emprende.</p></div><div class="flwr_accordion_wrap home-faq_list n58-reveal-list"><details class="flwr_accordion_item"><summary class="flwr_accordion_trigger"><span class="n58-faq-q">¿Cómo me postulo a N Emprende?</span><span class="n58-plus" aria-hidden="true"></span><span class="n58-faq-progress" aria-hidden="true"></span></summary><div class="flwr_accordion_content"><p class="f-text-body f-text-color-muted">Escríbenos a <a href="mailto:info@n58bancodigital.com">info@n58bancodigital.com</a>. Nuestro equipo revisará tu caso para determinar cómo podemos ayudarte.</p></div></details><details class="flwr_accordion_item"><summary class="flwr_accordion_trigger"><span class="n58-faq-q">¿Cómo funciona el programa?</span><span class="n58-plus" aria-hidden="true"></span><span class="n58-faq-progress" aria-hidden="true"></span></summary><div class="flwr_accordion_content"><p class="f-text-body f-text-color-muted">En cuatro pasos: recibimos tu solicitud, analizamos tu negocio, diseñamos un plan de acompañamiento y evaluamos tu ingreso a N Emprende.</p></div></details><details class="flwr_accordion_item"><summary class="flwr_accordion_trigger"><span class="n58-faq-q">¿Qué incluye el acompañamiento?</span><span class="n58-plus" aria-hidden="true"></span><span class="n58-faq-progress" aria-hidden="true"></span></summary><div class="flwr_accordion_content"><p class="f-text-body f-text-color-muted">Educación financiera, mentorías personalizadas, herramientas digitales, diagnóstico del negocio y un plan a tu medida.</p></div></details><details class="flwr_accordion_item"><summary class="flwr_accordion_trigger"><span class="n58-faq-q">¿N Emprende ofrece financiamiento?</span><span class="n58-plus" aria-hidden="true"></span><span class="n58-faq-progress" aria-hidden="true"></span></summary><div class="flwr_accordion_content"><p class="f-text-body f-text-color-muted">Sí. Si cumples con los criterios de evaluación, puedes optar por financiamiento a través de N Emprende.</p></div></details></div><div class="f-flex f-justify-center f-margin-top-6 n58-reveal"><a href="preguntas-frecuentes.html" class="flwr_button_secondary" data-flwr-trigger="hover focus"><span data-flwr-target="label">Ver todas</span></a></div></div></section>
 
-    <!-- ════════════════ 05 · PAGO MÓVIL [dark] ════════════════ -->
-    <section class="f-section-lg f-mode-dark" aria-label="Pago Móvil">
-      <div class="n58-container">
-        <div class="home-split">
-          <div class="home-split_media">
-            <div class="home-media n58-reveal-media">
-              <img src="assets/images/photos/pago-exitoso-app.webp" alt="Pago Móvil N58 confirmando un pago exitoso" class="home-media_img" loading="lazy">
-            </div>
-          </div>
-          <div class="home-stack n58-reveal-stack">
-            <p class="f-text-small"><span class="n58-badge is-alternate f-text-color-strong">Pago Móvil</span></p>
-            <h2 class="f-text-h1 f-text-color-strong">Cobra y paga<br>al instante</h2>
-            <p class="f-text-body f-text-color-muted f-max-w-40ch">Con Pago Móvil N58 tu negocio transfiere y recibe dinero en segundos, sin importar el banco. Afíliate fácilmente y disfruta de una experiencia de cobro sin límites.</p>
-            <div class="f-flex f-flex-wrap f-gap-3">
-              <a href="https://banca.n58bancodigital.com" class="flwr_button_primary" data-flwr-trigger="hover focus"><span data-flwr-target="label">Afíliate ya</span></a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ════════════════ 06 · PAGO DE SERVICIOS [light] ════════════════ -->
-    <section class="f-section-lg" aria-label="Pago de Servicios">
-      <div class="n58-container">
-        <div class="home-split">
-          <div class="home-stack n58-reveal-stack">
-            <p class="f-text-small"><span class="n58-badge is-core f-text-color-strong">Pago de Servicios</span></p>
-            <h2 class="f-text-h1">Los servicios de tu empresa,<br>pagados a tiempo</h2>
-            <p class="f-text-body f-text-color-muted f-max-w-40ch">Desde tu computadora o celular, paga las facturas de telefonía, internet, TV y más en cuestión de segundos, directo desde tu Banca en Línea N58.</p>
-            <div class="f-flex f-flex-wrap f-gap-3">
-              <a href="https://banca.n58bancodigital.com" class="flwr_button_primary is-invert" data-flwr-trigger="hover focus"><span data-flwr-target="label">Paga tus servicios</span></a>
-            </div>
-          </div>
-          <div class="home-split_media">
-            <div class="home-media n58-reveal-media">
-              <img src="assets/images/photos/pago-servicios.webp" alt="Pago de servicios desde la Banca en Línea N58" class="home-media_img" loading="lazy">
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ════════════════ 07 · OPERACIONES CAMBIARIAS [dark, image-mode] · sticky mask scene ════════════════
-         The page's standout category: same pin + mask-grow scroll scene as
-         home's Pago de Servicios, over the Ávila-Caracas skyline. Old export
-         duplicated the Pago de Servicios copy here — replaced with real divisas
-         copy (FLAG: validate wording with the client). -->
-    <section class="n58-bleed-pin" aria-label="Operaciones Cambiarias">
-      <div class="n58-bleed-sticky">
-        <div class="home-bleed n58-bleed-grow f-mode-dark">
-          <img src="assets/images/photos/avila-mirador.webp" alt="" class="home-bleed_img" loading="lazy" aria-hidden="true">
-          <div class="home-bleed_scrim" aria-hidden="true"></div>
-          <!-- Badge-slot teaser — a real n58-badge sized by the title text
-               (tags kept tight: no whitespace nodes inside the inline unit). -->
-          <div class="n58-bleed-slot" aria-hidden="true">
-            <span class="n58-badge is-core n58-bleed-slot-unit f-text-h2 f-text-color-strong"><span class="n58-bleed-slot-mask"><span class="n58-bleed-slot-title">Cambia divisas</span></span></span>
-          </div>
-          <div class="home-bleed_content">
-            <h2 class="f-text-h1 f-text-color-strong">Divisas al mejor<br>tipo de cambio</h2>
-            <p class="f-text-body f-text-color-main f-max-w-40ch">Compra y vende divisas para tu empresa con total seguridad, a la tasa oficial y sin trámites presenciales. Todo desde tu Banca en Línea, en cuestión de minutos.</p>
-            <div class="f-flex f-gap-3">
-              <a href="https://banca.n58bancodigital.com" class="flwr_button_primary" data-flwr-trigger="hover focus"><span data-flwr-target="label">¡Empieza ahora!</span></a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ════════════════ 08 · PRODUCTOS E INVERSIONES [light] ════════════════
-         FLAG: old export carried placeholder copy here and the sitemap asks to
-         confirm this product line with the client before launch. -->
-    <section id="productos-inversiones" class="f-section-lg" aria-label="Productos e Inversiones">
-      <div class="n58-container">
-        <div class="home-split">
-          <div class="home-split_media">
-            <div class="home-media n58-reveal-media">
-              <img src="assets/images/photos/padre-hija.webp" alt="Inversiones que crecen con tu empresa y tu familia" class="home-media_img" loading="lazy">
-            </div>
-          </div>
-          <div class="home-stack n58-reveal-stack">
-            <p class="f-text-small"><span class="n58-badge is-alternate f-text-color-strong">Productos e Inversiones</span></p>
-            <h2 class="f-text-h1">Haz que tu excedente<br>trabaje por ti</h2>
-            <p class="f-text-body f-text-color-muted f-max-w-40ch">Pon a producir la liquidez de tu empresa con instrumentos de inversión seguros y acompañamiento experto. Rentabiliza tus excedentes sin perder disponibilidad de tu capital.</p>
-            <div class="f-flex f-flex-wrap f-gap-3">
-              <a href="atencion-al-cliente.html" class="flwr_button_primary is-invert" data-flwr-trigger="hover focus"><span data-flwr-target="label">Habla con un asesor</span></a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ════════════════ 09 · DIRECTORIO DE PRODUCTOS [light] · CMS: Productos Empresas ════════════════
-         Category-grouped product listing (mirrors the live /productos-empresas
-         collection). Each product card links to the product detail template.
-         Categories with no items in the source (Créditos, Productos e Inversiones)
-         render heading + intro only, matching the live site. Reuses the existing
-         card/grid/reveal patterns — no new CSS. -->
-    <section class="f-section-lg" aria-label="Directorio de productos">
-      <div class="n58-container">
-
-        <div class="f-flex f-flex-column f-items-start f-gap-2 f-margin-bottom-7 n58-reveal">
-          <p class="f-text-small"><span class="n58-badge is-alternate f-text-color-strong">Directorio</span></p>
-          <h2 class="f-text-h2">Todos los productos para tu empresa</h2>
-          <p class="f-text-body f-text-color-muted f-max-w-60ch">Explora cada producto en detalle y encuentra la herramienta financiera que impulsa tu negocio.</p>
-        </div>
-
-        <!-- ── Cuentas · 2 productos ── -->
-        <div class="f-margin-bottom-7">
-          <div class="f-flex f-items-center f-gap-3 f-margin-bottom-3 n58-reveal">
-            <h3 class="f-text-h4">Cuentas</h3>
-            <span class="flwr_tag">2 productos</span>
-          </div>
-          <p class="f-text-body f-text-color-muted f-max-w-60ch f-margin-bottom-4 n58-reveal">Cuentas diseñadas para adaptarse a las necesidades de tu empresa, con flexibilidad, control y comodidad desde cualquier lugar.</p>
-          <div class="f-grid-autofit-md f-gap-4 n58-reveal-list">
-            <article class="flwr_card_default_wrap">
-              <div class="flwr_card_default_body">
-                <p class="flwr_card_default_eyebrow">Cuentas</p>
-                <h4 class="flwr_card_default_title">Cuenta en Moneda Extranjera</h4>
-                <p class="flwr_card_default_description">La cuenta ideal para manejar tus fondos en divisas, cumpliendo con la normativa cambiaria del país.</p>
-                <div class="flwr_card_default_footer f-flex-wrap f-justify-between">
-                  <span class="flwr_tag">Empresas</span>
-                  <a href="cuenta-moneda-extranjera-empresas.html" class="flwr_button_primary is-invert is-small" data-flwr-trigger="hover focus"><span data-flwr-target="label">Ver detalle</span></a>
-                </div>
-              </div>
-            </article>
-            <article class="flwr_card_default_wrap">
-              <div class="flwr_card_default_body">
-                <p class="flwr_card_default_eyebrow">Cuentas</p>
-                <h4 class="flwr_card_default_title">Cuenta Corriente</h4>
-                <p class="flwr_card_default_description">Una cuenta diseñada para la gestión eficiente de los recursos de tu empresa. Flexibilidad, seguridad y control total en tus transacciones.</p>
-                <div class="flwr_card_default_footer f-flex-wrap f-justify-between">
-                  <span class="flwr_tag">Empresas</span>
-                  <a href="cuenta-corriente-empresas.html" class="flwr_button_primary is-invert is-small" data-flwr-trigger="hover focus"><span data-flwr-target="label">Ver detalle</span></a>
-                </div>
-              </div>
-            </article>
-          </div>
-        </div>
-
-        <!-- ── Créditos · 1 producto ── -->
-        <div class="f-margin-bottom-7">
-          <div class="f-flex f-items-center f-gap-3 f-margin-bottom-3 n58-reveal">
-            <h3 class="f-text-h4">Créditos</h3>
-            <span class="flwr_tag">1 producto</span>
-          </div>
-          <p class="f-text-body f-text-color-muted f-max-w-60ch f-margin-bottom-4 n58-reveal">Impulsa el crecimiento de tu negocio con líneas de crédito accesibles, flexibles y adaptadas a las necesidades de tu empresa.</p>
-          <div class="f-grid-autofit-md f-gap-4 n58-reveal-list">
-            <article class="flwr_card_default_wrap">
-              <div class="flwr_card_default_body">
-                <p class="flwr_card_default_eyebrow">Créditos</p>
-                <h4 class="flwr_card_default_title">N Emprende</h4>
-                <p class="flwr_card_default_description">Un programa de acompañamiento para tu negocio: formación, mentorías, herramientas digitales y la opción de optar por financiamiento.</p>
-                <div class="flwr_card_default_footer f-flex-wrap f-justify-between">
-                  <span class="flwr_tag">Empresas</span>
-                  <a href="n-emprende-empresas.html" class="flwr_button_primary is-invert is-small" data-flwr-trigger="hover focus"><span data-flwr-target="label">Ver detalle</span></a>
-                </div>
-              </div>
-            </article>
-          </div>
-        </div>
-
-        <!-- ── Tarjetas · 1 producto ── -->
-
-        <!-- ── Pago Móvil · 1 producto ── -->
-        <div class="f-margin-bottom-7">
-          <div class="f-flex f-items-center f-gap-3 f-margin-bottom-3 n58-reveal">
-            <h3 class="f-text-h4">Pago Móvil</h3>
-            <span class="flwr_tag">1 producto</span>
-          </div>
-          <p class="f-text-body f-text-color-muted f-max-w-60ch f-margin-bottom-4 n58-reveal">Con Pago Móvil N58 tu empresa transfiere y cobra en segundos, sin importar el banco y desde cualquier lugar.</p>
-          <div class="f-grid-autofit-md f-gap-4 n58-reveal-list">
-            <article class="flwr_card_default_wrap">
-              <div class="flwr_card_default_body">
-                <p class="flwr_card_default_eyebrow">Pago Móvil</p>
-                <h4 class="flwr_card_default_title">Pago Móvil</h4>
-                <p class="flwr_card_default_description">Facilita las transacciones de tu empresa con el servicio de Pago Móvil de N58, diseñado para realizar pagos instantáneos y seguros desde cualquier lugar.</p>
-                <div class="flwr_card_default_footer f-flex-wrap f-justify-between">
-                  <span class="flwr_tag">Empresas</span>
-                  <a href="pago-movil-empresas.html" class="flwr_button_primary is-invert is-small" data-flwr-trigger="hover focus"><span data-flwr-target="label">Ver detalle</span></a>
-                </div>
-              </div>
-            </article>
-          </div>
-        </div>
-
-        <!-- ── Pago de Servicios · 1 producto ── -->
-        <div class="f-margin-bottom-7">
-          <div class="f-flex f-items-center f-gap-3 f-margin-bottom-3 n58-reveal">
-            <h3 class="f-text-h4">Pago de Servicios</h3>
-            <span class="flwr_tag">1 producto</span>
-          </div>
-          <p class="f-text-body f-text-color-muted f-max-w-60ch f-margin-bottom-4 n58-reveal">Gestiona y paga las facturas de tu negocio de forma rápida y segura desde cualquier lugar.</p>
-          <div class="f-grid-autofit-md f-gap-4 n58-reveal-list">
-            <article class="flwr_card_default_wrap">
-              <div class="flwr_card_default_body">
-                <p class="flwr_card_default_eyebrow">Pago de Servicios</p>
-                <h4 class="flwr_card_default_title">Pago de Servicios</h4>
-                <p class="flwr_card_default_description">Simplifica los pagos de facturas y servicios operativos con una plataforma que combina rapidez, comodidad y seguridad.</p>
-                <div class="flwr_card_default_footer f-flex-wrap f-justify-between">
-                  <span class="flwr_tag">Empresas</span>
-                  <a href="pago-de-servicios-empresas.html" class="flwr_button_primary is-invert is-small" data-flwr-trigger="hover focus"><span data-flwr-target="label">Ver detalle</span></a>
-                </div>
-              </div>
-            </article>
-          </div>
-        </div>
-
-        <!-- ── Operaciones Cambiarias · 1 producto ── -->
-        <div class="f-margin-bottom-7">
-          <div class="f-flex f-items-center f-gap-3 f-margin-bottom-3 n58-reveal">
-            <h3 class="f-text-h4">Operaciones Cambiarias</h3>
-            <span class="flwr_tag">1 producto</span>
-          </div>
-          <p class="f-text-body f-text-color-muted f-max-w-60ch f-margin-bottom-4 n58-reveal">Compra y vende divisas para tu empresa con total seguridad y al mejor tipo de cambio.</p>
-          <div class="f-grid-autofit-md f-gap-4 n58-reveal-list">
-            <article class="flwr_card_default_wrap">
-              <div class="flwr_card_default_body">
-                <p class="flwr_card_default_eyebrow">Operaciones Cambiarias</p>
-                <h4 class="flwr_card_default_title">Intervención</h4>
-                <p class="flwr_card_default_description">Adquiere divisas asignadas por el Banco Central de Venezuela, sujeto a disponibilidad.</p>
-                <div class="flwr_card_default_footer f-flex-wrap f-justify-between">
-                  <span class="flwr_tag">Empresas</span>
-                  <a href="intervencion-cambiaria-empresas.html" class="flwr_button_primary is-invert is-small" data-flwr-trigger="hover focus"><span data-flwr-target="label">Ver detalle</span></a>
-                </div>
-              </div>
-            </article>
-          </div>
-        </div>
-
-        <!-- ── Productos e Inversiones · sin productos en el origen → solo encabezado + intro (como el sitio en vivo) ── -->
-        <div class="f-margin-bottom-7">
-          <div class="f-flex f-items-center f-gap-3 f-margin-bottom-3 n58-reveal">
-            <h3 class="f-text-h4">Productos e Inversiones</h3>
-            <span class="flwr_tag">Próximamente</span>
-          </div>
-          <p class="f-text-body f-text-color-muted f-max-w-60ch n58-reveal">Haz crecer el capital de tu empresa con nuestras soluciones de inversión, seguras y adaptadas a tu perfil.</p>
-        </div>
-
-      </div>
-    </section>
+    </div>
 
   </main>
 
@@ -549,7 +406,8 @@
         </div>
       </div>
 
-      <!-- Link columns -->
+      <!-- Link columns — Información de Interés (the long list) gets its own column;
+           the shorter groups pair up so every column is reasonably filled. -->
       <div class="n58-footer-cols">
         <div class="n58-footer-col n58-reveal is-2">
           <nav class="flwr_footer_group" aria-label="Empresas">
@@ -598,7 +456,7 @@
       </div>
     </div>
 
-    <!-- Dark full-bleed bottom bar -->
+    <!-- Dark full-bleed bottom bar (matches the live footer's dark strip). -->
     <div class="n58-footer-bottom">
       <div class="n58-container n58-footer-bottom-inner">
         <p class="f-text-tiny">© 2026 N58 Banco Digital, S.A.</p>
@@ -619,13 +477,39 @@
     <span data-flwr-target="label">Chatear con AlaN</span>
   </a>
 
-  <!-- flwr runtime: hydrates navbar dropdown/hamburger, tabs, fullscreen menu, etc. -->
-  <script src="assets/runtime.js" defer></script>
-  <!-- Sticky mask-grow scene: JS scroll fallback for browsers without native scroll-driven CSS (older iOS Safari). No-op where CSS animation-timeline is supported. -->
-  <script src="assets/n58-bleed-scene.js" defer></script>
+  <!-- ════════════════ Anti-fraud dialog (first-visit, cookie-gated) ════════════════ -->
+  <!-- FLAG: confirm trigger with client — first-visit only vs every session. -->
+  <dialog class="antifraud-dialog f-mode-dark" tabindex="-1" aria-labelledby="antifraud-title" data-flwr-target="antifraud">
+    <button type="button" class="n58-modal-close" aria-label="Cerrar" data-flwr-target="antifraud-close">
+      <span class="n58-close-x" aria-hidden="true">
+        <img src="assets/images/icons/menu-bar-cream.svg" alt="" class="n58-close-x_bar n58-close-x_bar--1">
+        <img src="assets/images/icons/menu-bar-cream.svg" alt="" class="n58-close-x_bar n58-close-x_bar--2">
+      </span>
+    </button>
+    <div class="f-flex f-flex-column f-items-start f-gap-3 antifraud-body">
+      <h2 id="antifraud-title" class="f-text-h3 f-leading-tight f-text-balance f-text-color-strong">¡Protégete ante el fraude!</h2>
+      <p class="f-text-body f-text-color-muted f-max-w-30ch">Solo ingresa tus datos en nuestros canales verificados y seguros.</p>
+      <div class="antifraud-urls">
+        <p class="f-text-small"><span class="f-text-color-muted">Web oficial:</span> www.n58bancodigital.com</p>
+        <p class="f-text-small"><span class="f-text-color-muted">Onboarding:</span> onboarding.n58bancodigital.com</p>
+        <p class="f-text-small"><span class="f-text-color-muted">Banca en línea:</span> banca.n58bancodigital.com</p>
+      </div>
+      <button type="button" class="flwr_button_primary" data-flwr-target="antifraud-close"><span data-flwr-target="label">Entendido</span></button>
+    </div>
+  </dialog>
 
-  <!-- MOBILE-ONLY (≤991px) smoothness swap (shared — null-guarded: no ticker or
-       gallery marquee on this page, so it exits immediately). -->
+  <!-- Swiper.js (marquee dependency) — load before runtime so it hydrates on init. -->
+  <script src="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.js" defer></script>
+  <!-- flwr runtime: hydrates navbar dropdown/hamburger, marquee scroll, tabs, etc. (self-inits on DOMContentLoaded). -->
+  <script src="assets/runtime.js" defer></script>
+
+  <!-- MOBILE-ONLY (≤991px) smoothness swap. Desktop is left completely untouched:
+       the ticker keeps the draggable flwr marquee (drag-scrub + hover-pause). On
+       mobile only, it is swapped for a CSS compositor ticker so it stays smooth
+       and never fights the page's vertical scroll. The data-flwr strip runs
+       synchronously (this inline script executes during parse, before the
+       deferred runtime.js) so flwr skips it on mobile. Cross the breakpoint?
+       Reload to switch implementations. -->
   <script>
     (function () {
       if (!window.matchMedia || !window.matchMedia('(max-width: 991px)').matches) return;
@@ -677,7 +561,11 @@
         }, { passive: true });
       }
 
-      /* Gallery → native scroll-snap scroller + accessible arrow/dot controls. */
+      /* Gallery → native scroll-snap scroller + accessible arrow/dot controls.
+         Idle → gentle JS drift (snap off). Touch/arrows/dots → snap on + native
+         momentum. Idle ~2.6s → drift resumes. Cloned to 3 sets for a seamless
+         loop. Active dot + card targeting use arithmetic (cardStep/baseOffset),
+         NOT per-frame layout reads, so the drift stays free of forced reflow. */
       function initGallery() {
         if (!galWrap) return;
         var cards = galWrap.querySelectorAll('.n58-gallery-card');
@@ -698,6 +586,9 @@
           var cl = c.cloneNode(true); cl.setAttribute('aria-hidden', 'true'); sc.appendChild(cl);
         });
 
+        /* Accessible controls — dots pinned LEFT, arrows RIGHT. Not everyone
+           knows to swipe. Arrow icons are the project's own SVGs (paths read from
+           data-* on the wrap so the deploy build copies + path-rewrites them). */
         var prevSrc = galWrap.getAttribute('data-n58-arrow-prev') || '';
         var nextSrc = galWrap.getAttribute('data-n58-arrow-next') || '';
         function arrowBtn(src, label) {
@@ -791,8 +682,11 @@
     })();
   </script>
 
-  <!-- FAQ: single-open accordion with animated expand + looping auto-play
-       (shared — null-guarded: no FAQ on this page, exits immediately). -->
+  <!-- FAQ: single-open accordion with a smooth animated expand, + a looping
+       auto-play. When the FAQ scrolls into view, each item's cream loading bar
+       ramps left→right, the item opens, then the next fills — looping until a tap
+       hands control to the user. Heights + bar are animated inline with
+       !important so the motion survives system reduce-motion (brand intent). -->
   <script>
     (function () {
       var list = document.querySelector('.home-faq_list');
@@ -891,7 +785,8 @@
     })();
   </script>
 
-  <!-- Hide the floating AlaN FAB once the footer's bottom bar is in view. -->
+  <!-- Hide the floating AlaN FAB once the footer's bottom bar is in view, so it
+       stops overlapping the Línea N58 / WhatsApp CTAs. -->
   <script>
     (function () {
       var fab = document.querySelector('.alan-fab');
@@ -903,7 +798,10 @@
     })();
   </script>
 
-  <!-- AlaN FAB adapts to the section behind it (light → inverted lime look). -->
+  <!-- AlaN FAB adapts to the section behind it (the piri-piri cursor pattern):
+       over light-theme sections it takes the inverted lime-face look (like the
+       Pago Móvil button); over dark sections it stays dark. Samples the section
+       under the FAB's centre on scroll and walks up to the nearest f-mode-*. -->
   <script>
     (function () {
       var fab = document.querySelector('.alan-fab');
@@ -926,8 +824,9 @@
     })();
   </script>
 
-  <!-- Touch devices have no :hover — trigger the button lift when a button
-       crosses the middle band of the viewport as you scroll. -->
+  <!-- Touch devices have no :hover, so trigger the button lift + offset-shadow
+       when a button crosses the middle band of the viewport as you scroll (either
+       direction). Desktop keeps real hover. -->
   <script>
     (function () {
       if (!window.matchMedia || !window.matchMedia('(hover: none)').matches) return;
@@ -949,7 +848,15 @@
     })();
   </script>
 
-  <!-- Button "loading" fill → then act (charge-fill CTAs, shared). -->
+  <!-- Button "loading" fill → then act. Clicking a notch CTA floods its face
+       left→right with the button's own brand color like a loading bar (label
+       flips to the opposite color — see .is-filling in project.css). When the
+       charge completes:
+         · data-n58-scroll-next attribute → auto-scrolls to the NEXT section
+         · #anchor href → smooth-scrolls to it
+         · any other link → fades the page out and navigates
+       Hover is untouched (classic lift + offset shadow). Skipped for new-tab,
+       tel:/mailto:, modified clicks (ctrl/cmd/middle) and the AlaN FAB. -->
   <script>
     (function () {
       var SEL = '.flwr_button_primary, .flwr_button_secondary, .flwr_button_ghost, .flwr_button_alert, .flwr_button_link';
@@ -1005,7 +912,9 @@
     })();
   </script>
 
-  <!-- Page preloader lift — window.load (+500ms), hard fallback at 3s. -->
+  <!-- Page preloader lift — window.load (+500ms) fades the loader out and
+       un-pauses the hero entrance (.is-booting off); hard fallback at 3s so a
+       hung resource can never trap the page (same timings as the live site). -->
   <script>
     (function () {
       var wrap = document.querySelector('[data-flwr]');
@@ -1024,11 +933,16 @@
     })();
   </script>
 
-  <!-- Spline 3D loader (shared): preloads below-the-fold scenes before arrival; desktop-only. -->
+  <!-- Spline 3D loader (shared): preloads below-the-fold scenes before arrival; desktop-only. No-op when the page has no [data-n58-spline] stage. -->
   <script src="assets/spline-loader.js" defer></script>
 
-  <!-- Product tabs auto-play (shared): drives the Cuentas tab loading bars,
-       looping until any tap/click/key inside the section hands control over. -->
+  <!-- Product tabs auto-play (the FAQ loop, tab-flavored). When the section
+       scrolls into view, the active tab's 4px bar ramps left→right over
+       FILL_MS, then the next product activates — looping through all tabs
+       until any tap/click/key inside the section hands control to the user
+       (bars then fall back to CSS: full on the active tab, empty elsewhere).
+       Bars animate inline with !important so the motion survives system
+       reduce-motion (brand intent, same as the FAQ). -->
   <script>
     (function () {
       var wrap = document.querySelector('.n58-products');
@@ -1101,8 +1015,8 @@
     });
   </script>
 
-  <!-- Fullscreen menu: focus the dialog (not the close X) on open; reset the
-       navbar hamburger state on close. -->
+  <!-- Fullscreen menu: focus the dialog (not the close X) on open so it doesn't
+       open with a focus ring; reset the navbar hamburger state on close. -->
   <script>
     (function () {
       var menu = document.getElementById('n58-menu');
@@ -1122,6 +1036,64 @@
         var nav = document.querySelector('.flwr_navbar_wrap');
         if (nav) nav.setAttribute('data-flwr-state', '');
         if (ham) ham.setAttribute('aria-expanded', 'false');
+      });
+    })();
+  </script>
+
+  <!-- Embed: first-visit gate for the anti-fraud dialog (becomes a Webflow code embed on import). -->
+  <script>
+    (function () {
+      var dlg = document.querySelector('.antifraud-dialog');
+      if (!dlg) return;
+      /* Native showModal() blocks clicks behind the dialog but NOT scrolling. Lock
+         the page with the body-fixed technique (bulletproof incl. iOS touch —
+         plain overflow:hidden leaks on iOS). The dialog lives in the top layer, so
+         position:fixed on the body doesn't move it. Restore the scroll on close. */
+      var savedY = 0;
+      function lock() {
+        savedY = window.scrollY || 0;
+        var b = document.body;
+        b.style.position = 'fixed';
+        b.style.top = (-savedY) + 'px';
+        b.style.left = '0';
+        b.style.right = '0';
+        b.style.width = '100%';
+      }
+      function unlock() {
+        var b = document.body;
+        b.style.position = ''; b.style.top = ''; b.style.left = ''; b.style.right = ''; b.style.width = '';
+        window.scrollTo(0, savedY);
+      }
+      dlg.addEventListener('close', unlock);   /* covers the buttons + Escape */
+      function n58ShowAntifraud() {
+        try {
+          if (!localStorage.getItem("n58-antifraud-seen") && typeof dlg.showModal === "function") {
+            dlg.showModal();
+            lock();
+            dlg.focus();
+          }
+        } catch (e) {}
+      }
+      /* Defer to AFTER the page fully loads AND the preloader has lifted, so the
+         modal never flashes over the loading screen. Hard cap so it always shows. */
+      function n58AfterPreloader() {
+        var start = Date.now();
+        (function wait() {
+          if (!document.querySelector(".n58-preloader") || Date.now() - start > 3500) {
+            setTimeout(n58ShowAntifraud, 150);
+          } else {
+            requestAnimationFrame(wait);
+          }
+        })();
+      }
+      if (document.readyState === "complete") n58AfterPreloader();
+      else window.addEventListener("load", n58AfterPreloader);
+      var closeEls = dlg.querySelectorAll('[data-flwr-target="antifraud-close"]');
+      [].forEach.call(closeEls, function (el) {
+        el.addEventListener('click', function () {
+          dlg.close();
+          try { localStorage.setItem('n58-antifraud-seen', '1'); } catch (e) {}
+        });
       });
     })();
   </script>
