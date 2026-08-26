@@ -769,6 +769,80 @@
 }
 .tpl-req_check svg { width: 1.05rem; height: 1.05rem; }
 
+/* Recaudos rows that are not bullets. A published compliance list is an ordered
+   document: sub-headings scope the bullets under them ("Representante(s)
+   Legal(es):") and footnotes qualify the whole block (consular / Hague
+   legalisation). Both are <li> so document order survives; neither takes the
+   check icon, and neither counts towards the "N recaudos" badge. */
+.tpl-req.is-heading {
+  margin-top: 0.7rem;
+  margin-right: 0;
+  margin-bottom: -0.15rem;
+  margin-left: 0;
+}
+.tpl-req.is-heading:first-child { margin-top: 0; }
+.tpl-req_heading {
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+.tpl-req.is-note {
+  margin-top: 0.5rem;
+  margin-right: 0;
+  margin-bottom: 0;
+  margin-left: 0;
+  padding-top: 0.75rem;
+  padding-right: 0;
+  padding-bottom: 0;
+  padding-left: 0;
+  border-top-width: 1px;
+  border-top-style: solid;
+  border-top-color: var(--_theme---border--subtle);
+}
+.tpl-req_note {
+  display: block;
+  line-height: 1.55;
+}
+
+/* A recaudos row that carries a link (OLD publishes one recaudos document as a
+   bare Drive URL on cuenta-corriente-personas). Wraps instead of overflowing. */
+.tpl-req a {
+  color: inherit;
+  text-decoration-line: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+  overflow-wrap: anywhere;
+}
+
+/* ══════════════ FAQ ANSWERS ══════════════
+   The CMS answers are rich text: one of them is a bulleted biller list. The
+   accordion previously only ever held a single <p>, so lists need their own
+   geometry, and the open-state ink rule in project.css names only `p` — the
+   list items carry .f-text-color-muted, which would keep them muted against the
+   open item's magenta fill. Both rules below are scoped to the product FAQ. */
+.tpl-faq-section .n58-faq-list {
+  margin-top: 0.6rem;
+  margin-right: 0;
+  margin-bottom: 0;
+  margin-left: 0;
+  padding-top: 0;
+  padding-right: 0;
+  padding-bottom: 0;
+  padding-left: 1.15rem;
+  list-style-type: disc;
+  list-style-position: outside;
+}
+.tpl-faq-section .n58-faq-list li { margin-top: 0.25rem; }
+.tpl-faq-section .flwr_accordion_content a {
+  color: inherit;
+  text-decoration-line: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+}
+[data-flwr] .tpl-faq-section .home-faq_list .flwr_accordion_item.is-active .flwr_accordion_content .n58-faq-list,
+[data-flwr] .tpl-faq-section .home-faq_list .flwr_accordion_item.is-active .flwr_accordion_content .n58-faq-list li {
+  color: color-mix(in oklch, var(--_palette---neutral--900) 82%, transparent);
+}
+
 /* ══════════════ RESPONSIVE ══════════════ */
 @media (max-width: 991px) {
   .tpl-hero { grid-template-columns: minmax(0, 1fr); }

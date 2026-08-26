@@ -5,10 +5,22 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Pago Móvil — N58 Banco Digital | Producto</title>
   <meta name="description" content="Realiza tus transacciones al instante, de manera fácil y segura, desde cualquier lugar, con Pago Móvil N58.">
-  <link rel="canonical" href="https://www.n58bancodigital.com/producto/pago-movil-personas">
+  <!-- canonical is stamped per product by scripts/generate-legacy-product-pages.mjs from
+       products.json#canonical. In the template itself it is the [[slug]] CMS placeholder, never a
+       live URL — before the collection is bound in Webflow it must become a dynamic per-item
+       binding. og:url is intentionally absent: the generator stamps canonical only. -->
+  <link rel="canonical" href="https://www.n58bancodigital.com/producto/[[slug]]">
   <meta property="og:title" content="Pago Móvil — N58 Banco Digital">
   <meta property="og:description" content="Realiza tus transacciones al instante, de manera fácil y segura, desde cualquier lugar, con Pago Móvil N58.">
   <meta property="og:type" content="website">
+  <meta property="og:image" content="https://www.n58bancodigital.com/assets/images/photos/n58-open-graph.png">
+  <link rel="icon" type="image/png" href="assets/images/icons/favicon.png">
+  <link rel="apple-touch-icon" href="assets/images/icons/n58-webclip.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="google-site-verification" content="google-site-verification=RxHZTgy2yKHznQom72MKKAzfvrcrM1y6VNpfBOoOrZw">
+  <!-- twitter:title / twitter:description are intentionally omitted: X falls back to og:title
+       and og:description, which are stamped per page by the generator. A literal pair here
+       would be copied unchanged onto every generated page. -->
 
   <!-- Fonts: Nugros (custom @font-face) loaded first, then framework → project overrides. -->
   <link rel="preload" href="assets/fonts/Nugros-Regular.woff2" as="font" type="font/woff2" crossorigin>
@@ -16,8 +28,8 @@
   <link rel="stylesheet" href="css/fonts.css?v=d00f1644">
   <link rel="stylesheet" href="css/framework.css?v=1a765f0c">
   <link rel="stylesheet" href="css/variables.css?v=402f79dd">
-  <link rel="stylesheet" href="css/project.css?v=9026990e">
-  <link rel="stylesheet" href="css/tpl-producto.css?v=75bbe2c3">
+  <link rel="stylesheet" href="css/project.css?v=2dd56efb">
+  <link rel="stylesheet" href="css/tpl-producto.css?v=d81056fc">
   <!-- Swiper.js — required by the flwr marquee engine used by the FX ticker. -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.css">
 </head>
@@ -93,7 +105,7 @@
         <li><a href="conocenos.html" class="flwr_navbar_link">Conócenos</a></li>
       </ul>
       <div class="flwr_navbar_actions">
-        <a href="https://banca.n58bancodigital.com" class="flwr_button_secondary" data-flwr-trigger="hover focus"><span data-flwr-target="label">Banca en línea</span></a>
+        <a href="https://online.n58bancodigital.com" class="flwr_button_secondary" data-flwr-trigger="hover focus"><span data-flwr-target="label">Banca en línea</span></a>
         <a href="productos-empresas.html" class="flwr_button_primary" data-flwr-trigger="hover focus"><span data-flwr-target="label">Abre tu cuenta</span></a>
       </div>
       <button type="button" class="flwr_navbar_hamburger n58-hamburger" aria-label="Abrir menú" aria-expanded="false" data-flwr-target="fullscreen-menu-trigger" data-flwr-menu-id="n58-menu">
@@ -134,11 +146,11 @@
           <div class="n58-fsmenu-subwrap">
             <div class="n58-fsmenu-sublist">
               <div class="n58-fsmenu-sublinks">
-                <a href="categoria-template.html" class="n58-fsmenu-sublink">Cuentas</a>
-                <a href="categoria-template.html" class="n58-fsmenu-sublink">Pago Móvil</a>
-                <a href="categoria-template.html" class="n58-fsmenu-sublink">Pago de Servicios</a>
-                <a href="categoria-template.html" class="n58-fsmenu-sublink">Operaciones Cambiarias</a>
-                <a href="categoria-template.html" class="n58-fsmenu-sublink">Productos e Inversiones</a>
+                <a href="productos-empresas.html#cuentas" class="n58-fsmenu-sublink">Cuentas</a>
+                <a href="pago-movil-empresas.html" class="n58-fsmenu-sublink">Pago Móvil</a>
+                <a href="pago-de-servicios-empresas.html" class="n58-fsmenu-sublink">Pago de Servicios</a>
+                <a href="intervencion-cambiaria-empresas.html" class="n58-fsmenu-sublink">Operaciones Cambiarias</a>
+                <a href="productos-empresas.html#productos-inversiones" class="n58-fsmenu-sublink">Productos e Inversiones</a>
                 <a href="productos-empresas.html" class="n58-fsmenu-sublink">Ver todos los productos</a>
               </div>
             </div>
@@ -183,11 +195,11 @@
       </nav>
       <div class="flwr_fullscreen_menu_footer">
         <div class="n58-fsmenu-ctas">
-          <a href="https://banca.n58bancodigital.com" class="flwr_button_secondary"><span data-flwr-target="label">Banca en línea</span></a>
+          <a href="https://online.n58bancodigital.com" class="flwr_button_secondary"><span data-flwr-target="label">Banca en línea</span></a>
           <a href="productos-empresas.html" class="flwr_button_primary"><span data-flwr-target="label">Abre tu cuenta</span></a>
         </div>
         <div class="flwr_fullscreen_menu_socials">
-          <a href="tel:+582129177201" class="flwr_fullscreen_menu_social" aria-label="Llamar a Línea N58"><img src="assets/images/icons/phone-cream.svg" alt=""></a>
+          <a href="tel:+582129177299" class="flwr_fullscreen_menu_social" aria-label="Llamar a Línea N58"><img src="assets/images/icons/phone-cream.svg" alt=""></a>
           <a href="mailto:atencionalcliente@n58bancodigital.com" class="flwr_fullscreen_menu_social" aria-label="Escríbenos"><img src="assets/images/icons/mail-cream.svg" alt=""></a>
         </div>
       </div>
@@ -627,7 +639,7 @@
             </details>
             <details class="flwr_accordion_item">
               <summary class="flwr_accordion_trigger"><span class="n58-faq-q">¿Cuál es la comisión por el uso de Pago Móvil?</span><span class="n58-plus" aria-hidden="true"></span><span class="n58-faq-progress" aria-hidden="true"></span></summary>
-              <div class="flwr_accordion_content"><p class="f-text-body f-text-color-muted">Para conocer la comisión del uso de Pago Móvil ingresa en la sección de <a href="documentos-legales.html">tasas y tarifas</a>.</p></div>
+              <div class="flwr_accordion_content"><p class="f-text-body f-text-color-muted">Para conocer la comisión del uso de Pago Móvil ingresa en la sección de <a href="tasas.html">tasas y tarifas</a>.</p></div>
             </details>
             <details class="flwr_accordion_item">
               <summary class="flwr_accordion_trigger"><span class="n58-faq-q">¿Cuáles son los límites diarios?</span><span class="n58-plus" aria-hidden="true"></span><span class="n58-faq-progress" aria-hidden="true"></span></summary>
@@ -657,9 +669,9 @@
         <div class="n58-lottie-logo n58-footer-brandlogo" data-n58-lottie="assets/n58-logo-lottie.json" role="img" aria-label="N58 Banco Digital"></div>
         <p class="f-text-small f-text-color-muted">Neo-banco microfinanciero 100% digital. Tu aliado financiero en Venezuela.</p>
         <div class="n58-footer-contact">
-          <a href="tel:+582129177201" class="flwr_button_primary is-small is-outline is-outline-ink" data-flwr-trigger="hover focus">
+          <a href="tel:+582129177299" class="flwr_button_primary is-small is-outline is-outline-ink" data-flwr-trigger="hover focus">
             <svg class="n58-contact-ico" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6.8 4h2.1l1.2 3-1.5 1.2a11 11 0 0 0 5.2 5.2L15 12.9l3 1.2v2.1a2 2 0 0 1-2.2 2A13.5 13.5 0 0 1 4.8 6.2 2 2 0 0 1 6.8 4Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
-            <span data-flwr-target="label">Línea N58 · 0212-917-7201</span>
+            <span data-flwr-target="label">Línea N58 · +58 (212) 917 7299</span>
           </a>
           <a href="mailto:atencionalcliente@n58bancodigital.com" class="flwr_button_primary is-small is-outline is-outline-ink" data-flwr-trigger="hover focus">
             <svg class="n58-contact-ico" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 7.5A1.5 1.5 0 0 1 5.5 6h13A1.5 1.5 0 0 1 20 7.5v9A1.5 1.5 0 0 1 18.5 18h-13A1.5 1.5 0 0 1 4 16.5v-9Z" stroke="currentColor" stroke-width="1.6"/><path d="m5 8 7 4.5L19 8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -693,26 +705,26 @@
             <a href="documentos-legales.html" class="flwr_footer_link">Documentos</a>
             <a href="limites-diarios.html" class="flwr_footer_link">Límites Diarios</a>
             <a href="informes-financieros.html" class="flwr_footer_link">Informes Financieros</a>
-            <a href="documentos-legales.html" class="flwr_footer_link">Tasas</a>
-            <a href="documentos-legales.html" class="flwr_footer_link">Memoria y Cuenta Institucional</a>
-            <a href="documentos-legales.html" class="flwr_footer_link">Tarifas y Comisiones</a>
-            <a href="documentos-legales.html" class="flwr_footer_link">Concientización y Capacitación en Ciberseguridad</a>
+            <a href="tasas.html" class="flwr_footer_link">Tasas</a>
+            <a href="memoria-y-cuenta-institucional.html" class="flwr_footer_link">Memoria y Cuenta Institucional</a>
+            <a href="tarifas-y-comisiones.html" class="flwr_footer_link">Tarifas y Comisiones</a>
+            <a href="concientizacion-y-capacitacion-sobre-ciberseguridad.html" class="flwr_footer_link">Concientización y Capacitación en Ciberseguridad</a>
           </nav>
         </div>
         <div class="n58-footer-col n58-reveal is-4">
           <nav class="flwr_footer_group" aria-label="Prevención LC/FT/FPADM">
             <p class="flwr_footer_group_title">Prevención LC/FT/FPADM</p>
-            <a href="documentos-legales.html" class="flwr_footer_link">Prevención y Control de Legitimación de Capitales FT/FPADM</a>
+            <a href="prevencion-y-control-de-legitimacion-de-capitales-ft-fpadm.html" class="flwr_footer_link">Prevención y Control de Legitimación de Capitales FT/FPADM</a>
             <a href="boletines.html" class="flwr_footer_link">Boletines Informativos</a>
           </nav>
           <nav class="flwr_footer_group" aria-label="Defensoría al Cliente">
             <p class="flwr_footer_group_title">Defensoría al Cliente</p>
-            <a href="documentos-legales.html" class="flwr_footer_link">Defensoría del Cliente y Usuario Bancario</a>
+            <a href="defensoria-del-cliente-y-usuario-bancario.html" class="flwr_footer_link">Defensoría del Cliente y Usuario Bancario</a>
           </nav>
           <nav class="flwr_footer_group" aria-label="Legal">
             <p class="flwr_footer_group_title">Legal</p>
-            <a href="documentos-legales.html" class="flwr_footer_link">Contrato Único de Productos y Servicios Financieros</a>
-            <a href="documentos-legales.html" class="flwr_footer_link">Políticas de Privacidad</a>
+            <a href="contrato-unico-de-productos-y-servicios-financieros.html" class="flwr_footer_link">Contrato Único de Productos y Servicios Financieros</a>
+            <a href="politicas-de-privacidad.html" class="flwr_footer_link">Políticas de Privacidad</a>
           </nav>
         </div>
       </div>
@@ -721,13 +733,13 @@
     <!-- Dark full-bleed bottom bar (matches the live footer's dark strip). -->
     <div class="n58-footer-bottom">
       <div class="n58-container n58-footer-bottom-inner">
-        <p class="f-text-tiny">© 2026 N58 Banco Digital, S.A.</p>
+        <p class="f-text-tiny">© N58 Banco Digital, S.A. Todos los derechos reservados.</p>
         <p class="f-text-tiny">Impulsado por Inteligencia Artificial para tu comodidad 🤖</p>
         <p class="f-text-tiny">J-503581107</p>
         <div class="n58-footer-help">
           <span class="f-text-tiny">¿Necesitas ayuda? Llámanos:</span>
-          <a href="tel:+582129177201" class="flwr_button_secondary" data-flwr-trigger="hover focus"><span data-flwr-target="label">Línea N58</span></a>
-          <a href="https://wa.me/582129177201" target="_blank" rel="noopener" class="flwr_button_primary" data-flwr-trigger="hover focus"><span data-flwr-target="label">WhatsApp</span></a>
+          <a href="tel:+582129177299" class="flwr_button_secondary" data-flwr-trigger="hover focus"><span data-flwr-target="label">Línea N58</span></a>
+          <a href="https://wa.me/584142816245?text=Buenas!%20Vengo%20de%20la%20web%20de%20N58%20y%20me%20gustar%C3%ADa%20obtener%20m%C3%A1s%20informaci%C3%B3n%20." target="_blank" rel="noopener" class="flwr_button_primary" data-flwr-trigger="hover focus"><span data-flwr-target="label">WhatsApp</span></a>
         </div>
       </div>
     </div>
@@ -750,12 +762,13 @@
     </button>
     <div class="f-flex f-flex-column f-items-start f-gap-3 antifraud-body">
       <h2 id="antifraud-title" class="f-text-h3 f-leading-tight f-text-balance f-text-color-strong">¡Protégete ante el fraude!</h2>
-      <p class="f-text-body f-text-color-muted f-max-w-30ch">Solo ingresa tus datos en nuestros canales verificados y seguros.</p>
+      <p class="f-text-body f-text-color-muted f-max-w-30ch">Solo ingresa tus datos en enlaces de nuestros canales verificados y seguros.</p>
       <div class="antifraud-urls">
-        <p class="f-text-small"><span class="f-text-color-muted">Web oficial:</span> www.n58bancodigital.com</p>
-        <p class="f-text-small"><span class="f-text-color-muted">Onboarding:</span> onboarding.n58bancodigital.com</p>
-        <p class="f-text-small"><span class="f-text-color-muted">Banca en línea:</span> banca.n58bancodigital.com</p>
+        <p class="f-text-small"><span class="f-text-color-muted">Web oficial:</span> https://www.n58bancodigital.com/</p>
+        <p class="f-text-small"><span class="f-text-color-muted">Onboarding (registro):</span> https://onboarding.n58bancodigital.com/</p>
+        <p class="f-text-small"><span class="f-text-color-muted">Banca en línea:</span> https://online.n58bancodigital.com/</p>
       </div>
+      <p class="f-text-small f-text-color-muted">Agradecemos su paciencia y comprensión.</p>
       <button type="button" class="flwr_button_primary" data-flwr-target="antifraud-close"><span data-flwr-target="label">Entendido</span></button>
     </div>
   </dialog>
@@ -764,6 +777,9 @@
   <script src="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.js" defer></script>
   <!-- flwr runtime: hydrates navbar dropdown/hamburger, marquee scroll, tabs, etc. (self-inits on DOMContentLoaded). -->
   <script src="assets/runtime.js" defer></script>
+
+  <!-- Navbar theme: flips the bar to ink over light sections. -->
+  <script src="assets/n58-navbar-theme.js" defer></script>
 
   <!-- MOBILE-ONLY (≤991px) smoothness swap. Desktop is left completely untouched:
        the ticker keeps the draggable flwr marquee (drag-scrub + hover-pause). On
@@ -1364,7 +1380,7 @@
        theme and Nugros font all come from the tenant config (Widget Studio), so
        nothing else is needed here. Local dev server for testing; for production
        change the src host to https://app.vanny.chat -->
-  <script src="http://localhost:3000/vanny-widget.js" data-tenant="n58" defer></script>
+  <script src="https://vanny.chat/vanny-widget.js" data-tenant="n58" defer></script>
 
 </div>
 </body>

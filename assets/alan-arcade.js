@@ -134,7 +134,7 @@
   var COIN_TIME = 6;                   // seconds per coin
   var START_TIME = 60;
   var POWER_T = { dj: 1e9, turbo: 1e9, magnet: 1e9 };   // frames — powers last the whole level
-  var TURBO_MULT = 1.32, MAGNET_R = 72, MAGNET_PULL = 3.2;
+  var TURBO_MULT = 1.32, MAGNET_R = 96, MAGNET_PULL = 5.5;   // magnet: one pass within range collects
   var HAZARD_COST = 5, HAZARD_IFRAMES = 60, STREAK_WINDOW = 90;
 
   /* ═══════════════════════ Collision bitmask + box query ══════════════════ */
@@ -373,42 +373,39 @@
 
   /* ═══════════════════════ Reachability solver ════════════════════════════
      Breadth-first search over the real physics from the spawn. Nodes:
-       G — AlaN standing at (x,y)          (quantised 4px × 2px)
+       G — AlaN standing at (x,y)   (quantised 4px × 2px × 3 speed buckets)
        W — AlaN airborne touching a wall   (quantised 4px × 4px, per side)
-     From every node a fixed set of scripted moves is simulated with stepPlayer
-     (walk, run-off, tap/full jumps standing/walking/running, wall-jumps away /
-     back / neutral; with the double jump, the same plus a second press in the
-     air). Every landing yields a G node, every wall contact a W node, and every
-     position AlaN's centre passes through is marked in an 8px "swept" grid.
-     Everything the search visits is, by construction, reachable in the shipped
-     game — entities are only ever placed on visited nodes / swept cells.
-     The solver runs once WITHOUT powers (base) and, on levels that are about a
-     power, once more WITH it: the difference is what that power unlocks.
-     Cost: ~1–3k nodes × ≤25 moves × ≤96 frames, box queries are O(1).       */
+     Every node stores the EXACT player state it was reached with (position,
+     velocity, contact, timers) and the move that produced it, and every move
+     is expanded from that stored state — so every node is achievable by
+     replaying its input chain from the spawn, frame for frame (the self-play
+     bot does exactly that). Moves: walk, standing/directional jumps (tap and
+     full), wall-jumps away / back / neutral; with the double jump, the same
+     plus a second press in the air. Every landing yields a G node, every
+     wall contact a W node, and every position AlaN's centre passes through is
+     marked in an 8px "swept" grid. Entities are only ever placed on visited
+     nodes / swept cells. The solver runs once WITHOUT powers (base) and, on
+     levels that are about a power, once more WITH it: the difference is what
+     that power unlocks. Cost: ~1–4k nodes × ≤15 moves × ≤96 frames.        */
   var GQX = 4, GQY = 2, WQ = 4, SQ = 8;
   var GW = Math.ceil(VBW / GQX) + 2, GH = Math.ceil(VBH / GQY) + 2, WH = Math.ceil(VBH / WQ) + 2;
   var SW = Math.ceil(VBW / SQ) + 1, SH = Math.ceil(VBH / SQ) + 1;
-  var gSeen = new Uint8Array(GW * GH), wSeen = new Uint8Array(GW * WH * 2), swept = new Uint8Array(SW * SH);
-  var gSeenBase = new Uint8Array(GW * GH), sweptBase = new Uint8Array(SW * SH);
-  var gNodes = [], wNodes = [];          // {x,y,depth,hard}  /  {x,y,side,depth}
+  var gSeen = new Uint8Array(GW * GH * 3), wSeen = new Uint8Array(GW * WH * 2), swept = new Uint8Array(SW * SH);
+  var gSeenBase = new Uint8Array(GW * GH * 3), sweptBase = new Uint8Array(SW * SH);
+  var gNodes = [], wNodes = [];          // {x,y,depth,hard,side,st,parent,mv,f}
   var solveMs = 0;
   var mods = { dj: false, turbo: false };
   var ghost = newPlayer();
   var ghostIn = { left: false, right: false, jump: false, jumpEdge: false };
   var MOVES_G = [
     { dir: -1 }, { dir: 1 },                                   // walk (and walk-off drops)
-    { dir: -1, vx0: -RUN_MAX }, { dir: 1, vx0: RUN_MAX },       // run-off
-    { jump: 40 }, { jump: 4 },                                  // standing jumps (full / tap)
-    { jump: 40, dir: -1 }, { jump: 40, dir: 1 }, { jump: 4, dir: -1 }, { jump: 4, dir: 1 },
-    { jump: 40, dir: -1, vx0: -RUN_MAX }, { jump: 40, dir: 1, vx0: RUN_MAX },
-    { jump: 4, dir: -1, vx0: -RUN_MAX }, { jump: 4, dir: 1, vx0: RUN_MAX },
-    { jump: 40, dir: -1, vx0: RUN_MAX }, { jump: 40, dir: 1, vx0: -RUN_MAX }   // reversal jumps
+    { jump: 40 }, { jump: 4 },                                  // jumps: full / tap
+    { jump: 40, dir: -1 }, { jump: 40, dir: 1 }, { jump: 4, dir: -1 }, { jump: 4, dir: 1 }
   ];
   var MOVES_G_DJ = MOVES_G.concat([                            // + a second press in the air
     { jump: 40, jump2: 22 }, { jump: 40, dir: -1, jump2: 22 }, { jump: 40, dir: 1, jump2: 22 },
-    { jump: 40, dir: -1, vx0: -RUN_MAX, jump2: 22 }, { jump: 40, dir: 1, vx0: RUN_MAX, jump2: 22 },
-    { jump: 40, dir: -1, vx0: -RUN_MAX, jump2: 12 }, { jump: 40, dir: 1, vx0: RUN_MAX, jump2: 12 },
-    { jump: 4, dir: -1, vx0: -RUN_MAX, jump2: 14 }, { jump: 4, dir: 1, vx0: RUN_MAX, jump2: 14 }
+    { jump: 40, dir: -1, jump2: 12 }, { jump: 40, dir: 1, jump2: 12 },
+    { jump: 4, dir: -1, jump2: 14 }, { jump: 4, dir: 1, jump2: 14 }
   ]);
   var MOVES_W = [                                              // side = wall side (-1 left, +1 right)
     { jump: 40, mode: 'away' }, { jump: 4, mode: 'away' },
@@ -418,10 +415,21 @@
   var MOVES_W_DJ = MOVES_W.concat([
     { jump: 40, mode: 'away', jump2: 18 }, { jump: 40, mode: 'back', jump2: 18 }, { jump: 40, mode: 'none', jump2: 18 }
   ]);
-  function gKey(x, y) { return (Math.round(y / GQY) + 1) * GW + Math.round(x / GQX) + 1; }
+  function gKey(x, y, vx) {
+    var b = vx < -2 ? 0 : (vx > 2 ? 2 : 1);
+    return ((Math.round(y / GQY) + 1) * GW + Math.round(x / GQX) + 1) * 3 + b;
+  }
   function wKey(x, y, side) { return ((Math.round(y / WQ) + 1) * GW + Math.round(x / GQX) + 1) * 2 + (side > 0 ? 1 : 0); }
   function sKey(cx, cy) { return ((cy / SQ) | 0) * SW + ((cx / SQ) | 0); }
-
+  function snap(p) {
+    return { x: p.x, y: p.y, vx: p.vx, vy: p.vy, onGround: p.onGround, wallL: p.wallL, wallR: p.wallR, coyote: p.coyote,
+             wallStick: p.wallStick, jumpHeld: p.jumpHeld, facing: p.facing, djTimer: p.djTimer, airJumps: p.airJumps, turbo: p.turbo, kb: p.kb };
+  }
+  function restore(p, st) {
+    p.x = st.x; p.y = st.y; p.vx = st.vx; p.vy = st.vy; p.onGround = st.onGround; p.wallL = st.wallL; p.wallR = st.wallR;
+    p.coyote = st.coyote; p.jumpBuf = 0; p.wallStick = st.wallStick; p.jumpHeld = st.jumpHeld; p.facing = st.facing;
+    p.djTimer = st.djTimer; p.airJumps = st.airJumps; p.turbo = st.turbo; p.kb = st.kb; p.magnet = 0; p.squash = 0;
+  }
   /* The input a move script produces on frame f (shared by the solver ghosts
      and the self-play bot, so a plan replays exactly). side = wall side of
      the node the move starts from (0 = ground / free air). */
@@ -436,19 +444,9 @@
   var planTarget = null, planHit = null;   // self-play: hit test + first (node, move, frame) that satisfies it
   function simulate(node, mv, out, hard) {
     var p = ghost;
-    if (node.live) {                       // bot: start from the exact live state
-      var L = node.live;
-      p.x = L.x; p.y = L.y; p.vx = L.vx; p.vy = L.vy; p.onGround = L.onGround; p.wallL = L.wallL; p.wallR = L.wallR;
-      p.coyote = L.coyote; p.jumpBuf = 0; p.wallStick = L.wallStick; p.jumpHeld = L.jumpHeld; p.facing = L.facing;
-      p.djTimer = L.djTimer; p.airJumps = L.airJumps; p.turbo = L.turbo; p.kb = L.kb; p.magnet = 0; p.squash = 0;
-    } else {
-      p.x = node.x; p.y = node.y; p.vx = mv.vx0 || 0; p.vy = node.side ? 1.0 : 0;
-      p.onGround = !node.side; p.coyote = node.side ? 0 : COYOTE; p.jumpBuf = 0; p.wallStick = 0; p.jumpHeld = false;
-      p.djTimer = mods.dj ? 1e9 : 0; p.airJumps = mods.dj ? 1 : 0; p.turbo = mods.turbo ? 1e9 : 0;
-      p.magnet = 0; p.kb = 0; p.squash = 0;
-    }
+    restore(p, node.st);
     var dir = mv.dir || 0, jumpFrames = mv.jump || 0;
-    var airborne = !!node.side || (node.live && !node.live.onGround), wallUsed = !!node.side;
+    var airborne = !node.st.onGround, wallUsed = !!node.side;
     for (var f = 0; f < 96; f++) {
       moveInput(mv, f, node.side, ghostIn);
       stepPlayer(p, ghostIn, false);
@@ -458,10 +456,8 @@
       if (cx >= 0 && cy >= 0 && cx < VBW && cy < VBH) swept[sKey(cx, cy)] = 1;
       if (planTarget && planTarget(cx, cy, p)) { planHit = { node: node, mv: mv, f: f + 1 }; return; }
       if (p.onGround) {
-        if (airborne || !node.side) {
-          var k = gKey(p.x, p.y);
-          if (!gSeen[k]) { gSeen[k] = 1; out.push({ x: p.x, y: p.y, depth: node.depth + 1, hard: hard + (wallUsed ? 1 : 0), side: 0, parent: node, mv: mv, f: f + 1 }); }
-        }
+        var k = gKey(p.x, p.y, p.vx);
+        if (!gSeen[k]) { gSeen[k] = 1; out.push({ x: p.x, y: p.y, depth: node.depth + 1, hard: hard + (wallUsed ? 1 : 0), side: 0, st: snap(p), parent: node, mv: mv, f: f + 1 }); }
         if (airborne) return;             // landed → done
         if (jumpFrames === 0 && dir === 0 && !node.side) return;
       } else {
@@ -469,50 +465,53 @@
         if (f > 1 && (p.wallL || p.wallR)) {
           var side = p.wallL ? -1 : 1;
           var wk = wKey(p.x, p.y, side);
-          if (!wSeen[wk]) { wSeen[wk] = 1; out.push({ x: p.x, y: p.y, depth: node.depth + 1, hard: hard + 1, side: side, parent: node, mv: mv, f: f + 1 }); }
+          if (!wSeen[wk]) { wSeen[wk] = 1; out.push({ x: p.x, y: p.y, depth: node.depth + 1, hard: hard + 1, side: side, st: snap(p), parent: node, mv: mv, f: f + 1 }); }
         }
       }
     }
   }
-  /* Plan from a LIVE player state to whatever satisfies hitFn(cx, cy): BFS
-     over the same moves; the first move starts from the exact live state, so
-     replaying it in the real game lands on the same trajectory. Returns the
-     first move + how many frames to hold it (then re-plan).                 */
-  function plan(live, hitFn) {
-    gSeen.fill(0); wSeen.fill(0); swept.fill(0); planHit = null; planTarget = hitFn;
-    var side = (!live.onGround && live.wallL) ? -1 : ((!live.onGround && live.wallR) ? 1 : 0);
-    var start = { x: live.x, y: live.y, depth: 0, hard: 0, side: side, live: live, parent: null };
+  function startNode(st) {
+    var side = (!st.onGround && st.wallL) ? -1 : ((!st.onGround && st.wallR) ? 1 : 0);
+    return { x: st.x, y: st.y, depth: 0, hard: 0, side: side, st: st, parent: null };
+  }
+  function search(start, hitFn, budget) {
+    gSeen.fill(0); wSeen.fill(0); swept.fill(0); planHit = null; planTarget = hitFn || null;
+    gNodes.length = 0; wNodes.length = 0;
+    gSeen[gKey(start.x, start.y, start.st.vx)] = 1;
     var queue = [start], head = 0;
     var mg = mods.dj ? MOVES_G_DJ : MOVES_G, mw = mods.dj ? MOVES_W_DJ : MOVES_W;
-    while (head < queue.length && head < 4000 && !planHit) {
+    while (head < queue.length && head < budget && !planHit) {
       var n = queue[head++];
+      if (n.side) wNodes.push(n); else gNodes.push(n);
       var moves = n.side ? mw : mg;
       for (var i = 0; i < moves.length && !planHit; i++) simulate(n, moves[i], queue, n.hard);
     }
     planTarget = null;
-    if (!planHit) return null;
-    var node = planHit.node, mv = planHit.mv, frames = planHit.f;
-    if (node !== start) { while (node.parent !== start) node = node.parent; mv = node.mv; frames = node.f; }
-    return { mv: mv, frames: frames, side: start.side, nodes: head };
+    return head;
   }
+  var spawnState = null;                 // exact settled state at the spawn (set by findSpawn)
   function solveReach(sx, sy, m) {
     var t0 = performance.now();
     mods.dj = !!(m && m.dj); mods.turbo = !!(m && m.turbo);
-    gSeen.fill(0); wSeen.fill(0); swept.fill(0);
-    gNodes.length = 0; wNodes.length = 0;
-    var start = { x: sx, y: sy, depth: 0, hard: 0, side: 0 };
-    gSeen[gKey(sx, sy)] = 1;
-    var queue = [start], head = 0, budget = 4000;
-    var mg = mods.dj ? MOVES_G_DJ : MOVES_G, mw = mods.dj ? MOVES_W_DJ : MOVES_W;
-    while (head < queue.length && head < budget) {
-      var n = queue[head++];
-      if (n.side) wNodes.push(n); else gNodes.push(n);
-      var moves = n.side ? mw : mg;
-      for (var i = 0; i < moves.length; i++) simulate(n, moves[i], queue, n.hard);
-    }
+    var st = snap(ghost); restore(ghost, spawnState); st = snap(ghost);
+    st.djTimer = mods.dj ? 1e9 : 0; st.airJumps = mods.dj ? 1 : 0; st.turbo = mods.turbo ? 1e9 : 0;
+    search(startNode(st), null, 4000);
     solveMs += performance.now() - t0;
   }
-  /* How enclosed a point is: solid in how many of 8 directions at 18px (0–8). */
+  /* Plan from a LIVE player state to whatever satisfies hitFn(cx, cy): the
+     chain of (move, frames) from the live state to the hit. Replaying it in
+     the real game reproduces the exact trajectory (same physics, same state). */
+  function plan(live, hitFn) {
+    var start = startNode(live);
+    search(start, hitFn, 24000);
+    if (!planHit) return null;
+    var chain = [{ mv: planHit.mv, f: planHit.f, side: planHit.node.side, to: null }];
+    var node = planHit.node;
+    while (node !== start) { chain.push({ mv: node.mv, f: node.f, side: node.parent.side, to: node }); node = node.parent; }
+    chain.reverse();
+    return chain;
+  }
+  /* How enclosed a point is: solid in how many of 8 directions at r px (0–8). */
   var ENC_DIRS = [[1, 0], [-1, 0], [0, 1], [0, -1], [0.71, 0.71], [-0.71, 0.71], [0.71, -0.71], [-0.71, -0.71]];
   function enclosure(cx, cy, r) {
     var n = 0, m = curMode === 'ink' ? 0 : ARENA_FRAME + 2;
@@ -525,6 +524,17 @@
   }
   /* How far (in 8px cells, 4..9) a cell sits from anything the base run swept. */
   function baseRing(cx, cy) { for (var r = 4; r <= 8; r++) if (nearBase(cx, cy, r)) return r; return 9; }
+  /* Is any base-swept cell centre within `rpx` px (Euclidean) of (cx,cy)? */
+  function nearBaseCircle(cx, cy, rpx) {
+    var rc = Math.ceil(rpx / SQ), c0 = (cx / SQ) | 0, r0 = (cy / SQ) | 0;
+    for (var dy = -rc; dy <= rc; dy++) for (var dx = -rc; dx <= rc; dx++) {
+      var c = c0 + dx, rr2 = r0 + dy;
+      if (c < 0 || rr2 < 0 || c >= SW || rr2 >= SH || !sweptBase[rr2 * SW + c]) continue;
+      var ex = c * SQ + SQ / 2 - cx, ey = rr2 * SQ + SQ / 2 - cy;
+      if (ex * ex + ey * ey <= rpx * rpx) return true;
+    }
+    return false;
+  }
   /* Is this 8px cell within `r` cells of anything the BASE run swept? */
   function nearBase(cx, cy, r) {
     var c0 = (cx / SQ) | 0, r0 = (cy / SQ) | 0;
@@ -578,7 +588,9 @@
     var g = ghost; g.x = spawn.x; g.y = spawn.y; g.vx = 0; g.vy = 0; g.onGround = false;
     ghostIn.left = ghostIn.right = ghostIn.jump = ghostIn.jumpEdge = false;
     for (var i = 0; i < 40 && !g.onGround; i++) stepPlayer(g, ghostIn, false);
+    for (var j = 0; j < 12; j++) stepPlayer(g, ghostIn, false);   // let velocity settle to rest
     spawn.x = g.x; spawn.y = g.y;
+    spawnState = snap(g);
   }
   function dist(ax, ay, bx, by) { return Math.hypot(ax - bx, ay - by); }
   function nodeCenter(n) { return { x: n.x + PW / 2, y: n.y + PH / 2 }; }
@@ -646,7 +658,10 @@
     gating.theme = theme; gating.required = false;
     if (theme === 'dj' || theme === 'turbo') {
       solveReach(spawn.x, spawn.y, theme === 'dj' ? { dj: true } : { turbo: true });
-      for (i = 0; i < gNodes.length; i++) { n = gNodes[i]; if (!gSeenBase[gKey(n.x, n.y)]) { n.used = false; gatedG.push(n); } }
+      for (i = 0; i < gNodes.length; i++) {
+        n = gNodes[i]; var kb = gKey(n.x, n.y, 0) - 1;   // bucket 0 of this cell
+        if (!gSeenBase[kb] && !gSeenBase[kb + 1] && !gSeenBase[kb + 2]) { n.used = false; gatedG.push(n); }
+      }
       for (var sy = 0; sy < SH; sy++) for (var sx = 0; sx < SW; sx++) {
         if (!swept[sy * SW + sx]) continue;
         var scx = sx * SQ + SQ / 2, scy = sy * SQ + SQ / 2;
@@ -660,7 +675,7 @@
         var mcx = mx * SQ + SQ / 2, mcy = my * SQ + SQ / 2;
         if (solidPx(mcx, mcy) || solidPx(mcx - 7, mcy - 7) || solidPx(mcx + 7, mcy - 7) || solidPx(mcx - 7, mcy + 7) || solidPx(mcx + 7, mcy + 7)) continue;
         if (nearBase(mcx, mcy, 4)) continue;                        // truly out of reach
-        if (!nearBase(mcx, mcy, Math.floor((MAGNET_R - 10) / SQ))) continue;  // but within the pull
+        if (!nearBaseCircle(mcx, mcy, MAGNET_R - 14)) continue;      // but within the pull (Euclidean, with margin)
         if (mcx < 28 || mcx > VBW - 28 || mcy < 28 || mcy > VBH - 28) continue;
         gatedSpots.push({ x: mcx - PW / 2, y: mcy - PH / 2, depth: 0, hard: 0, used: false, ring: baseRing(mcx, mcy), enc: enclosure(mcx, mcy, 18), enc2: enclosure(mcx, mcy, 40) });
       }
@@ -833,9 +848,9 @@
     cam.x = P.x + PW / 2; cam.y = P.y + PH / 2;
   }
   function respawn() {
-    P.x = spawn.x; P.y = spawn.y; P.vx = 0; P.vy = 0;
-    P.onGround = true; P.sliding = false; P.skidding = false; P.facing = 1;
-    P.coyote = 0; P.jumpBuf = 0; P.wallStick = 0; P.runPhase = 0; P.squash = 0; P.kb = 0;
+    if (spawnState) { var keep = { dj: P.djTimer, aj: P.airJumps, tb: P.turbo, mg: P.magnet, sh: P.shield }; restore(P, spawnState); P.djTimer = keep.dj; P.airJumps = keep.aj; P.turbo = keep.tb; P.magnet = keep.mg; P.shield = keep.sh; }
+    else { P.x = spawn.x; P.y = spawn.y; P.vx = 0; P.vy = 0; P.onGround = true; P.coyote = 0; P.wallStick = 0; P.kb = 0; }
+    P.sliding = false; P.skidding = false; P.facing = 1; P.jumpBuf = 0; P.runPhase = 0; P.squash = 0;
   }
   function resetRun() { deaths = 0; totalElapsed = 0; loadLevel(0); }
 
@@ -969,11 +984,7 @@
     var t0 = performance.now(), deaths0 = deaths;
     botRunning = true; hazardHits = 0;
     loadLevel(i); STATE = 'playing'; introT = 0; camReveal = 0;
-    var fails = [], skipped = [], moves = 0, plans = 0;
-    function liveState() {
-      return { x: P.x, y: P.y, vx: P.vx, vy: P.vy, onGround: P.onGround, wallL: P.wallL, wallR: P.wallR, coyote: P.coyote,
-               wallStick: P.wallStick, jumpHeld: P.jumpHeld, facing: P.facing, djTimer: P.djTimer, airJumps: P.airJumps, turbo: P.turbo, kb: P.kb };
-    }
+    var fails = [], skipped = [], moves = 0, plans = 0, diverged = 0;
     function powered() { for (var k = 0; k < pickups.length; k++) if (pickups[k].type === gating.theme && !pickups[k].got) return false; return true; }
     function target() {
       var k, best = null, bd = 1e9, cxp = P.x + PW / 2, cyp = P.y + PH / 2;
@@ -988,22 +999,38 @@
       if (exit.open) return { kind: 'exit', o: exit };
       return null;
     }
-    while (STATE === 'playing' && moves < 600) {
+    while (STATE === 'playing' && plans < 400) {
       var tg = target(); if (!tg) break;
       var hit;
       if (tg.kind === 'exit') hit = function (cx, cy) { return Math.abs(exit.x - cx) < 9 && cy > exit.y - exit.h && cy < exit.y + 4; };
-      else if (tg.kind === 'coin' && P.magnet > 0) hit = function (cx, cy) { return dist(cx, cy, tg.o.x, tg.o.y) < MAGNET_R - 16; };
+      else if (tg.kind === 'coin' && P.magnet > 0) hit = function (cx, cy) { return dist(cx, cy, tg.o.x, tg.o.y) < MAGNET_R - 4; };
       else { var r = tg.kind === 'coin' ? COIN_R : 9; hit = function (cx, cy) { return Math.abs(tg.o.x - cx) < r + PW * 0.5 && Math.abs(tg.o.y - cy) < r + PH * 0.5; }; }
+      // Magnet: once a coin is in range, stand still and let the pull bring it.
+      if (tg.kind === 'coin' && P.magnet > 0 && dist(P.x + PW / 2, P.y + PH / 2, tg.o.x, tg.o.y) < MAGNET_R - 2) {
+        input.left = input.right = input.jump = false; input.jumpEdge = false;
+        for (var w = 0; w < 30 && !tg.o.got && STATE === 'playing'; w++) tick();
+        moves++;
+        tg.o.tries = (tg.o.tries || 0) + 1;
+        if (!tg.o.got && tg.o.tries > 6) { fails.push('magnet@' + Math.round(tg.o.x) + ',' + Math.round(tg.o.y)); skipped.push(tg.o); }
+        continue;
+      }
       mods.dj = P.djTimer > 0; mods.turbo = P.turbo > 0;
-      var pl = plan(liveState(), hit); plans++;
-      if (!pl) { fails.push(tg.kind + '@' + Math.round(tg.o.x) + ',' + Math.round(tg.o.y)); skipped.push(tg.o); continue; }
-      for (var f = 0; f < pl.frames && STATE === 'playing'; f++) { moveInput(pl.mv, f, pl.side, input); tick(); }
+      var chain = plan(snap(P), hit); plans++;
+      if (!chain) { fails.push(tg.kind + '@' + Math.round(tg.o.x) + ',' + Math.round(tg.o.y)); skipped.push(tg.o); continue; }
+      for (var c = 0; c < chain.length && STATE === 'playing'; c++) {
+        var seg = chain[c];
+        for (var f = 0; f < seg.f && STATE === 'playing'; f++) { moveInput(seg.mv, f, seg.side, input); tick(); }
+        moves++;
+        if (tg.kind === 'coin' && tg.o.got) break;
+        if (tg.kind === 'power' && tg.o.got) break;
+        // exact replay: if the world pushed us off the plan (drone hit), re-plan
+        if (seg.to && (Math.abs(P.x - seg.to.x) > 1.5 || Math.abs(P.y - seg.to.y) > 1.5)) { diverged++; break; }
+      }
       input.left = input.right = input.jump = false; input.jumpEdge = false;
-      moves++;
     }
     var res = { level: i + 1, id: LEVELS[i].id, theme: gating.theme, required: gating.required, ok: STATE === 'levelWon',
                 state: STATE, coins: (coins.length - coinsLeft) + '/' + coins.length, timeLeft: Math.round(timeLeft), played: Math.round(elapsed),
-                deaths: deaths - deaths0, hazardHits: hazardHits, moves: moves, plans: plans, fails: fails, ms: Math.round(performance.now() - t0) };
+                deaths: deaths - deaths0, hazardHits: hazardHits, moves: moves, plans: plans, diverged: diverged, fails: fails, ms: Math.round(performance.now() - t0) };
     botRunning = false;
     return res;
   }
@@ -1651,6 +1678,14 @@
         return { ms: Math.round(solveMs), ground: gNodes.length, wall: wNodes.length, hard: levelHard, highest: Math.round(top), highNodes: hi, exit: [Math.round(exit.x), Math.round(exit.y)], coins: coins.length, reach: reachCount, gating: { theme: gating.theme, required: gating.required, gatedGround: gating.gatedGround, gatedSpots: gating.gatedSpots, tour: gating.tour }, picks: pickups.map(function (q) { return q.type; }) };
       },
       LEVELS: LEVELS, ICON: ICON,
+      sweptNear: function (cx, cy, r) {        // dev: base-swept cell centres within r cells of (cx,cy)
+        var out = [], c0 = (cx / SQ) | 0, r0 = (cy / SQ) | 0;
+        for (var dy = -r; dy <= r; dy++) for (var dx = -r; dx <= r; dx++) {
+          var c = c0 + dx, rr2 = r0 + dy; if (c < 0 || rr2 < 0 || c >= SW || rr2 >= SH) continue;
+          if (sweptBase[rr2 * SW + c]) out.push([c * SQ + SQ / 2, rr2 * SQ + SQ / 2]);
+        }
+        return out;
+      },
       bot: function (i) {                     // QA: self-play one level, restore the idle screen
         var saved = loadProgress(), r = botLevel(i);
         saveProgress(saved); STATE = 'idle'; loadLevel(saved > 0 && saved < LEVELS.length ? saved : 0); showScreen('idle');

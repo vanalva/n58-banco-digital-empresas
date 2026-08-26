@@ -42,10 +42,10 @@
 .tpl-documento.is-read-normal { --tpl-measure: 72ch; }
 .tpl-documento.is-read-wide   { --tpl-measure: 88ch; }
 
-/* PDF-first mode for reports, bulletins, and short downloadable documents. */
-.tpl-doc-pdf-first { display: none; }
-.tpl-documento.is-pdf-first .tpl-doc-pdf-first { display: block; }
-.tpl-documento.is-pdf-first .tpl-doc-bodysection { display: none; }
+/* PDF-first mode for reports, bulletins, and short downloadable documents.
+   The .tpl-doc-pdf-first / .is-pdf-first toggle rules were removed with WP-11: the
+   markup they switched no longer exists on any page. The layout rules below are kept
+   for the PDF viewer block itself. */
 .tpl-doc-pdf-grid {
   display: grid;
   grid-template-columns: minmax(0, 1.65fr) minmax(18rem, 0.65fr);
@@ -110,6 +110,49 @@
   overflow-x: clip;
   overflow-y: clip;
 }
+/* Above the fold, entrance is TIME-based, not scroll-driven. n58-reveal-stack
+   scrubs each child on a view() timeline, which leaves anything sitting at the
+   fold stuck mid-animation on arrival — on a long document title the two CTAs
+   were landing at ~10%% opacity and reading as disabled. Same keyframes and
+   cadence as the home hero, so the motion language does not change. */
+@media (prefers-reduced-motion: no-preference) {
+  [data-flwr] .tpl-doc-hero .n58-reveal-stack > * {
+    animation-name: n58-hero-in;
+    animation-timeline: auto;
+    animation-range: normal;
+    animation-duration: 0.8s;
+    animation-timing-function: var(--_motion---ease-emphasized);
+    animation-fill-mode: both;
+    animation-delay: 0.08s;
+  }
+  [data-flwr] .tpl-doc-hero .n58-reveal-stack > *:nth-child(2)   { animation-delay: 0.2s; }
+  [data-flwr] .tpl-doc-hero .n58-reveal-stack > *:nth-child(3)   { animation-delay: 0.32s; }
+  [data-flwr] .tpl-doc-hero .n58-reveal-stack > *:nth-child(n+4) { animation-delay: 0.44s; }
+}
+
+/* The TOC rail has the same problem the article had: n58-reveal scrubs on a
+   view() timeline against the ELEMENT, and this rail is ~570px tall AND sticky,
+   so it sat at opacity 0 until it had scrolled most of its own height. Time-based
+   entrance instead, matching the hero. */
+@media (prefers-reduced-motion: no-preference) {
+  [data-flwr] .tpl-doc-toc.n58-reveal {
+    animation-name: n58-hero-in;
+    animation-timeline: auto;
+    animation-range: normal;
+    animation-duration: 0.8s;
+    animation-timing-function: var(--_motion---ease-emphasized);
+    animation-fill-mode: both;
+    animation-delay: 0.5s;
+  }
+}
+
+.tpl-doc-hero .n58-spline {
+  /* Shorter than the split-hero default (78vh): the hero copy reveals on a
+     view() timeline, so anything pushed below the fold at load reads washed
+     out until you scroll — which is what happened to the two CTAs. */
+  height: 52vh;
+  min-height: 22rem;
+}
 .tpl-doc-hero_inner {
   position: relative;
   z-index: 1;
@@ -120,7 +163,17 @@
   max-width: 54rem;
 }
 /* Eyebrow uses the real n58-badge (project.css), not an invented pill. */
-.tpl-doc-hero_title {
+/* DOCUMENT TITLE — its own step on the type scale.
+   Legal titles are sentences, not headlines: “Contrato Único de Productos y
+   Servicios Financieros” ran to five lines at f-text-display (92px) in the hero
+   column. This tops out at 3rem — between flwr’s h2 and h3 ceilings — which
+   holds the longest title in the set to two or three lines. Same fluid shape as
+   the framework tokens, so it scales with everything else.
+   The markup keeps f-text-display for Webflow paste; this simply outranks it
+   (equal specificity, later file). */
+[data-flwr] .tpl-doc-hero_title {
+  font-size: clamp(1.75rem, calc(1.75rem + ((min(1vw, 1cqi) - 0.2rem) * 1.786)), 3rem);
+  line-height: var(--_typography---leading--tight);
   text-wrap: balance;
 }
 .tpl-doc-hero_desc {
@@ -732,4 +785,82 @@
   .tpl-doc-prose h2 { font-size: 1.3rem; }
   .tpl-doc-lead.has-dropcap::first-letter { font-size: 2.8em; }
   .tpl-doc-prose table { min-width: 30rem; }
+}
+
+
+/* ════════════════════════════════════════════════════════════════════════════
+   READER PARITY — one reading language on both surfaces
+   ────────────────────────────────────────────────────────────────────────
+   A document reads the same whether it is opened on its own page or inside Modo
+   lectura: same measure, same rail width, same row treatment. The page keeps its
+   own chrome (hero, PDF viewer, related docs) — only the reading surface aligns.
+   Reader side: project.css § MODO LECTURA.
+   ════════════════════════════════════════════════════════════════════════════ */
+.tpl-documento {
+  /* Reading measure stays with the is-read-* variant (normal = 72ch); the
+     reader matches THAT instead of forcing a second number here. */
+  --tpl-toc-w:   21rem;  /* was 17rem — matches .n58-reader_side */
+}
+
+/* The rail loses its card. In the reader the list is a plain column against a
+   hairline, which reads lighter beside a long document and stops the TOC from
+   competing with the prose. */
+[data-flwr] .tpl-doc-toc {
+  background-color: transparent;
+  border-top-width: 0;
+  border-right-width: 0;
+  border-bottom-width: 0;
+  border-left-width: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+}
+[data-flwr] .tpl-documento.is-toc-sidebar .tpl-doc-toc {
+  padding-right: var(--_spacing---step--4);
+  border-right-width: var(--_theme---border--width-2);
+  border-right-style: solid;
+  border-right-color: color-mix(in oklab, currentColor 14%, transparent);
+}
+[data-flwr] .tpl-doc-toc_nav {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+/* Section label, same as the reader's group headings. */
+[data-flwr] .tpl-doc-toc_title {
+  font-size: var(--_typography---size--tiny);
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: color-mix(in oklab, currentColor 55%, transparent);
+}
+
+/* Rows, same as .n58-reader_item: rounded, hover wash, lime when current — no
+   left-border indicator, which is the one thing the two surfaces disagreed on. */
+[data-flwr] .tpl-doc-toc_link {
+  border-left-width: 0;
+  border-top-left-radius: var(--n58-radius-control);
+  border-top-right-radius: var(--n58-radius-control);
+  border-bottom-right-radius: var(--n58-radius-control);
+  border-bottom-left-radius: var(--n58-radius-control);
+  padding-top: var(--_spacing---step--2);
+  padding-bottom: var(--_spacing---step--2);
+  padding-left: var(--_spacing---step--3);
+  padding-right: var(--_spacing---step--3);
+  font-size: var(--_typography---size--small);
+  line-height: 1.3;
+  color: inherit;
+}
+[data-flwr] .tpl-doc-toc_link:hover {
+  background-color: color-mix(in oklab, currentColor 8%, transparent);
+  color: inherit;
+}
+[data-flwr] .tpl-doc-toc_link.is-active {
+  background-color: var(--_palette---core--500);
+  color: var(--_palette---neutral--900);
+}
+[data-flwr] .tpl-doc-toc_item.is-sub .tpl-doc-toc_link {
+  padding-left: var(--_spacing---step--5);
+  font-size: var(--_typography---size--tiny);
 }

@@ -349,6 +349,519 @@
   color: var(--_palette---neutral--900);
 }
 
+/* ────────────────────────────────────────────────────────────────────────
+   NAVBAR DROPDOWNS — one reveal, cascading rows, no block padding
+   ────────────────────────────────────────────────────────────────────────
+   flwr reveals a plain dropdown by animating grid-template-rows 0fr → 1fr, which
+   needs `overflow: hidden`. A menu that holds flyouts (Personas / Empresas) must
+   keep overflow VISIBLE so the flyout can escape, so flwr opts those out of the
+   animation entirely — which is why Recursos slid open and Empresas just
+   appeared. Here every menu uses the same transform + opacity reveal, so the
+   technique no longer depends on what the menu contains.
+
+   The cascade is on the ROWS, not the box: each <li> lifts in on a stagger, so
+   the menu reads as links stacking down rather than a panel growing. Ease is an
+   expo-out — fast off the mark, long soft landing — which is the "snappy but
+   soft" part. Closing runs shorter and with no stagger, because a menu you have
+   left should get out of the way immediately.
+
+   Webflow note: :nth-child() and :has() belong to a CSS embed, not styleLess.
+   ─────────────────────────────────────────────────────────────────────── */
+[data-flwr] .flwr_navbar_wrap {
+  --n58-dd-ease:    cubic-bezier(0.16, 1, 0.3, 1);
+  --n58-dd-in:      420ms;   /* open  — long enough for the cascade to read */
+  --n58-dd-out:     160ms;   /* close — out of the way, no stagger */
+  --n58-dd-step:    38ms;    /* row-to-row delay in the main menu */
+  --n58-dd-substep: 28ms;    /* row-to-row delay in a flyout (fewer rows) */
+  --n58-dd-lift:    0.85rem; /* how far each row starts above its resting place */
+  --n58-dd-radius:  calc(0.5rem - var(--_theme---border--width-2));
+}
+
+/* 1 — No block padding on the panel. The first row starts flush at the top edge
+   and the last ends flush at the bottom, so the hover fill runs corner to corner
+   instead of floating inside a gap. Covers both flwr's plain menu and its
+   :has(sub) variant, which is padded by a separate rule. */
+[data-flwr] .flwr_navbar_dropdown_menu,
+[data-flwr] .flwr_navbar_dropdown_menu:has(.flwr_navbar_dropdown_sub),
+[data-flwr] .flwr_navbar_dropdown_submenu {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+/* The flyout used to hang a step higher to clear the parent's padding — with
+   that gone it aligns row-to-row with the trigger that opened it. */
+[data-flwr] .flwr_navbar_dropdown_submenu {
+  top: 0;
+}
+/* With no padding the end rows meet the corners, so they carry the radius. */
+[data-flwr] .flwr_navbar_dropdown_menu > li:first-child > .flwr_navbar_dropdown_item,
+[data-flwr] .flwr_navbar_dropdown_submenu > li:first-child > .flwr_navbar_dropdown_item {
+  border-top-left-radius: var(--n58-dd-radius);
+  border-top-right-radius: var(--n58-dd-radius);
+}
+[data-flwr] .flwr_navbar_dropdown_menu > li:last-child > .flwr_navbar_dropdown_item,
+[data-flwr] .flwr_navbar_dropdown_submenu > li:last-child > .flwr_navbar_dropdown_item {
+  border-bottom-left-radius: var(--n58-dd-radius);
+  border-bottom-right-radius: var(--n58-dd-radius);
+}
+
+/* 2 — One reveal for every menu, flyouts included. */
+[data-flwr] .flwr_navbar_dropdown_menu,
+[data-flwr] .flwr_navbar_dropdown_menu:has(.flwr_navbar_dropdown_sub) {
+  display: block;
+  grid-template-rows: none;
+  overflow-x: visible;
+  overflow-y: visible;
+  transform-origin: top center;
+  transform: translateY(calc(-1 * var(--n58-dd-lift)));
+  opacity: 0;
+  transition:
+    opacity var(--n58-dd-out) var(--n58-dd-ease),
+    transform var(--n58-dd-out) var(--n58-dd-ease),
+    visibility 0s linear var(--n58-dd-out);
+}
+[data-flwr] .flwr_navbar_dropdown_menu > * {
+  overflow-x: visible;
+  overflow-y: visible;
+}
+[data-flwr] .flwr_navbar_dropdown[data-flwr-state~="open"] .flwr_navbar_dropdown_menu {
+  transform: translateY(0);
+  opacity: 1;
+  transition:
+    opacity var(--n58-dd-in) var(--n58-dd-ease),
+    transform var(--n58-dd-in) var(--n58-dd-ease),
+    visibility 0s linear 0s;
+}
+
+/* 3 — The cascade. Rows lift into place one after the next. */
+[data-flwr] .flwr_navbar_dropdown_menu > li,
+[data-flwr] .flwr_navbar_dropdown_submenu > li {
+  opacity: 0;
+  transform: translateY(calc(-1 * var(--n58-dd-lift)));
+  transition:
+    opacity var(--n58-dd-out) var(--n58-dd-ease),
+    transform var(--n58-dd-out) var(--n58-dd-ease);
+}
+[data-flwr] .flwr_navbar_dropdown[data-flwr-state~="open"] .flwr_navbar_dropdown_menu > li,
+[data-flwr] .flwr_navbar_dropdown_sub:hover > .flwr_navbar_dropdown_submenu > li,
+[data-flwr] .flwr_navbar_dropdown_sub:focus-within > .flwr_navbar_dropdown_submenu > li {
+  opacity: 1;
+  transform: translateY(0);
+  transition-duration: var(--n58-dd-in);
+}
+[data-flwr] .flwr_navbar_dropdown[data-flwr-state~="open"] .flwr_navbar_dropdown_menu > li:nth-child(1) { transition-delay: calc(var(--n58-dd-step) * 0); }
+[data-flwr] .flwr_navbar_dropdown[data-flwr-state~="open"] .flwr_navbar_dropdown_menu > li:nth-child(2) { transition-delay: calc(var(--n58-dd-step) * 1); }
+[data-flwr] .flwr_navbar_dropdown[data-flwr-state~="open"] .flwr_navbar_dropdown_menu > li:nth-child(3) { transition-delay: calc(var(--n58-dd-step) * 2); }
+[data-flwr] .flwr_navbar_dropdown[data-flwr-state~="open"] .flwr_navbar_dropdown_menu > li:nth-child(4) { transition-delay: calc(var(--n58-dd-step) * 3); }
+[data-flwr] .flwr_navbar_dropdown[data-flwr-state~="open"] .flwr_navbar_dropdown_menu > li:nth-child(5) { transition-delay: calc(var(--n58-dd-step) * 4); }
+[data-flwr] .flwr_navbar_dropdown[data-flwr-state~="open"] .flwr_navbar_dropdown_menu > li:nth-child(6) { transition-delay: calc(var(--n58-dd-step) * 5); }
+[data-flwr] .flwr_navbar_dropdown[data-flwr-state~="open"] .flwr_navbar_dropdown_menu > li:nth-child(7) { transition-delay: calc(var(--n58-dd-step) * 6); }
+[data-flwr] .flwr_navbar_dropdown[data-flwr-state~="open"] .flwr_navbar_dropdown_menu > li:nth-child(8) { transition-delay: calc(var(--n58-dd-step) * 7); }
+[data-flwr] .flwr_navbar_dropdown[data-flwr-state~="open"] .flwr_navbar_dropdown_menu > li:nth-child(9) { transition-delay: calc(var(--n58-dd-step) * 8); }
+[data-flwr] .flwr_navbar_dropdown[data-flwr-state~="open"] .flwr_navbar_dropdown_menu > li:nth-child(10) { transition-delay: calc(var(--n58-dd-step) * 9); }
+
+/* 4 — Flyouts ride the same ease and cascade, just quicker — they open from
+   inside an already-open menu, so they should feel like a continuation. */
+[data-flwr] .flwr_navbar_dropdown_submenu {
+  transform: translateX(calc(-1 * var(--n58-dd-lift)));
+  transition:
+    opacity var(--n58-dd-out) var(--n58-dd-ease),
+    transform var(--n58-dd-out) var(--n58-dd-ease),
+    visibility 0s linear var(--n58-dd-out);
+}
+[data-flwr] .flwr_navbar_dropdown_sub:hover > .flwr_navbar_dropdown_submenu,
+[data-flwr] .flwr_navbar_dropdown_sub:focus-within > .flwr_navbar_dropdown_submenu {
+  transform: translateX(0);
+  transition:
+    opacity var(--n58-dd-in) var(--n58-dd-ease),
+    transform var(--n58-dd-in) var(--n58-dd-ease),
+    visibility 0s linear 0s;
+}
+[data-flwr] .flwr_navbar_dropdown_sub:hover > .flwr_navbar_dropdown_submenu > li:nth-child(1),
+[data-flwr] .flwr_navbar_dropdown_sub:focus-within > .flwr_navbar_dropdown_submenu > li:nth-child(1) { transition-delay: calc(var(--n58-dd-substep) * 0); }
+[data-flwr] .flwr_navbar_dropdown_sub:hover > .flwr_navbar_dropdown_submenu > li:nth-child(2),
+[data-flwr] .flwr_navbar_dropdown_sub:focus-within > .flwr_navbar_dropdown_submenu > li:nth-child(2) { transition-delay: calc(var(--n58-dd-substep) * 1); }
+[data-flwr] .flwr_navbar_dropdown_sub:hover > .flwr_navbar_dropdown_submenu > li:nth-child(3),
+[data-flwr] .flwr_navbar_dropdown_sub:focus-within > .flwr_navbar_dropdown_submenu > li:nth-child(3) { transition-delay: calc(var(--n58-dd-substep) * 2); }
+[data-flwr] .flwr_navbar_dropdown_sub:hover > .flwr_navbar_dropdown_submenu > li:nth-child(4),
+[data-flwr] .flwr_navbar_dropdown_sub:focus-within > .flwr_navbar_dropdown_submenu > li:nth-child(4) { transition-delay: calc(var(--n58-dd-substep) * 3); }
+[data-flwr] .flwr_navbar_dropdown_sub:hover > .flwr_navbar_dropdown_submenu > li:nth-child(5),
+[data-flwr] .flwr_navbar_dropdown_sub:focus-within > .flwr_navbar_dropdown_submenu > li:nth-child(5) { transition-delay: calc(var(--n58-dd-substep) * 4); }
+[data-flwr] .flwr_navbar_dropdown_sub:hover > .flwr_navbar_dropdown_submenu > li:nth-child(6),
+[data-flwr] .flwr_navbar_dropdown_sub:focus-within > .flwr_navbar_dropdown_submenu > li:nth-child(6) { transition-delay: calc(var(--n58-dd-substep) * 5); }
+
+/* 5 — Reduce motion: show the menu, skip the choreography. */
+@media (prefers-reduced-motion: reduce) {
+  [data-flwr] .flwr_navbar_dropdown_menu,
+  [data-flwr] .flwr_navbar_dropdown_submenu,
+  [data-flwr] .flwr_navbar_dropdown_menu > li,
+  [data-flwr] .flwr_navbar_dropdown_submenu > li {
+    transform: none;
+    transition-duration: 1ms;
+    transition-delay: 0s;
+  }
+}
+
+
+/* ════════════════════════════════════════════════════════════════════════════
+   MODO LECTURA — two-pane document reader
+   ─────────────────────────────────────────────────────────────────────────────
+   Full-viewport surface: document list left, the open document right, one search
+   that filters the list and walks matches inside the text. Sits above the navbar
+   (z 1200) because it replaces the page while it is open.
+   Content and behaviour: assets/n58-doc-reader.js.
+   ════════════════════════════════════════════════════════════════════════════ */
+html.n58-reader-open {
+  overflow-x: hidden;
+  overflow-y: hidden;
+}
+[data-flwr] .n58-reader {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1300;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  background-color: var(--_palette---neutral--50);
+  color: var(--_palette---neutral--900);
+}
+[data-flwr] .n58-reader[hidden] { display: none; }
+
+/* Top bar — what you are reading, the search, the way out. */
+[data-flwr] .n58-reader_bar {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 30rem) auto;
+  align-items: center;
+  column-gap: var(--_spacing---step--5);
+  padding-top: var(--_spacing---step--3);
+  padding-bottom: var(--_spacing---step--3);
+  padding-left: var(--_spacing---step--5);
+  padding-right: var(--_spacing---step--5);
+  border-bottom-width: var(--_theme---border--width-2);
+  border-bottom-style: solid;
+  border-bottom-color: color-mix(in oklab, currentColor 14%, transparent);
+}
+[data-flwr] .n58-reader_doctitle {
+  font-size: var(--_typography---size--h5);
+  line-height: 1.15;
+  margin-top: 0.35rem;
+  margin-bottom: 0;
+  text-wrap: balance;
+}
+[data-flwr] .n58-reader_docmeta {
+  font-size: var(--_typography---size--tiny);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: color-mix(in oklab, currentColor 60%, transparent);
+  margin-top: 0.2rem;
+  margin-bottom: 0;
+}
+
+/* Search cluster — input, counter, hit-to-hit arrows. */
+[data-flwr] .n58-reader_search {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  column-gap: var(--_spacing---step--2);
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  padding-left: var(--_spacing---step--3);
+  padding-right: var(--_spacing---step--2);
+  border-top-width: var(--_theme---border--width-2);
+  border-right-width: var(--_theme---border--width-2);
+  border-bottom-width: var(--_theme---border--width-2);
+  border-left-width: var(--_theme---border--width-2);
+  border-top-style: solid;
+  border-right-style: solid;
+  border-bottom-style: solid;
+  border-left-style: solid;
+  border-top-color: color-mix(in oklab, currentColor 18%, transparent);
+  border-right-color: color-mix(in oklab, currentColor 18%, transparent);
+  border-bottom-color: color-mix(in oklab, currentColor 18%, transparent);
+  border-left-color: color-mix(in oklab, currentColor 18%, transparent);
+  border-top-left-radius: var(--n58-radius-pill);
+  border-top-right-radius: var(--n58-radius-pill);
+  border-bottom-right-radius: var(--n58-radius-pill);
+  border-bottom-left-radius: var(--n58-radius-pill);
+}
+[data-flwr] .n58-reader_input {
+  flex-grow: 1;
+  flex-shrink: 1;
+  flex-basis: auto;
+  min-width: 0;
+  border-top-width: 0;
+  border-right-width: 0;
+  border-bottom-width: 0;
+  border-left-width: 0;
+  background-color: transparent;
+  color: inherit;
+  font-family: inherit;
+  font-size: var(--_typography---size--small);
+  outline-width: 0;
+}
+[data-flwr] .n58-reader_counter {
+  flex-shrink: 0;
+  font-size: var(--_typography---size--tiny);
+  color: color-mix(in oklab, currentColor 60%, transparent);
+  white-space: nowrap;
+}
+[data-flwr] .n58-reader_navbtn,
+[data-flwr] .n58-reader_close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  flex-shrink: 0;
+  border-top-width: 0;
+  border-right-width: 0;
+  border-bottom-width: 0;
+  border-left-width: 0;
+  border-top-left-radius: var(--n58-radius-pill);
+  border-top-right-radius: var(--n58-radius-pill);
+  border-bottom-right-radius: var(--n58-radius-pill);
+  border-bottom-left-radius: var(--n58-radius-pill);
+  background-color: transparent;
+  color: inherit;
+  cursor: pointer;
+  transition-property: background-color, opacity;
+  transition-duration: var(--_motion---duration-fast);
+  transition-timing-function: var(--_motion---ease-standard);
+}
+[data-flwr] .n58-reader_navbtn:hover,
+[data-flwr] .n58-reader_close:hover {
+  background-color: color-mix(in oklab, currentColor 12%, transparent);
+}
+[data-flwr] .n58-reader_navbtn[disabled] {
+  opacity: 0.35;
+  cursor: default;
+}
+[data-flwr] .n58-reader_actions {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  column-gap: var(--_spacing---step--3);
+  justify-content: flex-end;
+}
+
+/* Two panes. */
+[data-flwr] .n58-reader_layout {
+  display: grid;
+  grid-template-columns: 21rem minmax(0, 1fr);
+  min-height: 0;
+}
+[data-flwr] .n58-reader_side {
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding-top: var(--_spacing---step--4);
+  padding-bottom: var(--_spacing---step--6);
+  padding-left: var(--_spacing---step--4);
+  padding-right: var(--_spacing---step--4);
+  border-right-width: var(--_theme---border--width-2);
+  border-right-style: solid;
+  border-right-color: color-mix(in oklab, currentColor 14%, transparent);
+}
+[data-flwr] .n58-reader_group {
+  font-size: var(--_typography---size--tiny);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: color-mix(in oklab, currentColor 55%, transparent);
+  margin-top: var(--_spacing---step--4);
+  margin-bottom: var(--_spacing---step--1);
+}
+[data-flwr] .n58-reader_group:first-child { margin-top: 0; }
+[data-flwr] .n58-reader_item {
+  display: block;
+  width: 100%;
+  text-align: left;
+  font-family: inherit;
+  font-size: var(--_typography---size--small);
+  line-height: 1.3;
+  color: inherit;
+  background-color: transparent;
+  cursor: pointer;
+  padding-top: var(--_spacing---step--2);
+  padding-bottom: var(--_spacing---step--2);
+  padding-left: var(--_spacing---step--3);
+  padding-right: var(--_spacing---step--3);
+  border-top-width: 0;
+  border-right-width: 0;
+  border-bottom-width: 0;
+  border-left-width: 0;
+  border-top-left-radius: var(--n58-radius-control);
+  border-top-right-radius: var(--n58-radius-control);
+  border-bottom-right-radius: var(--n58-radius-control);
+  border-bottom-left-radius: var(--n58-radius-control);
+  transition-property: background-color, color;
+  transition-duration: var(--_motion---duration-fast);
+  transition-timing-function: var(--_motion---ease-standard);
+}
+[data-flwr] .n58-reader_item:hover {
+  background-color: color-mix(in oklab, currentColor 8%, transparent);
+}
+[data-flwr] .n58-reader_item[aria-current="true"] {
+  background-color: var(--_palette---core--500);
+  color: var(--_palette---neutral--900);
+}
+[data-flwr] .n58-reader_item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  column-gap: var(--_spacing---step--2);
+}
+/* Dimmed = no match for the current query, still one click away. */
+[data-flwr] .n58-reader_item.is-dim { opacity: 0.42; }
+[data-flwr] .n58-reader_item.is-dim:hover { opacity: 1; }
+[data-flwr] .n58-reader_count {
+  flex-shrink: 0;
+  font-size: var(--_typography---size--tiny);
+  line-height: 1;
+  padding-top: 0.2rem;
+  padding-bottom: 0.2rem;
+  padding-left: 0.45rem;
+  padding-right: 0.45rem;
+  border-top-left-radius: var(--n58-radius-pill);
+  border-top-right-radius: var(--n58-radius-pill);
+  border-bottom-right-radius: var(--n58-radius-pill);
+  border-bottom-left-radius: var(--n58-radius-pill);
+  background-color: color-mix(in oklab, var(--_palette---core--500) 45%, transparent);
+  color: var(--_palette---neutral--900);
+}
+[data-flwr] .n58-reader_item[aria-current="true"] .n58-reader_count {
+  background-color: var(--_palette---neutral--900);
+  color: var(--_palette---core--500);
+}
+[data-flwr] .n58-reader_empty {
+  color: color-mix(in oklab, currentColor 60%, transparent);
+}
+[data-flwr] .n58-reader_scroll {
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding-top: var(--_spacing---step--6);
+  padding-bottom: var(--_spacing---step--8);
+  padding-left: var(--_spacing---step--6);
+  padding-right: var(--_spacing---step--6);
+  scroll-behavior: smooth;
+}
+[data-flwr] .n58-reader_body {
+  /* Same measure the document pages use (.tpl-documento.is-read-normal), so a
+     document has the same line length on either surface. */
+  max-width: 72ch;
+  margin-left: auto;
+  margin-right: auto;
+}
+[data-flwr] .n58-reader[data-n58-reader-state="loading"] .n58-reader_body {
+  opacity: 0.35;
+}
+
+/* Hits. The current one is the solid lime; the rest are a soft wash so the eye
+   can see how many are on screen without them shouting. */
+[data-flwr] mark.n58-reader_hit {
+  background-color: color-mix(in oklab, var(--_palette---core--500) 38%, transparent);
+  color: inherit;
+  border-top-left-radius: 0.15rem;
+  border-top-right-radius: 0.15rem;
+  border-bottom-right-radius: 0.15rem;
+  border-bottom-left-radius: 0.15rem;
+}
+[data-flwr] mark.n58-reader_hit.is-current {
+  background-color: var(--_palette---core--500);
+  color: var(--_palette---neutral--900);
+}
+
+@media (max-width: 991px) {
+  [data-flwr] .n58-reader_bar {
+    grid-template-columns: minmax(0, 1fr) auto;
+    row-gap: var(--_spacing---step--3);
+  }
+  [data-flwr] .n58-reader_search {
+    grid-column-start: 1;
+    grid-column-end: 3;
+    grid-row-start: 2;
+  }
+  [data-flwr] .n58-reader_layout {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto minmax(0, 1fr);
+  }
+  [data-flwr] .n58-reader_side {
+    max-height: 32vh;
+    border-right-width: 0;
+    border-bottom-width: var(--_theme---border--width-2);
+    border-bottom-style: solid;
+    border-bottom-color: color-mix(in oklab, currentColor 14%, transparent);
+  }
+  [data-flwr] .n58-reader_scroll {
+    padding-left: var(--_spacing---step--4);
+    padding-right: var(--_spacing---step--4);
+  }
+}
+
+/* ────────────────────────────────────────────────────────────────────────
+   LIGHT-SECTION NAVBAR
+   ────────────────────────────────────────────────────────────────────────
+   The bar is fixed, so it floats over whatever section is beneath it. It ships
+   dark and vanishes over a cream section (Documentos Legales, the light halves
+   of the product pages). n58-navbar-theme.js finds the section straddling the
+   bar's bottom edge and toggles `.is-light`; everything below re-points the
+   navbar's component tokens to ink.
+
+   Borders and icons read `currentColor`, so they follow the text automatically
+   in both modes rather than needing a second set of values. The wrapper keeps
+   `f-mode-dark` so the dropdown PANELS stay dark — a dark menu over a light bar
+   reads as an overlay, and the lime hover works on either. Flip the panels by
+   adding the same token overrides under `.is-light .flwr_navbar_dropdown_menu`.
+   ──────────────────────────────────────────────────────────────────────── */
+[data-flwr] .flwr_navbar_wrap {
+  transition-property: background-color, color, border-color, backdrop-filter, transform;
+  transition-duration: 260ms;
+  transition-timing-function: var(--_motion---ease-standard);
+}
+[data-flwr] .flwr_navbar_wrap.f-mode-dark.is-light {
+  /* Frosted cream instead of frosted ink — same treatment, opposite end. */
+  --_component---navbar--surface:          color-mix(in oklab, var(--_palette---neutral--50) 92%, transparent);
+  --_component---navbar--surface-scrolled: color-mix(in oklab, var(--_palette---neutral--50) 97%, transparent);
+  --_component---navbar--text:             var(--_palette---neutral--900);
+  /* currentColor — the hairline tracks the text colour in either mode. */
+  --_component---navbar--border:           color-mix(in oklab, currentColor 18%, transparent);
+  color: var(--_palette---neutral--900);
+}
+/* Links, the dropdown trigger and its caret all inherit; the caret is a mask
+   painted with currentColor, so it flips for free. */
+[data-flwr] .flwr_navbar_wrap.is-light .flwr_navbar_link,
+[data-flwr] .flwr_navbar_wrap.is-light .flwr_navbar_dropdown_trigger,
+[data-flwr] .flwr_navbar_wrap.is-light .flwr_navbar_logo {
+  color: var(--_palette---neutral--900);
+}
+/* Lottie wordmark: the cream glyphs go to ink, the lime + magenta roof mark
+   keeps its brand colour (only the cream fills are re-pointed). */
+[data-flwr] .flwr_navbar_wrap.is-light .n58-lottie-logo svg [fill="rgb(255,239,233)"] {
+  fill: var(--_palette---neutral--900);
+  transition-property: fill;
+  transition-duration: 260ms;
+  transition-timing-function: var(--_motion---ease-standard);
+}
+/* Hamburger bars are currentColor already — named here so the intent is on the
+   record if the component ever hardcodes a colour. */
+/* Navbar CTAs follow the bar: over a light section they take the same
+   coloured-face / ink-label reading as every other button on that surface.
+   The wrapper keeps f-mode-dark for the dropdown panels, so this is keyed on
+   .is-light rather than the mode class. */
+/* Specificity note: the dark-context rule above carries three :not()s, so this
+   one names f-mode-dark AND is-light on the wrapper to outrank it — the bar
+   is dark-scoped by design and only its surface flipped. */
+[data-flwr] .flwr_navbar_wrap.f-mode-dark.is-light :is(.flwr_button_primary, .flwr_button_secondary, .flwr_button_ghost, .flwr_button_alert, .flwr_button_link):not(.is-outline):not(.alan-fab) {
+  background-color: transparent;
+  --notch-fill: var(--_button-style---text);
+  --notch-shadow: var(--_palette---neutral--900);
+  color: var(--_palette---neutral--900);
+}
+[data-flwr] .flwr_navbar_wrap.is-light .flwr_navbar_hamburger,
+[data-flwr] .flwr_navbar_wrap.is-light .flwr_navbar_hamburger span {
+  color: var(--_palette---neutral--900);
+}
+
 /* Dropdown backdrop lives as a sibling of the navbar (moved out of the <li> so
    the navbar's backdrop-filter doesn't trap it, and so the dropdown menu —
    inside the z-1200 navbar — sits ABOVE the z-1100 backdrop). flwr's base rule
@@ -2744,6 +3257,33 @@ body {
   color: var(--_palette---neutral--900);
 }
 
+/* … and the section decides, so nobody has to remember the modifier.
+   On a LIGHT surface the ink face reads as a hole punched in the page, so the
+   colour goes to the FACE and the label + border + notch edge become ink. This
+   used to be hand-applied, which is why the Documentos Legales cards showed a
+   magenta-on-ink “Detalle” next to an ink-on-lime “Descargar PDF” — same page,
+   two readings of the same button.
+
+   Opting out: is-outline chips are a hairline treatment with no face at all,
+   and the AlaN FAB flips itself from its own scroll script. */
+/* The page wrapper IS the [data-flwr] root, so both the compound and the
+   descendant form are needed — a section can also carry the mode class. */
+[data-flwr].f-mode-light :is(.flwr_button_primary, .flwr_button_secondary, .flwr_button_ghost, .flwr_button_alert, .flwr_button_link):not(.is-outline):not(.alan-fab),
+[data-flwr] .f-mode-light :is(.flwr_button_primary, .flwr_button_secondary, .flwr_button_ghost, .flwr_button_alert, .flwr_button_link):not(.is-outline):not(.alan-fab) {
+  background-color: transparent;
+  --notch-fill: var(--_button-style---text);
+  --notch-shadow: var(--_palette---neutral--900);
+  color: var(--_palette---neutral--900);
+}
+/* A dark section inside a light page keeps the dark reading — ink face, colour
+   label — unless it explicitly asked to be inverted (a lime CTA on ink). */
+[data-flwr].f-mode-dark :is(.flwr_button_primary, .flwr_button_secondary, .flwr_button_ghost, .flwr_button_alert, .flwr_button_link):not(.is-invert):not(.is-outline):not(.alan-fab),
+[data-flwr] .f-mode-dark :is(.flwr_button_primary, .flwr_button_secondary, .flwr_button_ghost, .flwr_button_alert, .flwr_button_link):not(.is-invert):not(.is-outline):not(.alan-fab) {
+  --notch-fill: var(--_palette---neutral--900);
+  --notch-shadow: var(--_button-style---text);
+  color: var(--_button-style---text);
+}
+
 /* ─────────────────────────────────────────────────────────────────────────
    FX TICKER — CSS compositor marquee (NOT the JS engine). A tiny init script in
    index.html clones the item set into two equal groups wide enough to fill the
@@ -4357,7 +4897,7 @@ body {
   flex-shrink: 0;
   flex-basis: auto;
   width: calc((100% - 3 * var(--_spacing---step--4)) / 4);
-  min-height: 13rem;
+  min-height: 16rem;
   row-gap: var(--_spacing---step--4);
   padding-top: var(--_spacing---step--5);
   padding-right: var(--_spacing---step--5);
@@ -4370,10 +4910,14 @@ body {
 
 /* Ink-line illustration set (alpha-*.svg, hard-filled #1b2021 ink). On dark
    surfaces add .is-invert (filter is styleLess-safe; mask-* is embed-only). */
+/* Line illustrations (conocenos: stat cards + role cards). 4rem read as a
+   footnote next to display-size stats — these are the section’s only imagery,
+   so they carry weight. Fluid so they hold their share of the card at every
+   width; the cards grow with them (min-height bumped alongside). */
 .n58-illu {
   display: block;
-  width: 4rem;
-  height: 4rem;
+  width: clamp(4.5rem, 6.5vw, 7rem);
+  height: clamp(4.5rem, 6.5vw, 7rem);
   object-fit: contain;
 }
 
@@ -4574,7 +5118,7 @@ body {
   flex-shrink: 0;
   flex-basis: auto;
   width: calc((100% - 3 * var(--_spacing---step--4)) / 4);
-  min-height: 15rem;
+  min-height: 17rem;
   row-gap: var(--_spacing---step--4);
   padding-top: var(--_spacing---step--5);
   padding-right: var(--_spacing---step--5);

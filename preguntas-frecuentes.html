@@ -9,6 +9,12 @@
   <meta property="og:title" content="Preguntas Frecuentes — N58 Banco Digital">
   <meta property="og:description" content="AlaN responde tus preguntas más frecuentes sobre cuentas, pagos, operaciones cambiarias y seguridad en N58 Banco Digital.">
   <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.n58bancodigital.com/preguntas-frecuentes">
+  <meta property="og:image" content="https://www.n58bancodigital.com/assets/images/photos/n58-hero-image.webp">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Preguntas Frecuentes — N58 Banco Digital">
+  <meta name="twitter:description" content="AlaN responde tus preguntas más frecuentes sobre cuentas, pagos, operaciones cambiarias y seguridad en N58 Banco Digital.">
+  <meta name="google-site-verification" content="google-site-verification=RxHZTgy2yKHznQom72MKKAzfvrcrM1y6VNpfBOoOrZw">
 
   <!-- Fonts: Nugros (custom @font-face) loaded first, then framework → project overrides. -->
   <link rel="preload" href="assets/fonts/Nugros-Regular.woff2" as="font" type="font/woff2" crossorigin>
@@ -16,7 +22,7 @@
   <link rel="stylesheet" href="css/fonts.css?v=d00f1644">
   <link rel="stylesheet" href="css/framework.css?v=1a765f0c">
   <link rel="stylesheet" href="css/variables.css?v=402f79dd">
-  <link rel="stylesheet" href="css/project.css?v=9026990e">
+  <link rel="stylesheet" href="css/project.css?v=2dd56efb">
 </head>
 <body>
 <div data-flwr class="f-mode-light n58-page">
@@ -90,7 +96,7 @@
         <li><a href="conocenos.html" class="flwr_navbar_link">Conócenos</a></li>
       </ul>
       <div class="flwr_navbar_actions">
-        <a href="https://banca.n58bancodigital.com" class="flwr_button_secondary" data-flwr-trigger="hover focus"><span data-flwr-target="label">Banca en línea</span></a>
+        <a href="https://online.n58bancodigital.com" class="flwr_button_secondary" data-flwr-trigger="hover focus"><span data-flwr-target="label">Banca en línea</span></a>
         <a href="productos-empresas.html" class="flwr_button_primary" data-flwr-trigger="hover focus"><span data-flwr-target="label">Abre tu cuenta</span></a>
       </div>
       <button type="button" class="flwr_navbar_hamburger n58-hamburger" aria-label="Abrir menú" aria-expanded="false" data-flwr-target="fullscreen-menu-trigger" data-flwr-menu-id="n58-menu">
@@ -131,11 +137,11 @@
           <div class="n58-fsmenu-subwrap">
             <div class="n58-fsmenu-sublist">
               <div class="n58-fsmenu-sublinks">
-                <a href="categoria-template.html" class="n58-fsmenu-sublink">Cuentas</a>
-                <a href="categoria-template.html" class="n58-fsmenu-sublink">Pago Móvil</a>
-                <a href="categoria-template.html" class="n58-fsmenu-sublink">Pago de Servicios</a>
-                <a href="categoria-template.html" class="n58-fsmenu-sublink">Operaciones Cambiarias</a>
-                <a href="categoria-template.html" class="n58-fsmenu-sublink">Productos e Inversiones</a>
+                <a href="productos-empresas.html#cuentas" class="n58-fsmenu-sublink">Cuentas</a>
+                <a href="pago-movil-empresas.html" class="n58-fsmenu-sublink">Pago Móvil</a>
+                <a href="pago-de-servicios-empresas.html" class="n58-fsmenu-sublink">Pago de Servicios</a>
+                <a href="intervencion-cambiaria-empresas.html" class="n58-fsmenu-sublink">Operaciones Cambiarias</a>
+                <a href="productos-empresas.html#productos-inversiones" class="n58-fsmenu-sublink">Productos e Inversiones</a>
                 <a href="productos-empresas.html" class="n58-fsmenu-sublink">Ver todos los productos</a>
               </div>
             </div>
@@ -180,11 +186,11 @@
       </nav>
       <div class="flwr_fullscreen_menu_footer">
         <div class="n58-fsmenu-ctas">
-          <a href="https://banca.n58bancodigital.com" class="flwr_button_secondary"><span data-flwr-target="label">Banca en línea</span></a>
+          <a href="https://online.n58bancodigital.com" class="flwr_button_secondary"><span data-flwr-target="label">Banca en línea</span></a>
           <a href="productos-empresas.html" class="flwr_button_primary"><span data-flwr-target="label">Abre tu cuenta</span></a>
         </div>
         <div class="flwr_fullscreen_menu_socials">
-          <a href="tel:+582129177201" class="flwr_fullscreen_menu_social" aria-label="Llamar a Línea N58"><img src="assets/images/icons/phone-cream.svg" alt=""></a>
+          <a href="tel:+582129177299" class="flwr_fullscreen_menu_social" aria-label="Llamar a Línea N58"><img src="assets/images/icons/phone-cream.svg" alt=""></a>
           <a href="mailto:atencionalcliente@n58bancodigital.com" class="flwr_fullscreen_menu_social" aria-label="Escríbenos"><img src="assets/images/icons/mail-cream.svg" alt=""></a>
         </div>
       </div>
@@ -232,45 +238,81 @@
           <p class="f-text-body f-text-color-muted">Explora por categoría o recorre la lista completa.</p>
         </div>
 
-        <!-- Category filter (visual) — static flwr chips linking to each group. -->
+        <!-- Category filter (visual) — static flwr chips linking to each group.
+             One chip per OLD CMS category, in the OLD collection order. -->
         <div class="f-flex f-flex-wrap f-gap-2 f-justify-center f-margin-bottom-6 n58-reveal is-2">
-          <a href="#faq-cuentas" class="flwr_chip f-text-no-decor">Cuentas</a>
-          <a href="#faq-pagos" class="flwr_chip f-text-no-decor">Pagos y transferencias</a>
+          <a href="#faq-agencia" class="flwr_chip f-text-no-decor">Agencia y canales digitales</a>
+          <a href="#faq-reclamos" class="flwr_chip f-text-no-decor">Atención al Cliente · Reclamos y Defensoría</a>
           <a href="#faq-divisas" class="flwr_chip f-text-no-decor">Operaciones Cambiarias</a>
-          <a href="#faq-seguridad" class="flwr_chip f-text-no-decor">Seguridad y soporte</a>
+          <a href="#faq-intervencion" class="flwr_chip f-text-no-decor">Operaciones Cambiarias · Intervención</a>
+          <a href="#faq-mesa-de-cambio" class="flwr_chip f-text-no-decor">Operaciones Cambiarias · Mesa de Cambio / Menudeo</a>
+          <a href="#faq-pago-servicios" class="flwr_chip f-text-no-decor">Pago de Servicios</a>
+          <a href="#faq-pago-movil" class="flwr_chip f-text-no-decor">Pago Móvil</a>
+          <a href="#faq-tarjetas" class="flwr_chip f-text-no-decor">Tarjetas · Tarjeta Maestro</a>
+          <a href="#faq-atencion" class="flwr_chip f-text-no-decor">Atención al Cliente</a>
+          <a href="#faq-cuentas" class="flwr_chip f-text-no-decor">Cuentas</a>
+          <a href="#faq-cuentas-apertura" class="flwr_chip f-text-no-decor">Cuentas · Apertura</a>
         </div>
 
-        <!-- ── Grupo · Cuentas ── -->
-        <div id="faq-cuentas" class="f-flex f-flex-column f-items-center f-gap-2 f-text-center f-margin-top-6 f-margin-bottom-4 n58-reveal">
-          <h3 class="f-text-h3 f-text-color-strong">Cuentas</h3>
+        <!-- ── Grupo · Agencia y canales digitales ── -->
+        <div id="faq-agencia" class="f-flex f-flex-column f-items-center f-gap-2 f-text-center f-margin-top-6 f-margin-bottom-4 n58-reveal">
+          <h3 class="f-text-h3 f-text-color-strong">Agencia y canales digitales</h3>
         </div>
         <div class="flwr_accordion_wrap home-faq_list n58-reveal-list">
           <details class="flwr_accordion_item">
-            <summary class="flwr_accordion_trigger"><span class="n58-faq-q">¿Cuánto tarda la aprobación?</span><span class="n58-plus" aria-hidden="true"></span><span class="n58-faq-progress" aria-hidden="true"></span></summary>
-            <div class="flwr_accordion_content"><p class="f-text-body f-text-color-muted">La aprobación toma menos de 24 horas una vez verificados tus datos.</p></div>
+            <summary class="flwr_accordion_trigger"><span class="n58-faq-q">¿Cuáles son los canales digitales?</span><span class="n58-plus" aria-hidden="true"></span><span class="n58-faq-progress" aria-hidden="true"></span></summary>
+            <div class="flwr_accordion_content"><p class="f-text-body f-text-color-muted">Nuestras redes oficiales: @n58bancodigital en Instagram, X, Facebook, LinkedIn, YouTube, TikTok.</p></div>
           </details>
           <details class="flwr_accordion_item">
-            <summary class="flwr_accordion_trigger"><span class="n58-faq-q">¿Qué documentos necesito?</span><span class="n58-plus" aria-hidden="true"></span><span class="n58-faq-progress" aria-hidden="true"></span></summary>
-            <div class="flwr_accordion_content"><p class="f-text-body f-text-color-muted">Solo tu cédula de identidad vigente y un correo electrónico activo.</p></div>
+            <summary class="flwr_accordion_trigger"><span class="n58-faq-q">¿Puedo retirar dinero en efectivo en la taquilla?</span><span class="n58-plus" aria-hidden="true"></span><span class="n58-faq-progress" aria-hidden="true"></span></summary>
+            <div class="flwr_accordion_content"><p class="f-text-body f-text-color-muted">Sí, dirígete a nuestra agencia ubicada en el Centro Lido, Nivel Tamanaco, Caracas.</p></div>
           </details>
           <details class="flwr_accordion_item">
-            <summary class="flwr_accordion_trigger"><span class="n58-faq-q">¿Mi cuenta tiene costo de mantenimiento?</span><span class="n58-plus" aria-hidden="true"></span><span class="n58-faq-progress" aria-hidden="true"></span></summary>
-            <div class="flwr_accordion_content"><p class="f-text-body f-text-color-muted">Consulta el tarifario vigente en la sección de Documentos — allí publicamos las tarifas y comisiones actualizadas de todos nuestros productos.</p></div>
+            <summary class="flwr_accordion_trigger"><span class="n58-faq-q">¿Poseen agencias en el interior del país?</span><span class="n58-plus" aria-hidden="true"></span><span class="n58-faq-progress" aria-hidden="true"></span></summary>
+            <div class="flwr_accordion_content"><p class="f-text-body f-text-color-muted">No contamos con agencias fuera de Caracas, pero si te encuentras interesado en formar parte de N58 y disfrutar de nuestros servicios, lo puedes hacer a través de nuestra banca en línea o comunicándote con nosotros por nuestros canales oficiales.</p></div>
+          </details>
+          <details class="flwr_accordion_item">
+            <summary class="flwr_accordion_trigger"><span class="n58-faq-q">¿Cuál es el horario de la agencia?</span><span class="n58-plus" aria-hidden="true"></span><span class="n58-faq-progress" aria-hidden="true"></span></summary>
+            <div class="flwr_accordion_content"><p class="f-text-body f-text-color-muted">De lunes a viernes, de 8:30 am a 3:30 pm.</p></div>
+          </details>
+          <details class="flwr_accordion_item">
+            <summary class="flwr_accordion_trigger"><span class="n58-faq-q">¿N58 tiene agencia física?</span><span class="n58-plus" aria-hidden="true"></span><span class="n58-faq-progress" aria-hidden="true"></span></summary>
+            <div class="flwr_accordion_content"><p class="f-text-body f-text-color-muted">Sí, contamos con una agencia física, que se encuentra ubicada en el Centro Comercial Lido, PB, nivel Tamanaco, Caracas. Ahí nuestros ejecutivos te atenderán y brindarán el apoyo que necesites.</p></div>
           </details>
         </div>
 
-        <!-- ── Grupo · Pagos y transferencias ── -->
-        <div id="faq-pagos" class="f-flex f-flex-column f-items-center f-gap-2 f-text-center f-margin-top-6 f-margin-bottom-4 n58-reveal">
-          <h3 class="f-text-h3 f-text-color-strong">Pagos y transferencias</h3>
+        <!-- ── Grupo · Atención al Cliente · Reclamos y Defensoría ── -->
+        <div id="faq-reclamos" class="f-flex f-flex-column f-items-center f-gap-2 f-text-center f-margin-top-6 f-margin-bottom-4 n58-reveal">
+          <h3 class="f-text-h3 f-text-color-strong">Atención al Cliente · Reclamos y Defensoría</h3>
         </div>
         <div class="flwr_accordion_wrap home-faq_list n58-reveal-list">
           <details class="flwr_accordion_item">
-            <summary class="flwr_accordion_trigger"><span class="n58-faq-q">¿Puedo transferir a otros bancos?</span><span class="n58-plus" aria-hidden="true"></span><span class="n58-faq-progress" aria-hidden="true"></span></summary>
-            <div class="flwr_accordion_content"><p class="f-text-body f-text-color-muted">Sí. Puedes hacer transferencias internas sin límite y transferencias interbancarias desde la Banca en Línea, sujetas a los límites diarios vigentes.</p></div>
+            <summary class="flwr_accordion_trigger"><span class="n58-faq-q">¿Necesitas comunicarte con el Defensor del Cliente y Usuario Bancario?</span><span class="n58-plus" aria-hidden="true"></span><span class="n58-faq-progress" aria-hidden="true"></span></summary>
+            <div class="flwr_accordion_content"><p class="f-text-body f-text-color-muted">Puedes contactarnos a través del siguiente correo electrónico defensordelcliente@n58bancodigital.com</p></div>
           </details>
           <details class="flwr_accordion_item">
-            <summary class="flwr_accordion_trigger"><span class="n58-faq-q">¿Cuáles son los límites diarios de mis operaciones?</span><span class="n58-plus" aria-hidden="true"></span><span class="n58-faq-progress" aria-hidden="true"></span></summary>
-            <div class="flwr_accordion_content"><p class="f-text-body f-text-color-muted">Publicamos la tabla completa de límites por tipo de operación en la página de <a href="limites-diarios.html" class="f-text-color-link">Límites Diarios</a>.</p></div>
+            <summary class="flwr_accordion_trigger"><span class="n58-faq-q">¿Cómo puedo formular un reclamo?</span><span class="n58-plus" aria-hidden="true"></span><span class="n58-faq-progress" aria-hidden="true"></span></summary>
+            <div class="flwr_accordion_content">
+              <div class="f-flex f-flex-column f-gap-3">
+                <ol class="f-list-decimal f-text-body f-text-color-muted">
+                  <li>Ingresa en “Atención al Cliente”.</li>
+                  <li>Selecciona la opción “Reclamos”.</li>
+                  <li>Completa el formulario en línea. <a href="formulario-reclamos.html#formulario" class="f-text-color-link">Formulario de Reclamos</a>.</li>
+                  <li>Adjunta el comprobante de la transacción o los soportes.</li>
+                  <li>También podrás realizar el reclamo o sugerencia a través del número telefónico (0500) 6588823 o nuestro WhatsApp +58 414 2816245.</li>
+                </ol>
+                <p class="f-text-body f-text-color-muted">Si deseas comunicarte personalmente con nosotros, puedes dirigirte a nuestra agencia en: Av. Francisco de Miranda, CC Lido, Agencia N58 Chacao - Caracas.</p>
+                <p class="f-text-body f-text-color-muted">Los reclamos se resolverán en un lapso no mayor a veinte (20) días continuos, según lo estipulado en el numeral 3, del artículo 71 del Decreto con Rango, Valor y Fuerza de Ley de Reforma Parcial de la Ley de Instituciones del Sector Bancario.</p>
+              </div>
+            </div>
+          </details>
+          <details class="flwr_accordion_item">
+            <summary class="flwr_accordion_trigger"><span class="n58-faq-q">¿Cuáles son los horarios de atención al cliente?</span><span class="n58-plus" aria-hidden="true"></span><span class="n58-faq-progress" aria-hidden="true"></span></summary>
+            <div class="flwr_accordion_content"><p class="f-text-body f-text-color-muted">De lunes a viernes de 8:00 am a 5:00 pm.</p></div>
+          </details>
+          <details class="flwr_accordion_item">
+            <summary class="flwr_accordion_trigger"><span class="n58-faq-q">¿Qué debo hacer si tengo problemas con mis productos financieros?</span><span class="n58-plus" aria-hidden="true"></span><span class="n58-faq-progress" aria-hidden="true"></span></summary>
+            <div class="flwr_accordion_content"><p class="f-text-body f-text-color-muted">Puedes comunicarte con nosotros a través de nuestra línea telefónica (0500) 6588823 o por nuestro WhatsApp +58 (414) 2816245.</p></div>
           </details>
         </div>
 
@@ -280,31 +322,160 @@
         </div>
         <div class="flwr_accordion_wrap home-faq_list n58-reveal-list">
           <details class="flwr_accordion_item">
-            <summary class="flwr_accordion_trigger"><span class="n58-faq-q">¿Cómo compro o vendo divisas con N58?</span><span class="n58-plus" aria-hidden="true"></span><span class="n58-faq-progress" aria-hidden="true"></span></summary>
-            <div class="flwr_accordion_content"><p class="f-text-body f-text-color-muted">Desde la Banca en Línea realizas tus operaciones de compra y venta de divisas con total seguridad y al mejor tipo de cambio.</p></div>
-          </details>
-          <details class="flwr_accordion_item">
-            <summary class="flwr_accordion_trigger"><span class="n58-faq-q">¿Qué tipo de cambio aplica a mis operaciones?</span><span class="n58-plus" aria-hidden="true"></span><span class="n58-faq-progress" aria-hidden="true"></span></summary>
-            <div class="flwr_accordion_content"><p class="f-text-body f-text-color-muted">Aplicamos la tasa oficial publicada por el BCV vigente al momento de la operación. Puedes verla en el ticker de nuestra página de inicio.</p></div>
+            <summary class="flwr_accordion_trigger"><span class="n58-faq-q">¿Cuáles son las comisiones por compra - venta de moneda extranjera?</span><span class="n58-plus" aria-hidden="true"></span><span class="n58-faq-progress" aria-hidden="true"></span></summary>
+            <div class="flwr_accordion_content"><p class="f-text-body f-text-color-muted">Para compra: comisión de 0,20 %. Para venta: comisión 0,20 % para Persona Jurídica / Persona Natural exenta de comisión de venta, de acuerdo con el tarifario del Banco Central de Venezuela.</p></div>
           </details>
         </div>
 
-        <!-- ── Grupo · Seguridad y soporte ── -->
-        <div id="faq-seguridad" class="f-flex f-flex-column f-items-center f-gap-2 f-text-center f-margin-top-6 f-margin-bottom-4 n58-reveal">
-          <h3 class="f-text-h3 f-text-color-strong">Seguridad y soporte</h3>
+        <!-- ── Grupo · Operaciones Cambiarias · Intervención ── -->
+        <div id="faq-intervencion" class="f-flex f-flex-column f-items-center f-gap-2 f-text-center f-margin-top-6 f-margin-bottom-4 n58-reveal">
+          <h3 class="f-text-h3 f-text-color-strong">Operaciones Cambiarias · Intervención</h3>
         </div>
         <div class="flwr_accordion_wrap home-faq_list n58-reveal-list">
           <details class="flwr_accordion_item">
-            <summary class="flwr_accordion_trigger"><span class="n58-faq-q">¿Qué hago si olvido mi contraseña?</span><span class="n58-plus" aria-hidden="true"></span><span class="n58-faq-progress" aria-hidden="true"></span></summary>
-            <div class="flwr_accordion_content"><p class="f-text-body f-text-color-muted">Usa la opción "Recuperar contraseña" enla Banca en Línea. Te enviaremos un código de verificación a tu correo registrado.</p></div>
+            <summary class="flwr_accordion_trigger"><span class="n58-faq-q">¿Cómo puedo hacer operaciones de intervención?</span><span class="n58-plus" aria-hidden="true"></span><span class="n58-faq-progress" aria-hidden="true"></span></summary>
+            <div class="flwr_accordion_content"><p class="f-text-body f-text-color-muted">Ingresa a nuestra banca en línea, módulo de operaciones cambiarias, y selecciona la opción de intervención.</p></div>
           </details>
           <details class="flwr_accordion_item">
-            <summary class="flwr_accordion_trigger"><span class="n58-faq-q">¿Cómo protege N58 mis datos?</span><span class="n58-plus" aria-hidden="true"></span><span class="n58-faq-progress" aria-hidden="true"></span></summary>
-            <div class="flwr_accordion_content"><p class="f-text-body f-text-color-muted">Toda tu información viaja cifrada y validamos cada operación con verificación de identidad. Recuerda: solo ingresa tus datos en nuestros canales oficiales.</p></div>
+            <summary class="flwr_accordion_trigger"><span class="n58-faq-q">¿Cuál es el horario para realizar operaciones de intervención?</span><span class="n58-plus" aria-hidden="true"></span><span class="n58-faq-progress" aria-hidden="true"></span></summary>
+            <div class="flwr_accordion_content"><p class="f-text-body f-text-color-muted">Puedes realizar operaciones de Intervención de 9:00 am a 12:00 pm, los días hábiles bancarios, de acuerdo con la disponibilidad de nuestro banco, N58.</p></div>
           </details>
           <details class="flwr_accordion_item">
-            <summary class="flwr_accordion_trigger"><span class="n58-faq-q">¿Cómo contacto a Atención al Cliente?</span><span class="n58-plus" aria-hidden="true"></span><span class="n58-faq-progress" aria-hidden="true"></span></summary>
-            <div class="flwr_accordion_content"><p class="f-text-body f-text-color-muted">Llámanos por la Línea N58 (0212-917-7201), escríbenos a atencionalcliente@n58bancodigital.com o chatea con AlaN desde el botón flotante.</p></div>
+            <summary class="flwr_accordion_trigger"><span class="n58-faq-q">¿Cuáles son las comisiones para realizar operaciones de intervención?</span><span class="n58-plus" aria-hidden="true"></span><span class="n58-faq-progress" aria-hidden="true"></span></summary>
+            <div class="flwr_accordion_content"><p class="f-text-body f-text-color-muted">La comisión para venta de divisas es de 0,50 %. De acuerdo con el tarifario del Banco Central de Venezuela.</p></div>
+          </details>
+          <details class="flwr_accordion_item">
+            <summary class="flwr_accordion_trigger"><span class="n58-faq-q">¿Cuál es el monto mínimo y máximo para realizar operaciones de intervención?</span><span class="n58-plus" aria-hidden="true"></span><span class="n58-faq-progress" aria-hidden="true"></span></summary>
+            <div class="flwr_accordion_content"><p class="f-text-body f-text-color-muted">El monto mínimo es de 20 $ y el monto máximo va de acuerdo a la disponibilidad de nuestro banco, N58.</p></div>
+          </details>
+        </div>
+
+        <!-- ── Grupo · Operaciones Cambiarias · Mesa de Cambio / Menudeo ── -->
+        <div id="faq-mesa-de-cambio" class="f-flex f-flex-column f-items-center f-gap-2 f-text-center f-margin-top-6 f-margin-bottom-4 n58-reveal">
+          <h3 class="f-text-h3 f-text-color-strong">Operaciones Cambiarias · Mesa de Cambio / Menudeo</h3>
+        </div>
+        <div class="flwr_accordion_wrap home-faq_list n58-reveal-list">
+          <details class="flwr_accordion_item">
+            <summary class="flwr_accordion_trigger"><span class="n58-faq-q">¿Cuál es el horario para realizar operaciones en moneda extranjera?</span><span class="n58-plus" aria-hidden="true"></span><span class="n58-faq-progress" aria-hidden="true"></span></summary>
+            <div class="flwr_accordion_content"><p class="f-text-body f-text-color-muted">Para operaciones de Mesa de Cambio o Menudeo el horario de atención comprende las 24 horas del día. Para operaciones de intervención el horario es de 9:00 am a 12:00 pm, días hábiles bancarios.</p></div>
+          </details>
+          <details class="flwr_accordion_item">
+            <summary class="flwr_accordion_trigger"><span class="n58-faq-q">¿Cuál es el monto mínimo para realizar operaciones cambiarias?</span><span class="n58-plus" aria-hidden="true"></span><span class="n58-faq-progress" aria-hidden="true"></span></summary>
+            <div class="flwr_accordion_content"><p class="f-text-body f-text-color-muted">Puedes realizar la compra o venta de moneda extranjera a partir de 1 dólar.</p></div>
+          </details>
+          <details class="flwr_accordion_item">
+            <summary class="flwr_accordion_trigger"><span class="n58-faq-q">¿Cuál es el monto máximo para realizar operaciones cambiarias?</span><span class="n58-plus" aria-hidden="true"></span><span class="n58-faq-progress" aria-hidden="true"></span></summary>
+            <div class="flwr_accordion_content"><p class="f-text-body f-text-color-muted">El monto máximo está sujeto a la disponibilidad de N58.</p></div>
+          </details>
+          <details class="flwr_accordion_item">
+            <summary class="flwr_accordion_trigger"><span class="n58-faq-q">¿Cómo puedo comprar o vender divisas?</span><span class="n58-plus" aria-hidden="true"></span><span class="n58-faq-progress" aria-hidden="true"></span></summary>
+            <div class="flwr_accordion_content"><p class="f-text-body f-text-color-muted">Ingresa a nuestra banca en línea, módulo de operaciones cambiarias, y selecciona la opción requerida.</p></div>
+          </details>
+        </div>
+
+        <!-- ── Grupo · Pago de Servicios ── -->
+        <div id="faq-pago-servicios" class="f-flex f-flex-column f-items-center f-gap-2 f-text-center f-margin-top-6 f-margin-bottom-4 n58-reveal">
+          <h3 class="f-text-h3 f-text-color-strong">Pago de Servicios</h3>
+        </div>
+        <div class="flwr_accordion_wrap home-faq_list n58-reveal-list">
+          <details class="flwr_accordion_item">
+            <summary class="flwr_accordion_trigger"><span class="n58-faq-q">¿Qué servicios puedo pagar con N58?</span><span class="n58-plus" aria-hidden="true"></span><span class="n58-faq-progress" aria-hidden="true"></span></summary>
+            <div class="flwr_accordion_content">
+              <div class="f-flex f-flex-column f-gap-3">
+                <p class="f-text-body f-text-color-muted">Con N58 podrás pagar:</p>
+                <ul class="f-list-disc f-text-body f-text-color-muted">
+                  <li>Cantv</li>
+                  <li>SimpleTV</li>
+                  <li>Inter</li>
+                  <li>Movistar</li>
+                  <li>Digitel</li>
+                  <li>Movilnet</li>
+                  <li>Recarga Freefire y pagar la suscripción de Spotify.</li>
+                </ul>
+              </div>
+            </div>
+          </details>
+          <details class="flwr_accordion_item">
+            <summary class="flwr_accordion_trigger"><span class="n58-faq-q">¿Cómo puedo pagar mis servicios?</span><span class="n58-plus" aria-hidden="true"></span><span class="n58-faq-progress" aria-hidden="true"></span></summary>
+            <div class="flwr_accordion_content"><p class="f-text-body f-text-color-muted">Puedes pagar tus servicios a través de nuestra banca en línea utilizando la opción “Servicios”. Luego, selecciona el servicio que deseas pagar y rellena los datos solicitados.</p></div>
+          </details>
+        </div>
+
+        <!-- ── Grupo · Pago Móvil ── -->
+        <div id="faq-pago-movil" class="f-flex f-flex-column f-items-center f-gap-2 f-text-center f-margin-top-6 f-margin-bottom-4 n58-reveal">
+          <h3 class="f-text-h3 f-text-color-strong">Pago Móvil</h3>
+        </div>
+        <div class="flwr_accordion_wrap home-faq_list n58-reveal-list">
+          <details class="flwr_accordion_item">
+            <summary class="flwr_accordion_trigger"><span class="n58-faq-q">¿Cuál es la comisión por el uso de pago móvil?</span><span class="n58-plus" aria-hidden="true"></span><span class="n58-faq-progress" aria-hidden="true"></span></summary>
+            <div class="flwr_accordion_content"><p class="f-text-body f-text-color-muted">Para conocer la comisión del uso de pago móvil ingresa en el siguiente enlace <a href="tasas.html" class="f-text-color-link">tasas y tarifas</a>.</p></div>
+          </details>
+          <details class="flwr_accordion_item">
+            <summary class="flwr_accordion_trigger"><span class="n58-faq-q">¿Cuáles son los límites diarios?</span><span class="n58-plus" aria-hidden="true"></span><span class="n58-faq-progress" aria-hidden="true"></span></summary>
+            <div class="flwr_accordion_content"><p class="f-text-body f-text-color-muted">Consulta los límites <a href="limites-diarios.html" class="f-text-color-link">aquí</a>.</p></div>
+          </details>
+          <details class="flwr_accordion_item">
+            <summary class="flwr_accordion_trigger"><span class="n58-faq-q">¿Cómo me puedo desafiliar del servicio pago móvil?</span><span class="n58-plus" aria-hidden="true"></span><span class="n58-faq-progress" aria-hidden="true"></span></summary>
+            <div class="flwr_accordion_content"><p class="f-text-body f-text-color-muted">A través de nuestra banca en línea. En el menú de opciones, selecciona “Desafiliar pago móvil”, valida tus datos afiliados al servicio y, al confirmar, ya estarás desafiliado del servicio.</p></div>
+          </details>
+          <details class="flwr_accordion_item">
+            <summary class="flwr_accordion_trigger"><span class="n58-faq-q">¿Cómo me puedo afiliar a pago móvil?</span><span class="n58-plus" aria-hidden="true"></span><span class="n58-faq-progress" aria-hidden="true"></span></summary>
+            <div class="flwr_accordion_content"><p class="f-text-body f-text-color-muted">A través de nuestra banca en línea. En el menú de opciones, selecciona “Afiliar pago móvil”, confirma tus datos para asociar el servicio de pago móvil y ya estarás afiliado.</p></div>
+          </details>
+        </div>
+
+        <!-- ── Grupo · Tarjetas · Tarjeta Maestro ── -->
+        <div id="faq-tarjetas" class="f-flex f-flex-column f-items-center f-gap-2 f-text-center f-margin-top-6 f-margin-bottom-4 n58-reveal">
+          <h3 class="f-text-h3 f-text-color-strong">Tarjetas · Tarjeta Maestro</h3>
+        </div>
+        <div class="flwr_accordion_wrap home-faq_list n58-reveal-list">
+        </div>
+
+        <!-- ── Grupo · Atención al Cliente ── -->
+        <div id="faq-atencion" class="f-flex f-flex-column f-items-center f-gap-2 f-text-center f-margin-top-6 f-margin-bottom-4 n58-reveal">
+          <h3 class="f-text-h3 f-text-color-strong">Atención al Cliente</h3>
+        </div>
+        <div class="flwr_accordion_wrap home-faq_list n58-reveal-list">
+          <details class="flwr_accordion_item">
+            <summary class="flwr_accordion_trigger"><span class="n58-faq-q">¿Cuáles son los canales de comunicación?</span><span class="n58-plus" aria-hidden="true"></span><span class="n58-faq-progress" aria-hidden="true"></span></summary>
+            <div class="flwr_accordion_content">
+              <div class="f-flex f-flex-column f-gap-3">
+                <p class="f-text-body f-text-color-muted">Nuestro canal de autogestión: <a href="tel:00582129177299" class="f-text-color-link">+58 (212) 917 7299 </a></p>
+                <p class="f-text-body f-text-color-muted">Nuestra línea telefónica: <a href="tel:005805006588823" class="f-text-color-link">+58 (0500) 658 8823 </a></p>
+                <p class="f-text-body f-text-color-muted">Nuestro número de WhatsApp: <a href="https://wa.me/584142816245?text=Buenas!%20Vengo%20de%20la%20web%20de%20N58%20y%20me%20gustar%C3%ADa%20obtener%20m%C3%A1s%20informaci%C3%B3n%20." target="_blank" rel="noopener" class="f-text-color-link">+58 (414) 281 6245</a></p>
+                <p class="f-text-body f-text-color-muted">Además de los correos electrónicos: <a href="mailto:atencionalcliente@n58bancodigital.com" class="f-text-color-link">atencionalcliente@n58bancodigital.com</a> / <a href="mailto:info@n58bancodigital.com" class="f-text-color-link">info@n58bancodigital.com</a>.</p>
+              </div>
+            </div>
+          </details>
+        </div>
+
+        <!-- ── Grupo · Cuentas ── -->
+        <div id="faq-cuentas" class="f-flex f-flex-column f-items-center f-gap-2 f-text-center f-margin-top-6 f-margin-bottom-4 n58-reveal">
+          <h3 class="f-text-h3 f-text-color-strong">Cuentas</h3>
+        </div>
+        <div class="flwr_accordion_wrap home-faq_list n58-reveal-list">
+          <details class="flwr_accordion_item">
+            <summary class="flwr_accordion_trigger"><span class="n58-faq-q">¿Puedo abrir cuentas en divisas?</span><span class="n58-plus" aria-hidden="true"></span><span class="n58-faq-progress" aria-hidden="true"></span></summary>
+            <div class="flwr_accordion_content"><p class="f-text-body f-text-color-muted">Por supuesto, al abrir una cuenta en N58 y haber completado todos los recaudos, automáticamente se activa la cuenta en divisas, la cual podrás visualizar a través de nuestra banca en línea.</p></div>
+          </details>
+          <details class="flwr_accordion_item">
+            <summary class="flwr_accordion_trigger"><span class="n58-faq-q">¿Cuáles son los requisitos para abrir una cuenta de persona jurídica?</span><span class="n58-plus" aria-hidden="true"></span><span class="n58-faq-progress" aria-hidden="true"></span></summary>
+            <div class="flwr_accordion_content"><p class="f-text-body f-text-color-muted">Persona Jurídica: RIF actualizado. Copia del Registro Mercantil. Copia de la última declaración I.S.R.L correspondiente al último periodo fiscal. Referencias bancarias o comerciales no mayor a tres (3) meses de expedidas. Copia de un recibo de cualquier servicio público o privado donde se evidencie la dirección de la empresa. Copia del Documento Constitutivo-Estatutario y sus modificaciones vigentes. Carta de movilización de la cuenta y las personas autorizadas, debidamente identificadas. Copia de Acta de Asamblea donde conste el nombramiento de la Junta Directiva vigente y/o designación de su Representante Legal.</p></div>
+          </details>
+        </div>
+
+        <!-- ── Grupo · Cuentas · Apertura ── -->
+        <div id="faq-cuentas-apertura" class="f-flex f-flex-column f-items-center f-gap-2 f-text-center f-margin-top-6 f-margin-bottom-4 n58-reveal">
+          <h3 class="f-text-h3 f-text-color-strong">Cuentas · Apertura</h3>
+        </div>
+        <div class="flwr_accordion_wrap home-faq_list n58-reveal-list">
+          <details class="flwr_accordion_item">
+            <summary class="flwr_accordion_trigger"><span class="n58-faq-q">¿Cómo puedo abrir una cuenta en N58?</span><span class="n58-plus" aria-hidden="true"></span><span class="n58-faq-progress" aria-hidden="true"></span></summary>
+            <div class="flwr_accordion_content"><p class="f-text-body f-text-color-muted">Es muy fácil, si eres persona jurídica lo puedes hacer a través de nuestra banca en línea en <a href="index.html" class="f-text-color-link">www.n58bancodigital.com</a>.</p></div>
+          </details>
+          <details class="flwr_accordion_item">
+            <summary class="flwr_accordion_trigger"><span class="n58-faq-q">¿En cuánto tiempo puedo abrir una cuenta?</span><span class="n58-plus" aria-hidden="true"></span><span class="n58-faq-progress" aria-hidden="true"></span></summary>
+            <div class="flwr_accordion_content"><p class="f-text-body f-text-color-muted">La apertura de cuenta es inmediata, al completar los recaudos solicitados.</p></div>
           </details>
         </div>
       </div>
@@ -319,7 +490,7 @@
           <p class="f-text-body f-text-color-muted f-max-w-40ch">Nuestro equipo de Atención al Cliente está listo para ayudarte por el canal que prefieras.</p>
           <div class="f-flex f-flex-wrap f-gap-3 f-justify-center f-margin-top-2">
             <a href="atencion-al-cliente.html" class="flwr_button_primary is-invert" data-flwr-trigger="hover focus"><span data-flwr-target="label">Contáctanos</span></a>
-            <a href="tel:+582129177201" class="flwr_button_secondary" data-flwr-trigger="hover focus"><span data-flwr-target="label">Línea N58 · 0212-917-7201</span></a>
+            <a href="tel:+582129177299" class="flwr_button_secondary" data-flwr-trigger="hover focus"><span data-flwr-target="label">Línea N58 · +58 (212) 917 7299</span></a>
           </div>
           <p class="f-text-small f-text-color-muted">También puedes escribirnos a <a href="mailto:atencionalcliente@n58bancodigital.com" class="f-text-color-link">atencionalcliente@n58bancodigital.com</a> o chatear con AlaN.</p>
         </div>
@@ -337,9 +508,9 @@
         <div class="n58-lottie-logo n58-footer-brandlogo" data-n58-lottie="assets/n58-logo-lottie.json" role="img" aria-label="N58 Banco Digital"></div>
         <p class="f-text-small f-text-color-muted">Neo-banco microfinanciero 100% digital. Tu aliado financiero en Venezuela.</p>
         <div class="n58-footer-contact">
-          <a href="tel:+582129177201" class="flwr_button_primary is-small is-outline is-outline-ink" data-flwr-trigger="hover focus">
+          <a href="tel:+582129177299" class="flwr_button_primary is-small is-outline is-outline-ink" data-flwr-trigger="hover focus">
             <svg class="n58-contact-ico" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6.8 4h2.1l1.2 3-1.5 1.2a11 11 0 0 0 5.2 5.2L15 12.9l3 1.2v2.1a2 2 0 0 1-2.2 2A13.5 13.5 0 0 1 4.8 6.2 2 2 0 0 1 6.8 4Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
-            <span data-flwr-target="label">Línea N58 · 0212-917-7201</span>
+            <span data-flwr-target="label">Línea N58 · +58 (212) 917 7299</span>
           </a>
           <a href="mailto:atencionalcliente@n58bancodigital.com" class="flwr_button_primary is-small is-outline is-outline-ink" data-flwr-trigger="hover focus">
             <svg class="n58-contact-ico" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 7.5A1.5 1.5 0 0 1 5.5 6h13A1.5 1.5 0 0 1 20 7.5v9A1.5 1.5 0 0 1 18.5 18h-13A1.5 1.5 0 0 1 4 16.5v-9Z" stroke="currentColor" stroke-width="1.6"/><path d="m5 8 7 4.5L19 8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -373,26 +544,26 @@
             <a href="documentos-legales.html" class="flwr_footer_link">Documentos</a>
             <a href="limites-diarios.html" class="flwr_footer_link">Límites Diarios</a>
             <a href="informes-financieros.html" class="flwr_footer_link">Informes Financieros</a>
-            <a href="documentos-legales.html" class="flwr_footer_link">Tasas</a>
-            <a href="documentos-legales.html" class="flwr_footer_link">Memoria y Cuenta Institucional</a>
-            <a href="documentos-legales.html" class="flwr_footer_link">Tarifas y Comisiones</a>
-            <a href="documentos-legales.html" class="flwr_footer_link">Concientización y Capacitación en Ciberseguridad</a>
+            <a href="tasas.html" class="flwr_footer_link">Tasas</a>
+            <a href="memoria-y-cuenta-institucional.html" class="flwr_footer_link">Memoria y Cuenta Institucional</a>
+            <a href="tarifas-y-comisiones.html" class="flwr_footer_link">Tarifas y Comisiones</a>
+            <a href="concientizacion-y-capacitacion-sobre-ciberseguridad.html" class="flwr_footer_link">Concientización y Capacitación en Ciberseguridad</a>
           </nav>
         </div>
         <div class="n58-footer-col n58-reveal is-4">
           <nav class="flwr_footer_group" aria-label="Prevención LC/FT/FPADM">
             <p class="flwr_footer_group_title">Prevención LC/FT/FPADM</p>
-            <a href="documentos-legales.html" class="flwr_footer_link">Prevención y Control de Legitimación de Capitales FT/FPADM</a>
+            <a href="prevencion-y-control-de-legitimacion-de-capitales-ft-fpadm.html" class="flwr_footer_link">Prevención y Control de Legitimación de Capitales FT/FPADM</a>
             <a href="boletines.html" class="flwr_footer_link">Boletines Informativos</a>
           </nav>
           <nav class="flwr_footer_group" aria-label="Defensoría al Cliente">
             <p class="flwr_footer_group_title">Defensoría al Cliente</p>
-            <a href="documentos-legales.html" class="flwr_footer_link">Defensoría del Cliente y Usuario Bancario</a>
+            <a href="defensoria-del-cliente-y-usuario-bancario.html" class="flwr_footer_link">Defensoría del Cliente y Usuario Bancario</a>
           </nav>
           <nav class="flwr_footer_group" aria-label="Legal">
             <p class="flwr_footer_group_title">Legal</p>
-            <a href="documentos-legales.html" class="flwr_footer_link">Contrato Único de Productos y Servicios Financieros</a>
-            <a href="documentos-legales.html" class="flwr_footer_link">Políticas de Privacidad</a>
+            <a href="contrato-unico-de-productos-y-servicios-financieros.html" class="flwr_footer_link">Contrato Único de Productos y Servicios Financieros</a>
+            <a href="politicas-de-privacidad.html" class="flwr_footer_link">Políticas de Privacidad</a>
           </nav>
         </div>
       </div>
@@ -401,13 +572,13 @@
     <!-- Dark full-bleed bottom bar (matches the live footer's dark strip). -->
     <div class="n58-footer-bottom">
       <div class="n58-container n58-footer-bottom-inner">
-        <p class="f-text-tiny">© 2026 N58 Banco Digital, S.A.</p>
+        <p class="f-text-tiny">© N58 Banco Digital, S.A. Todos los derechos reservados.</p>
         <p class="f-text-tiny">Impulsado por Inteligencia Artificial para tu comodidad 🤖</p>
         <p class="f-text-tiny">J-503581107</p>
         <div class="n58-footer-help">
           <span class="f-text-tiny">¿Necesitas ayuda? Llámanos:</span>
-          <a href="tel:+582129177201" class="flwr_button_secondary" data-flwr-trigger="hover focus"><span data-flwr-target="label">Línea N58</span></a>
-          <a href="https://wa.me/582129177201" target="_blank" rel="noopener" class="flwr_button_primary" data-flwr-trigger="hover focus"><span data-flwr-target="label">WhatsApp</span></a>
+          <a href="tel:+582129177299" class="flwr_button_secondary" data-flwr-trigger="hover focus"><span data-flwr-target="label">Línea N58</span></a>
+          <a href="https://wa.me/584142816245?text=Buenas!%20Vengo%20de%20la%20web%20de%20N58%20y%20me%20gustar%C3%ADa%20obtener%20m%C3%A1s%20informaci%C3%B3n%20." target="_blank" rel="noopener" class="flwr_button_primary" data-flwr-trigger="hover focus"><span data-flwr-target="label">WhatsApp</span></a>
         </div>
       </div>
     </div>
@@ -421,6 +592,9 @@
 
   <!-- flwr runtime: hydrates navbar dropdown/hamburger, fullscreen menu, etc. (self-inits on DOMContentLoaded). -->
   <script src="assets/runtime.js" defer></script>
+
+  <!-- Navbar theme: flips the bar to ink over light sections. -->
+  <script src="assets/n58-navbar-theme.js" defer></script>
 
   <!-- FAQ: single-open accordion with a smooth animated expand, + a looping
        auto-play. Same script as the home page, adapted for MULTIPLE category
@@ -727,7 +901,7 @@
        theme and Nugros font all come from the tenant config (Widget Studio), so
        nothing else is needed here. Local dev server for testing; for production
        change the src host to https://app.vanny.chat -->
-  <script src="http://localhost:3000/vanny-widget.js" data-tenant="n58" defer></script>
+  <script src="https://vanny.chat/vanny-widget.js" data-tenant="n58" defer></script>
 
 </div>
 </body>

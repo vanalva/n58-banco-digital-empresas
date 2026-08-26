@@ -9,6 +9,12 @@
   <meta property="og:title" content="Documentos Legales — N58 Banco Digital">
   <meta property="og:description" content="Encuentra y descarga fácilmente todos los documentos legales y normativas oficiales de N58, organizados para tu comodidad y consulta inmediata.">
   <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.n58bancodigital.com/documentos-legales">
+  <meta property="og:image" content="https://www.n58bancodigital.com/assets/images/photos/n58-hero-image.webp">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Documentos Legales — N58 Banco Digital">
+  <meta name="twitter:description" content="Encuentra y descarga fácilmente todos los documentos legales y normativas oficiales de N58, organizados para tu comodidad y consulta inmediata.">
+  <meta name="google-site-verification" content="google-site-verification=RxHZTgy2yKHznQom72MKKAzfvrcrM1y6VNpfBOoOrZw">
 
   <!-- Fonts: Nugros (custom @font-face) loaded first, then framework → project overrides. -->
   <link rel="preload" href="assets/fonts/Nugros-Regular.woff2" as="font" type="font/woff2" crossorigin>
@@ -16,7 +22,10 @@
   <link rel="stylesheet" href="css/fonts.css?v=d00f1644">
   <link rel="stylesheet" href="css/framework.css?v=1a765f0c">
   <link rel="stylesheet" href="css/variables.css?v=402f79dd">
-  <link rel="stylesheet" href="css/project.css?v=9026990e">
+  <link rel="stylesheet" href="css/project.css?v=2dd56efb">
+  <!-- Modo lectura renders document bodies fetched from the document pages,
+       so it needs their prose styles. -->
+  <link rel="stylesheet" href="css/tpl-documento.css?v=62f60489">
 </head>
 <body>
 <div data-flwr class="f-mode-light n58-page">
@@ -84,7 +93,7 @@
         <li><a href="conocenos.html" class="flwr_navbar_link">Conócenos</a></li>
       </ul>
       <div class="flwr_navbar_actions">
-        <a href="https://banca.n58bancodigital.com" class="flwr_button_secondary" data-flwr-trigger="hover focus"><span data-flwr-target="label">Banca en línea</span></a>
+        <a href="https://online.n58bancodigital.com" class="flwr_button_secondary" data-flwr-trigger="hover focus"><span data-flwr-target="label">Banca en línea</span></a>
         <a href="productos-empresas.html" class="flwr_button_primary" data-flwr-trigger="hover focus"><span data-flwr-target="label">Abre tu cuenta</span></a>
       </div>
       <button type="button" class="flwr_navbar_hamburger n58-hamburger" aria-label="Abrir menú" aria-expanded="false" data-flwr-target="fullscreen-menu-trigger" data-flwr-menu-id="n58-menu">
@@ -122,11 +131,11 @@
           <div class="n58-fsmenu-subwrap">
             <div class="n58-fsmenu-sublist">
               <div class="n58-fsmenu-sublinks">
-                <a href="categoria-template.html" class="n58-fsmenu-sublink">Cuentas</a>
-                <a href="categoria-template.html" class="n58-fsmenu-sublink">Pago Móvil</a>
-                <a href="categoria-template.html" class="n58-fsmenu-sublink">Pago de Servicios</a>
-                <a href="categoria-template.html" class="n58-fsmenu-sublink">Operaciones Cambiarias</a>
-                <a href="categoria-template.html" class="n58-fsmenu-sublink">Productos e Inversiones</a>
+                <a href="productos-empresas.html#cuentas" class="n58-fsmenu-sublink">Cuentas</a>
+                <a href="pago-movil-empresas.html" class="n58-fsmenu-sublink">Pago Móvil</a>
+                <a href="pago-de-servicios-empresas.html" class="n58-fsmenu-sublink">Pago de Servicios</a>
+                <a href="intervencion-cambiaria-empresas.html" class="n58-fsmenu-sublink">Operaciones Cambiarias</a>
+                <a href="productos-empresas.html#productos-inversiones" class="n58-fsmenu-sublink">Productos e Inversiones</a>
                 <a href="productos-empresas.html" class="n58-fsmenu-sublink">Ver todos los productos</a>
               </div>
             </div>
@@ -171,11 +180,11 @@
       </nav>
       <div class="flwr_fullscreen_menu_footer">
         <div class="n58-fsmenu-ctas">
-          <a href="https://banca.n58bancodigital.com" class="flwr_button_secondary"><span data-flwr-target="label">Banca en línea</span></a>
+          <a href="https://online.n58bancodigital.com" class="flwr_button_secondary"><span data-flwr-target="label">Banca en línea</span></a>
           <a href="productos-empresas.html" class="flwr_button_primary"><span data-flwr-target="label">Abre tu cuenta</span></a>
         </div>
         <div class="flwr_fullscreen_menu_socials">
-          <a href="tel:+582129177201" class="flwr_fullscreen_menu_social" aria-label="Llamar a Línea N58"><img src="assets/images/icons/phone-cream.svg" alt=""></a>
+          <a href="tel:+582129177299" class="flwr_fullscreen_menu_social" aria-label="Llamar a Línea N58"><img src="assets/images/icons/phone-cream.svg" alt=""></a>
           <a href="mailto:atencionalcliente@n58bancodigital.com" class="flwr_fullscreen_menu_social" aria-label="Escríbenos"><img src="assets/images/icons/mail-cream.svg" alt=""></a>
         </div>
       </div>
@@ -222,8 +231,10 @@
         <div class="f-flex f-flex-column f-items-start f-gap-2 f-margin-bottom-6 n58-reveal">
           <p class="f-text-small"><span class="n58-badge is-core f-text-color-strong">Buscador</span></p>
           <h2 class="f-text-h2">Encuentra tu documento</h2>
-          <!-- FLAG: authored copy (old section had only "Buscador / Detalle" placeholders). -->
-          <p class="f-text-body f-text-color-muted f-max-w-60ch">Busca por nombre o navega por categoría. Todos los documentos se descargan en formato PDF.</p>
+          <!-- FLAG: authored copy (old section had only "Buscador / Detalle" placeholders).
+               The "todos se descargan en PDF" claim was removed: Ciberseguridad and
+               Prevención have no source PDF on the old site either. -->
+          <p class="f-text-body f-text-color-muted f-max-w-60ch">Busca por nombre o navega por categoría.</p>
         </div>
 
         <!-- flwr search — markup contract per components.json + framework.css:
@@ -252,6 +263,16 @@
           <a href="#grupo-ciberseguridad" class="flwr_chip">Ciberseguridad</a>
         </nav>
 
+        <!-- Modo lectura — swaps the card grid for a two-pane reader: every document
+             down the left, the open one on the right, one search across both.
+             Behaviour in assets/n58-doc-reader.js. -->
+        <div class="f-flex f-flex-wrap f-gap-3 f-margin-bottom-5">
+          <button type="button" class="flwr_button_secondary is-small" data-n58-reader-open data-flwr-trigger="hover focus">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" width="18" height="18"><path d="M4 5.5A1.5 1.5 0 0 1 5.5 4H10a2 2 0 0 1 2 2v13a2 2 0 0 0-2-2H5.5A1.5 1.5 0 0 1 4 15.5v-10Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M20 5.5A1.5 1.5 0 0 0 18.5 4H14a2 2 0 0 0-2 2v13a2 2 0 0 1 2-2h4.5a1.5 1.5 0 0 0 1.5-1.5v-10Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+            <span data-flwr-target="label">Modo lectura</span>
+          </button>
+        </div>
+
         <div id="lista-documentos">
 
           <!-- ── Grupo · Legal · CMS: Documentos Legales (real hrefs from the scrape) ── -->
@@ -264,12 +285,12 @@
               <article class="flwr_card_default_wrap">
                 <div class="flwr_card_default_body">
                   <p class="flwr_card_default_eyebrow">Legal</p>
-                  <h4 class="flwr_card_default_title">Contrato Único de Productos y Servicios Financieros</h4>
-                  <p class="flwr_card_default_description">Condiciones generales que rigen los productos y servicios financieros de N58 Banco Digital.</p>
+                  <h4 class="flwr_card_default_title">Contrato Único de Productos y Servicios</h4>
+                  <p class="flwr_card_default_description">En N58 Banco Digital, simplificamos tu experiencia con nuestro Contrato Único de Productos y Servicios.</p>
                   <div class="flwr_card_default_footer f-flex-wrap f-justify-between">
-                    <span class="flwr_tag">Vigente</span>
                     <div class="f-flex f-flex-wrap f-gap-2">
-                      <a href="https://cdn.prod.website-files.com/697210f73d5699e2d6dd2a1b/697210f73d5699e2d6dd2d1a_Contrato%20%C3%9Anico%20de%20Productos%20y%20Servicios%20Financieros.pdf" target="_blank" rel="noopener" class="flwr_button_primary is-invert is-small" data-flwr-trigger="hover focus"><span data-flwr-target="label">Descargar PDF</span></a>
+                      <a href="contrato-unico-de-productos-y-servicios-financieros.html" class="flwr_button_secondary is-small" data-flwr-trigger="hover focus"><span data-flwr-target="label">Detalle</span></a>
+                      <a href="assets/docs/legal/contrato-unico-de-productos-y-servicios-financieros.pdf" target="_blank" rel="noopener" class="flwr_button_primary is-invert is-small" data-flwr-trigger="hover focus"><span data-flwr-target="label">Descargar PDF</span></a>
                     </div>
                   </div>
                 </div>
@@ -278,12 +299,11 @@
                 <div class="flwr_card_default_body">
                   <p class="flwr_card_default_eyebrow">Legal</p>
                   <h4 class="flwr_card_default_title">Políticas de Privacidad</h4>
-                  <p class="flwr_card_default_description">Cómo recolectamos, usamos y protegemos tus datos personales en nuestros canales digitales.</p>
+                  <p class="flwr_card_default_description">En N58 Banco Digital, la protección de tu información personal es fundamental.</p>
                   <div class="flwr_card_default_footer f-flex-wrap f-justify-between">
-                    <span class="flwr_tag">Vigente</span>
                     <div class="f-flex f-flex-wrap f-gap-2">
-                      <a href="documento-template.html" class="flwr_button_secondary is-small" data-flwr-trigger="hover focus"><span data-flwr-target="label">Detalle</span></a>
-                      <a href="https://cdn.prod.website-files.com/697210f73d5699e2d6dd2a1b/697210f73d5699e2d6dd2d0e_Pol%C3%ADticas%20de%20Privacidad.pdf" target="_blank" rel="noopener" class="flwr_button_primary is-invert is-small" data-flwr-trigger="hover focus"><span data-flwr-target="label">Descargar PDF</span></a>
+                      <a href="politicas-de-privacidad.html" class="flwr_button_secondary is-small" data-flwr-trigger="hover focus"><span data-flwr-target="label">Detalle</span></a>
+                      <a href="assets/docs/legal/politicas-de-privacidad.pdf" target="_blank" rel="noopener" class="flwr_button_primary is-invert is-small" data-flwr-trigger="hover focus"><span data-flwr-target="label">Descargar PDF</span></a>
                     </div>
                   </div>
                 </div>
@@ -302,12 +322,11 @@
                 <div class="flwr_card_default_body">
                   <p class="flwr_card_default_eyebrow">Institucional</p>
                   <h4 class="flwr_card_default_title">Memoria y Cuenta Institucional</h4>
-                  <p class="flwr_card_default_description">Informe institucional de gestión y resultados de N58 Banco Digital.</p>
+                  <p class="flwr_card_default_description">Resumen de resultados financieros, avances tecnológicos y programas estratégicos desarrollados en la primera mitad de 2025.</p>
                   <div class="flwr_card_default_footer f-flex-wrap f-justify-between">
-                    <span class="flwr_tag">Informe I Semestre 2025</span>
                     <div class="f-flex f-flex-wrap f-gap-2">
-                      <a href="documento-template.html" class="flwr_button_secondary is-small" data-flwr-trigger="hover focus"><span data-flwr-target="label">Detalle</span></a>
-                      <a href="https://cdn.prod.website-files.com/697210f73d5699e2d6dd2a1b/697210f73d5699e2d6dd2d32_Informe%20I%20Semestre%202025.pdf" target="_blank" rel="noopener" class="flwr_button_primary is-invert is-small" data-flwr-trigger="hover focus"><span data-flwr-target="label">Descargar PDF</span></a>
+                      <a href="memoria-y-cuenta-institucional.html" class="flwr_button_secondary is-small" data-flwr-trigger="hover focus"><span data-flwr-target="label">Detalle</span></a>
+                      <a href="assets/docs/legal/informe-i-semestre-2025.pdf" target="_blank" rel="noopener" class="flwr_button_primary is-invert is-small" data-flwr-trigger="hover focus"><span data-flwr-target="label">Descargar PDF</span></a>
                     </div>
                   </div>
                 </div>
@@ -319,19 +338,31 @@
           <div id="grupo-tarifas" class="f-margin-bottom-7">
             <div class="f-flex f-items-center f-gap-3 f-margin-bottom-4 n58-reveal">
               <h3 class="f-text-h4">Tarifas y Tasas</h3>
-              <span class="flwr_tag">1 documento</span>
+              <span class="flwr_tag">2 documentos</span>
             </div>
             <div class="f-grid-autofit-md f-gap-4 n58-reveal-list">
               <article class="flwr_card_default_wrap">
                 <div class="flwr_card_default_body">
                   <p class="flwr_card_default_eyebrow">Tarifas y Tasas</p>
-                  <h4 class="flwr_card_default_title">Tarifario N58</h4>
-                  <p class="flwr_card_default_description">Tarifas, comisiones y tasas vigentes por productos y servicios de N58 Banco Digital.</p>
+                  <h4 class="flwr_card_default_title">Tarifas y Comisiones</h4>
+                  <p class="flwr_card_default_description">En N58, la transparencia es clave. Aquí encontrarás el detalle de nuestras tarifas y comisiones aplicables a cada uno de nuestros productos y servicios.</p>
                   <div class="flwr_card_default_footer f-flex-wrap f-justify-between">
-                    <span class="flwr_tag">Tarifario Digital</span>
                     <div class="f-flex f-flex-wrap f-gap-2">
-                      <a href="documento-template.html" class="flwr_button_secondary is-small" data-flwr-trigger="hover focus"><span data-flwr-target="label">Detalle</span></a>
-                      <a href="https://cdn.prod.website-files.com/697210f73d5699e2d6dd2a1b/697210f73d5699e2d6dd2d50_Tarifario%20Digital.pdf" target="_blank" rel="noopener" class="flwr_button_primary is-invert is-small" data-flwr-trigger="hover focus"><span data-flwr-target="label">Descargar PDF</span></a>
+                      <a href="tarifas-y-comisiones.html" class="flwr_button_secondary is-small" data-flwr-trigger="hover focus"><span data-flwr-target="label">Detalle</span></a>
+                      <a href="assets/docs/legal/tarifario-digital.pdf" target="_blank" rel="noopener" class="flwr_button_primary is-invert is-small" data-flwr-trigger="hover focus"><span data-flwr-target="label">Descargar PDF</span></a>
+                    </div>
+                  </div>
+                </div>
+              </article>
+              <article class="flwr_card_default_wrap">
+                <div class="flwr_card_default_body">
+                  <p class="flwr_card_default_eyebrow">Tarifas y Tasas</p>
+                  <h4 class="flwr_card_default_title">Tasas Activas y Pasivas</h4>
+                  <p class="flwr_card_default_description">Tasas vigentes aplicables a los productos y servicios financieros de N58 Banco Digital.</p>
+                  <div class="flwr_card_default_footer f-flex-wrap f-justify-between">
+                    <div class="f-flex f-flex-wrap f-gap-2">
+                      <a href="tasas.html" class="flwr_button_secondary is-small" data-flwr-trigger="hover focus"><span data-flwr-target="label">Detalle</span></a>
+                      <a href="assets/docs/legal/tasas-pasivas-y-activas.pdf" target="_blank" rel="noopener" class="flwr_button_primary is-invert is-small" data-flwr-trigger="hover focus"><span data-flwr-target="label">Descargar PDF</span></a>
                     </div>
                   </div>
                 </div>
@@ -349,12 +380,11 @@
               <article class="flwr_card_default_wrap">
                 <div class="flwr_card_default_body">
                   <p class="flwr_card_default_eyebrow">Prevención LC/FT/FPADM</p>
-                  <h4 class="flwr_card_default_title">Prevención y Control de Legitimación de Capitales, FT y FPADM</h4>
-                  <p class="flwr_card_default_description">Marco institucional de prevención y control conforme a la normativa vigente de SUDEBAN.</p>
+                  <h4 class="flwr_card_default_title">Prevención y Control de Legitimación de Capitales FT/FPADM</h4>
+                  <p class="flwr_card_default_description">En N58 Banco Digital nos comprometemos a combatir la Legitimación de Capitales, el Financiamiento al Terrorismo y el Financiamiento de la Proliferación de Armas de Destrucción Masiva, garantizando operaciones más seguras y transparentes, dando fiel cumplimiento a las políticas y regulaciones en la materia.</p>
                   <div class="flwr_card_default_footer f-flex-wrap f-justify-between">
-                    <span class="flwr_tag">Marco institucional</span>
                     <div class="f-flex f-flex-wrap f-gap-2">
-                      <a href="documento-template.html" class="flwr_button_primary is-invert is-small" data-flwr-trigger="hover focus"><span data-flwr-target="label">Detalle</span></a>
+                      <a href="prevencion-y-control-de-legitimacion-de-capitales-ft-fpadm.html" class="flwr_button_primary is-invert is-small" data-flwr-trigger="hover focus"><span data-flwr-target="label">Detalle</span></a>
                     </div>
                   </div>
                 </div>
@@ -373,12 +403,11 @@
                 <div class="flwr_card_default_body">
                   <p class="flwr_card_default_eyebrow">Defensoría al Cliente</p>
                   <h4 class="flwr_card_default_title">Defensoría del Cliente y Usuario Bancario</h4>
-                  <p class="flwr_card_default_description">Reglamento, alcance y canales para acudir al Defensor del Cliente y Usuario Bancario N58.</p>
+                  <p class="flwr_card_default_description">En N58 Banco Digital, estamos comprometidos con proteger tus derechos como cliente.</p>
                   <div class="flwr_card_default_footer f-flex-wrap f-justify-between">
-                    <span class="flwr_tag">Reglamento vigente</span>
                     <div class="f-flex f-flex-wrap f-gap-2">
-                      <a href="documento-template.html" class="flwr_button_secondary is-small" data-flwr-trigger="hover focus"><span data-flwr-target="label">Detalle</span></a>
-                      <a href="https://cdn.prod.website-files.com/697210f73d5699e2d6dd2a1b/697210f73d5699e2d6dd2cc2_Reglamento%20Defensor%20del%20Cliente%20y%20el%20Usuario%20Bancario.pdf" target="_blank" rel="noopener" class="flwr_button_primary is-invert is-small" data-flwr-trigger="hover focus"><span data-flwr-target="label">Descargar PDF</span></a>
+                      <a href="defensoria-del-cliente-y-usuario-bancario.html" class="flwr_button_secondary is-small" data-flwr-trigger="hover focus"><span data-flwr-target="label">Detalle</span></a>
+                      <a href="assets/docs/legal/reglamento-defensor-del-cliente-y-usuario-bancario.pdf" target="_blank" rel="noopener" class="flwr_button_primary is-invert is-small" data-flwr-trigger="hover focus"><span data-flwr-target="label">Descargar PDF</span></a>
                     </div>
                   </div>
                 </div>
@@ -397,11 +426,10 @@
                 <div class="flwr_card_default_body">
                   <p class="flwr_card_default_eyebrow">Ciberseguridad</p>
                   <h4 class="flwr_card_default_title">Concientización y Capacitación en Ciberseguridad</h4>
-                  <p class="flwr_card_default_description">Programa de concientización y capacitación para proteger a nuestros clientes en el entorno digital.</p>
+                  <p class="flwr_card_default_description">Conoce los riesgos más comunes y cómo evitarlos con nuestras campañas de concientización en ciberseguridad.</p>
                   <div class="flwr_card_default_footer f-flex-wrap f-justify-between">
-                    <span class="flwr_tag">Programa vigente</span>
                     <div class="f-flex f-flex-wrap f-gap-2">
-                      <a href="documento-template.html" class="flwr_button_primary is-invert is-small" data-flwr-trigger="hover focus"><span data-flwr-target="label">Detalle</span></a>
+                      <a href="concientizacion-y-capacitacion-sobre-ciberseguridad.html" class="flwr_button_primary is-invert is-small" data-flwr-trigger="hover focus"><span data-flwr-target="label">Detalle</span></a>
                     </div>
                   </div>
                 </div>
@@ -439,9 +467,9 @@
         <div class="n58-lottie-logo n58-footer-brandlogo" data-n58-lottie="assets/n58-logo-lottie.json" role="img" aria-label="N58 Banco Digital"></div>
         <p class="f-text-small f-text-color-muted">Neo-banco microfinanciero 100% digital. Tu aliado financiero en Venezuela.</p>
         <div class="n58-footer-contact">
-          <a href="tel:+582129177201" class="flwr_button_primary is-small is-outline is-outline-ink" data-flwr-trigger="hover focus">
+          <a href="tel:+582129177299" class="flwr_button_primary is-small is-outline is-outline-ink" data-flwr-trigger="hover focus">
             <svg class="n58-contact-ico" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6.8 4h2.1l1.2 3-1.5 1.2a11 11 0 0 0 5.2 5.2L15 12.9l3 1.2v2.1a2 2 0 0 1-2.2 2A13.5 13.5 0 0 1 4.8 6.2 2 2 0 0 1 6.8 4Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
-            <span data-flwr-target="label">Línea N58 · 0212-917-7201</span>
+            <span data-flwr-target="label">Línea N58 · +58 (212) 917 7299</span>
           </a>
           <a href="mailto:atencionalcliente@n58bancodigital.com" class="flwr_button_primary is-small is-outline is-outline-ink" data-flwr-trigger="hover focus">
             <svg class="n58-contact-ico" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 7.5A1.5 1.5 0 0 1 5.5 6h13A1.5 1.5 0 0 1 20 7.5v9A1.5 1.5 0 0 1 18.5 18h-13A1.5 1.5 0 0 1 4 16.5v-9Z" stroke="currentColor" stroke-width="1.6"/><path d="m5 8 7 4.5L19 8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -474,26 +502,26 @@
             <a href="documentos-legales.html" class="flwr_footer_link">Documentos</a>
             <a href="limites-diarios.html" class="flwr_footer_link">Límites Diarios</a>
             <a href="informes-financieros.html" class="flwr_footer_link">Informes Financieros</a>
-            <a href="documentos-legales.html" class="flwr_footer_link">Tasas</a>
-            <a href="documentos-legales.html" class="flwr_footer_link">Memoria y Cuenta Institucional</a>
-            <a href="documentos-legales.html" class="flwr_footer_link">Tarifas y Comisiones</a>
-            <a href="documentos-legales.html" class="flwr_footer_link">Concientización y Capacitación en Ciberseguridad</a>
+            <a href="tasas.html" class="flwr_footer_link">Tasas</a>
+            <a href="memoria-y-cuenta-institucional.html" class="flwr_footer_link">Memoria y Cuenta Institucional</a>
+            <a href="tarifas-y-comisiones.html" class="flwr_footer_link">Tarifas y Comisiones</a>
+            <a href="concientizacion-y-capacitacion-sobre-ciberseguridad.html" class="flwr_footer_link">Concientización y Capacitación en Ciberseguridad</a>
           </nav>
         </div>
         <div class="n58-footer-col n58-reveal is-4">
           <nav class="flwr_footer_group" aria-label="Prevención LC/FT/FPADM">
             <p class="flwr_footer_group_title">Prevención LC/FT/FPADM</p>
-            <a href="documentos-legales.html" class="flwr_footer_link">Prevención y Control de Legitimación de Capitales FT/FPADM</a>
+            <a href="prevencion-y-control-de-legitimacion-de-capitales-ft-fpadm.html" class="flwr_footer_link">Prevención y Control de Legitimación de Capitales FT/FPADM</a>
             <a href="boletines.html" class="flwr_footer_link">Boletines Informativos</a>
           </nav>
           <nav class="flwr_footer_group" aria-label="Defensoría al Cliente">
             <p class="flwr_footer_group_title">Defensoría al Cliente</p>
-            <a href="documentos-legales.html" class="flwr_footer_link">Defensoría del Cliente y Usuario Bancario</a>
+            <a href="defensoria-del-cliente-y-usuario-bancario.html" class="flwr_footer_link">Defensoría del Cliente y Usuario Bancario</a>
           </nav>
           <nav class="flwr_footer_group" aria-label="Legal">
             <p class="flwr_footer_group_title">Legal</p>
-            <a href="documentos-legales.html" class="flwr_footer_link">Contrato Único de Productos y Servicios Financieros</a>
-            <a href="documentos-legales.html" class="flwr_footer_link">Políticas de Privacidad</a>
+            <a href="contrato-unico-de-productos-y-servicios-financieros.html" class="flwr_footer_link">Contrato Único de Productos y Servicios Financieros</a>
+            <a href="politicas-de-privacidad.html" class="flwr_footer_link">Políticas de Privacidad</a>
           </nav>
         </div>
       </div>
@@ -502,13 +530,13 @@
     <!-- Dark full-bleed bottom bar -->
     <div class="n58-footer-bottom">
       <div class="n58-container n58-footer-bottom-inner">
-        <p class="f-text-tiny">© 2026 N58 Banco Digital, S.A.</p>
+        <p class="f-text-tiny">© N58 Banco Digital, S.A. Todos los derechos reservados.</p>
         <p class="f-text-tiny">Impulsado por Inteligencia Artificial para tu comodidad 🤖</p>
         <p class="f-text-tiny">J-503581107</p>
         <div class="n58-footer-help">
           <span class="f-text-tiny">¿Necesitas ayuda? Llámanos:</span>
-          <a href="tel:+582129177201" class="flwr_button_secondary" data-flwr-trigger="hover focus"><span data-flwr-target="label">Línea N58</span></a>
-          <a href="https://wa.me/582129177201" target="_blank" rel="noopener" class="flwr_button_primary" data-flwr-trigger="hover focus"><span data-flwr-target="label">WhatsApp</span></a>
+          <a href="tel:+582129177299" class="flwr_button_secondary" data-flwr-trigger="hover focus"><span data-flwr-target="label">Línea N58</span></a>
+          <a href="https://wa.me/584142816245?text=Buenas!%20Vengo%20de%20la%20web%20de%20N58%20y%20me%20gustar%C3%ADa%20obtener%20m%C3%A1s%20informaci%C3%B3n%20." target="_blank" rel="noopener" class="flwr_button_primary" data-flwr-trigger="hover focus"><span data-flwr-target="label">WhatsApp</span></a>
         </div>
       </div>
     </div>
@@ -522,6 +550,12 @@
 
   <!-- flwr runtime: hydrates navbar dropdown/hamburger, fullscreen menu, search, etc. (self-inits on DOMContentLoaded). -->
   <script src="assets/runtime.js" defer></script>
+
+  <!-- Modo lectura (two-pane reader). -->
+  <script src="assets/n58-doc-reader.js" defer></script>
+
+  <!-- Navbar theme: flips the bar to ink over light sections. -->
+  <script src="assets/n58-navbar-theme.js" defer></script>
 
   <!-- MOBILE-ONLY (≤991px) smoothness swap (shared chrome — null-guarded: no
        ticker/gallery on this page, so both inits no-op). -->
@@ -1000,8 +1034,51 @@
   </script>
 
   <!-- Vanny AI chat widget — one line (tenant config carries theme + font). -->
-  <script src="http://localhost:3000/vanny-widget.js" data-tenant="n58" defer></script>
+  <script src="https://vanny.chat/vanny-widget.js" data-tenant="n58" defer></script>
+
+  <!-- ════════════════ MODO LECTURA ════════════════
+       Empty shell; the list and the article are filled by
+       assets/n58-doc-reader.js, which reads the document index off the cards
+       above and fetches each body from its own page (nothing is duplicated). -->
+  <div class="n58-reader f-mode-light" data-n58-reader data-n58-reader-state="ready" role="dialog" aria-modal="true" aria-label="Modo lectura" hidden>
+    <header class="n58-reader_bar">
+      <div>
+        <p class="f-text-small"><span class="n58-badge is-core f-text-color-strong">Modo lectura</span></p>
+        <p class="n58-reader_doctitle" data-n58-reader-title></p>
+        <p class="n58-reader_docmeta" data-n58-reader-meta></p>
+      </div>
+
+      <div class="n58-reader_search">
+        <svg class="n58-reader_icon" viewBox="0 0 24 24" fill="none" aria-hidden="true" width="18" height="18"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.6"/><path d="m16.5 16.5 4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        <input type="search" class="n58-reader_input" data-n58-reader-search placeholder="Buscar en este documento…" aria-label="Buscar en el documento">
+        <span class="n58-reader_counter" data-n58-reader-counter aria-live="polite"></span>
+        <button type="button" class="n58-reader_navbtn" data-n58-reader-prev aria-label="Coincidencia anterior" disabled>
+          <svg viewBox="0 0 16 16" fill="none" aria-hidden="true" width="14" height="14"><path d="M8 12V4m0 0L4.5 7.5M8 4l3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <button type="button" class="n58-reader_navbtn" data-n58-reader-next aria-label="Siguiente coincidencia" disabled>
+          <svg viewBox="0 0 16 16" fill="none" aria-hidden="true" width="14" height="14"><path d="M8 4v8m0 0 3.5-3.5M8 12 4.5 8.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+
+      <div class="n58-reader_actions">
+        <a class="flwr_button_primary is-small" data-n58-reader-pdf target="_blank" rel="noopener" data-flwr-trigger="hover focus" hidden><span data-flwr-target="label">Descargar PDF</span></a>
+        <button type="button" class="n58-reader_close" data-n58-reader-close aria-label="Salir del modo lectura">
+          <svg viewBox="0 0 16 16" fill="none" aria-hidden="true" width="16" height="16"><path d="m4 4 8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <div class="n58-reader_layout">
+      <aside class="n58-reader_side">
+        <nav class="n58-reader_list" data-n58-reader-list aria-label="Documentos"></nav>
+      </aside>
+      <div class="n58-reader_scroll" data-n58-reader-scroll>
+        <article class="tpl-doc-prose n58-reader_body" data-n58-reader-body></article>
+      </div>
+    </div>
+  </div>
 
 </div>
+
 </body>
 </html>
