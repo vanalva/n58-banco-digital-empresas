@@ -16,8 +16,8 @@
   <link rel="stylesheet" href="css/fonts.css?v=d00f1644">
   <link rel="stylesheet" href="css/framework.css?v=1a765f0c">
   <link rel="stylesheet" href="css/variables.css?v=402f79dd">
-  <link rel="stylesheet" href="css/project.css?v=1f5dbe83">
-  <link rel="stylesheet" href="css/tpl-producto.css?v=91166e78">
+  <link rel="stylesheet" href="css/project.css?v=9026990e">
+  <link rel="stylesheet" href="css/tpl-producto.css?v=99681f22">
   <!-- Swiper.js — required by the flwr marquee engine used by the FX ticker. -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.css">
 </head>
@@ -259,10 +259,43 @@
               <a href="#tpl-caracteristicas" class="flwr_button_secondary" data-flwr-trigger="hover focus"><span data-flwr-target="label">Leer más</span></a>
             </div>
           </div>
-          <div class="tpl-hero_media"><div class="home-media n58-reveal-media tpl-media-frame"><img src="assets/images/photos/pago-movil.webp" alt="Pago Móvil para Empresas en N58 Banco Digital" class="home-media_img" loading="eager"></div></div>
+          <div class="tpl-hero_media"><div class="home-media f-frame is-hero n58-reveal-media tpl-media-frame"><img src="assets/images/photos/pago-movil.webp" alt="Pago Móvil para Empresas en N58 Banco Digital" class="home-media_img f-frame-img" loading="eager"></div></div>
         </div></div>
       </section>
-<div class="n58-product-marquee f-mode-dark" aria-hidden="true"><div class="n58-product-marquee_track"><span class="n58-product-marquee_item">Pago Móvil</span><span class="n58-product-marquee_star" aria-hidden="true">✦</span><span class="n58-product-marquee_item">Pago Móvil</span><span class="n58-product-marquee_star" aria-hidden="true">✦</span><span class="n58-product-marquee_item">Pago Móvil</span><span class="n58-product-marquee_star" aria-hidden="true">✦</span><span class="n58-product-marquee_item">Pago Móvil</span><span class="n58-product-marquee_star" aria-hidden="true">✦</span><span class="n58-product-marquee_item">Pago Móvil</span><span class="n58-product-marquee_star" aria-hidden="true">✦</span><span class="n58-product-marquee_item">Pago Móvil</span><span class="n58-product-marquee_star" aria-hidden="true">✦</span></div></div>
+      <!-- ════════════════ PRODUCT MARQUEE [dark] · same component as the home FX ticker ════════════════
+           Identical chrome and engine to the homepage ticker (.n58-fx-bar pill +
+           flwr marquee engine + icon separators) — only the key changes: lime
+           (core) accents instead of the home magenta, product identity instead of
+           FX rates. DESKTOP: the draggable flwr marquee (drag-scrub + hover-pause).
+           MOBILE (≤991px): the init script near the end of <body> swaps it for the
+           CSS compositor marquee, exactly as it does on the home page. -->
+      <div class="f-mode-dark n58-fx-bar is-green is-band" aria-hidden="true">
+        <div class="flwr_marquee_wrap" data-flwr="marquee"
+             data-flwr-marquee-speed="18000"
+             data-flwr-marquee-direction="false"
+             data-flwr-marquee-hover-pause="true"
+             data-flwr-marquee-hover-ease="true"
+             data-flwr-marquee-draggable="true"
+             data-flwr-marquee-respect-prm="false">
+          <div class="flwr_marquee_track">
+            <div class="flwr_marquee_item n58-fx-item">
+              <span class="n58-fx-label is-green">Empresas</span>
+              <span class="n58-fx-value">Pago Móvil</span>
+            </div>
+            <img src="assets/images/marquee/star-green.svg" alt="" aria-hidden="true" class="n58-fx-sep">
+            <div class="flwr_marquee_item n58-fx-item">
+              <span class="n58-fx-label is-green">Empresas</span>
+              <span class="n58-fx-value">Pago Móvil</span>
+            </div>
+            <img src="assets/images/marquee/face-green.svg" alt="" aria-hidden="true" class="n58-fx-sep">
+            <div class="flwr_marquee_item n58-fx-item">
+              <span class="n58-fx-label is-green">Empresas</span>
+              <span class="n58-fx-value">Pago Móvil</span>
+            </div>
+            <img src="assets/images/marquee/stars-green.svg" alt="" aria-hidden="true" class="n58-fx-sep">
+          </div>
+        </div>
+      </div>
 
       <!-- ════════════════ 02 · CARACTERÍSTICAS [light] ════════════════
            3 feature cards. Arrangement (grid/row/stagger) is variant-driven; the

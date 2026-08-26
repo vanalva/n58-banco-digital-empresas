@@ -32,40 +32,9 @@
 .tpl-producto.is-accent-alternate-2 { --tpl-accent: var(--_palette---alternate-2--500); }
 .tpl-producto.is-accent-alert       { --tpl-accent: var(--_palette---alert--500);       }
 
-/* Optional product-identity marquee between the hero and product details. */
-.n58-product-marquee {
-  overflow: hidden;
-  border-top-width: 1px;
-  border-top-style: solid;
-  border-top-color: color-mix(in oklch, var(--_palette---neutral--100) 18%, transparent);
-  border-bottom-width: 1px;
-  border-bottom-style: solid;
-  border-bottom-color: color-mix(in oklch, var(--_palette---neutral--100) 18%, transparent);
-  background-color: var(--_theme---surface--main);
-  color: var(--_theme---text--strong);
-}
-.n58-product-marquee_track {
-  display: flex;
-  width: max-content;
-  align-items: center;
-  column-gap: 1.25rem;
-  row-gap: 1.25rem;
-  padding-top: 1rem;
-  padding-bottom: 1rem;
-  animation-name: n58-product-marquee;
-  animation-duration: 28s;
-  animation-timing-function: linear;
-  animation-iteration-count: infinite;
-}
-.n58-product-marquee_item {
-  font-size: clamp(1.25rem, 2.4vw, 2.25rem);
-  font-weight: 800;
-  letter-spacing: -0.02em;
-  white-space: nowrap;
-}
-.n58-product-marquee_star { color: var(--tpl-accent); font-size: 1.5rem; }
-@keyframes n58-product-marquee { to { transform: translateX(-50%); } }
-@media (prefers-reduced-motion: reduce) { .n58-product-marquee_track { animation-name: none; } }
+/* The product-identity marquee is no longer bespoke: product pages now reuse
+   the homepage FX ticker component (.n58-fx-bar + flwr marquee engine) in its
+   green variant — see the FX TICKER block in project.css. */
 
 /* Eligibility and related-information bridge after requirements. */
 .tpl-resources-section {
@@ -815,8 +784,8 @@
   .tpl-hero_stats { column-gap: 1.8rem; }
   .tpl-reqs_stat { width: 4.6rem; height: 4.6rem; right: 0; bottom: -0.6rem; }
   .tpl-reqs_stat-num { font-size: 1.6rem; }
-  /* Shorter hero image on mobile so the stacked hero doesn't overrun the viewport. */
-  .tpl-hero_media .home-media_img { aspect-ratio: 16 / 10; }
+  /* Hero media shape comes from the ratio-clamp frame in project.css
+     (4:3 -> ~16:15 -> 4:5, capped at 72svh), not a per-page override. */
 }
 
 @media (max-width: 478px) {

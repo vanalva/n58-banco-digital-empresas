@@ -1392,10 +1392,6 @@ body {
   [data-flwr] .n58-hero.is-home.f-min-h-svh {
     min-height: 0;
   }
-  /* Portrait framed photo (≥4:5) so it reads well in the stacked mobile hero. */
-  .n58-hero .home-media_img {
-    aspect-ratio: 4 / 5;
-  }
 }
 
 /* ─────────────────────────────────────────────────────────────────────────
@@ -1449,6 +1445,124 @@ body {
   aspect-ratio: 4 / 3;
   object-fit: cover;
 }
+
+/* ════════════════════════════════════════════════════════════════════════════
+   RATIO CLAMP — responsive media frames
+   ─────────────────────────────────────────────────────────────────────────────
+   A media slot rarely wants ONE aspect ratio. Beside a column of copy it wants
+   to be landscape; stacked full-width on a phone it wants to be portrait. The
+   usual fix — a different `aspect-ratio` hand-written per component per
+   breakpoint — is how one site ends up with a 4:5 hero on the home page and a
+   16:10 hero on the product pages.
+
+   So: a frame declares TWO shapes, the widest screen and the narrowest, and the
+   system fills in everything between.
+
+     --_frame---wide     ratio at desktop
+     --_frame---narrow   ratio at mobile
+     --_frame---mid      TABLET, derived automatically as the average of the two
+     --_frame---cap      hard height ceiling, so a portrait frame can never push
+                         the rest of the page below the fold
+     --_frame---focus    object-position — a portrait crop of a landscape photo
+                         eats the SIDES, so this is mostly a horizontal decision
+
+   Ratios are stored as unitless numbers (1.3333, not 4 / 3): a number can be
+   interpolated, a ratio literal cannot. That is what makes `is-fluid` possible.
+
+   Webflow note: aspect-ratio is rejected by styleLess, so this block belongs to
+   the CSS-embed layer — the same place flwr keeps its own f-ratio-* utilities
+   (see .flwr/styles/runtime.css).
+
+   NOW IN FLWR CORE (styles/runtime.css, catalog synced 2026-08-26). This copy
+   stays until N58 runs /flwr-diff -> /flwr-bump; at that point delete everything
+   down to the N58 hero wiring at the end of this block — the framework will
+   provide it. The hero wiring itself stays here (it is project styling).
+   ════════════════════════════════════════════════════════════════════════════ */
+[data-flwr] {
+  /* The ratio scale, widest → tallest. */
+  --_ratio---ultra:    2.4;      /* 12:5  cinematic band */
+  --_ratio---wide:     1.7778;   /* 16:9  video          */
+  --_ratio---photo:    1.5;      /* 3:2   35mm           */
+  --_ratio---classic:  1.3333;   /* 4:3   classic        */
+  --_ratio---square:   1;        /* 1:1                  */
+  --_ratio---portrait: 0.8;      /* 4:5   editorial      */
+  --_ratio---tall:     0.6667;   /* 2:3   poster         */
+
+  /* Viewport progress, 0 at the phone anchor (375px) → 1 at the desktop anchor
+     (1440px), in px on purpose: the stepped mode keys off px breakpoints, and rem
+       anchors drift with the root font-size (a styleguide running an 18px root
+       reached only t=0.84 at 1440px). CSS cannot divide a length by a length, so through
+     tan(atan2(<length>, 1px)), the standard length → number cast. Only is-fluid
+     reads this; the stepped default needs no math. */
+  --_ratio---t: clamp(0, calc(tan(atan2(100vw - 375px, 1px)) / 1065), 1);
+}
+
+[data-flwr] .f-frame {
+  --_frame---wide:   var(--_ratio---classic);
+  --_frame---narrow: var(--_ratio---portrait);
+  --_frame---mid:    calc((var(--_frame---wide) + var(--_frame---narrow)) / 2);
+  --_frame---cap:    78svh;
+  --_frame---focus:  50% 50%;
+  box-sizing: border-box;
+  position: relative;
+  width: 100%;
+  aspect-ratio: var(--_frame---wide);
+  /* aspect-ratio + max-height IS the clamp: the box keeps its shape until that
+     shape would get too tall, then it stops growing and the image crops. */
+  max-height: var(--_frame---cap);
+  overflow-x: hidden;
+  overflow-y: hidden;
+}
+/* Custom properties inherit, so the image reads the frame's focal point without
+   a relational selector — the class alone is enough. */
+[data-flwr] .f-frame-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: var(--_frame---focus);
+}
+
+/* ── Behaviours: each one is just a pair of endpoints ────────────────────── */
+[data-flwr] .f-frame.is-hero      { --_frame---wide: var(--_ratio---classic);  --_frame---narrow: var(--_ratio---portrait); --_frame---cap: 72svh; }
+[data-flwr] .f-frame.is-editorial { --_frame---wide: var(--_ratio---photo);    --_frame---narrow: var(--_ratio---classic);  }
+[data-flwr] .f-frame.is-tile      { --_frame---wide: var(--_ratio---square);   --_frame---narrow: var(--_ratio---square);   }
+[data-flwr] .f-frame.is-band      { --_frame---wide: var(--_ratio---ultra);    --_frame---narrow: var(--_ratio---wide);     --_frame---cap: 64svh; }
+[data-flwr] .f-frame.is-portrait  { --_frame---wide: var(--_ratio---portrait); --_frame---narrow: var(--_ratio---portrait); --_frame---cap: 88svh; }
+/* Anything else sets the two endpoints on its own class, e.g.
+   .my-media { --_frame---wide: var(--_ratio---wide); --_frame---narrow: 1; } */
+
+/* ── Focal point. Portrait crops eat the sides — say which side to keep. ──── */
+[data-flwr] .f-frame.is-focus-left   { --_frame---focus: 0% 50%; }
+[data-flwr] .f-frame.is-focus-right  { --_frame---focus: 100% 50%; }
+[data-flwr] .f-frame.is-focus-top    { --_frame---focus: 50% 0%; }
+[data-flwr] .f-frame.is-focus-bottom { --_frame---focus: 50% 100%; }
+[data-flwr] .f-frame.is-focus-face   { --_frame---focus: 50% 28%; }
+
+/* ── The two steps. Tablet is the average — declared once, never per component. */
+@media (max-width: 991px) {
+  [data-flwr] .f-frame { aspect-ratio: var(--_frame---mid); }
+}
+@media (max-width: 767px) {
+  [data-flwr] .f-frame { aspect-ratio: var(--_frame---narrow); }
+}
+
+/* ── is-fluid: no steps at all. The ratio itself is interpolated across the
+   viewport range, so the frame morphs landscape → square → portrait smoothly
+   instead of snapping at 991/767. Higher specificity than the breakpoint rules
+   above, so it wins wherever it is applied. Needs tan()/atan2() (Chrome 111+,
+   Safari 15.4+, Firefox 108+) — a lower bar than the oklch() relative colours
+   this site already runs on. ─────────────────────────────────────── */
+[data-flwr] .f-frame.is-fluid {
+  aspect-ratio: calc(var(--_frame---narrow) + (var(--_frame---wide) - var(--_frame---narrow)) * var(--_ratio---t));
+}
+
+/* N58 heroes carry `f-frame is-hero` + `f-frame-img` in the markup, so the shape
+   comes from the classes above — no per-page override. That is what replaced the
+   two rules that had drifted apart (home went 4:5 on mobile, product pages went
+   16:10). One shape everywhere: 4:3 desktop → ~16:15 tablet → 4:5 mobile, capped
+   at 72svh. Change a single hero by adding another behaviour or by setting
+   --_frame---wide / --_frame---narrow on its own class. */
 /* ─────────────────────────────────────────────────────────────────────────
    § PRIVACIDAD — reeded-glass media band. A photo behind a full-frame Vidrio
    Acanalado sheet (n58-hero-glass.js, data-mode="panel"), copy overlaid on a
@@ -2738,6 +2852,27 @@ body {
   align-self: center;
 }
 
+/* GREEN (core) VARIANT — the product pages run this exact ticker under their
+   hero: same pill, same flwr engine, same mobile CSS-marquee swap. Only the
+   accents change (lime instead of the home magenta) so the product bar reads as
+   the same component in a different key. Combo classes, so they compose. */
+.n58-fx-bar.is-green {
+  border-top-color: color-mix(in oklab, var(--_palette---core--500) 28%, var(--_palette---neutral--800));
+  border-right-color: color-mix(in oklab, var(--_palette---core--500) 28%, var(--_palette---neutral--800));
+  border-bottom-color: color-mix(in oklab, var(--_palette---core--500) 28%, var(--_palette---neutral--800));
+  border-left-color: color-mix(in oklab, var(--_palette---core--500) 28%, var(--_palette---neutral--800));
+}
+.n58-fx-label.is-green {
+  color: var(--_palette---core--500);
+}
+/* In-flow placement (the home bar is pinned inside the hero instead). The
+   sections above/below carry their own section padding, so this only adds the
+   breathing room the pill needs to read as a floating object. */
+.n58-fx-bar.is-band {
+  margin-top: var(--_spacing---step--6);
+  margin-bottom: var(--_spacing---step--6);
+}
+
 /* Anti-fraud dialog (first-visit). Native <dialog>; cookie-gated by embed JS. */
 .antifraud-dialog {
   box-sizing: border-box;
@@ -4002,11 +4137,14 @@ body {
 /* ═══════════════════════════════════════════════════════════════════════════
    § ALAN ARCADE — "El desafío de AlaN" (canvas mini-game, Easter egg)
    ───────────────────────────────────────────────────────────────────────────
-   All gameplay + art is drawn inside the <canvas> by ../assets/alan-arcade.js;
-   these rules are only the responsive wrapper, the start overlay and the
-   coarse-pointer touch buttons. Single-class selectors + longhand only
-   (Webflow/Flowriter styleLess rules). The canvas keeps the N58 monogram's
-   native aspect ratio (1116.97 / 582.9) so terrain + physics never distort.
+   Gameplay + art are drawn inside the <canvas> by ../assets/alan-arcade.js.
+   These rules are only: the responsive wrapper, the screen panel (the site's
+   dark modal chrome + flwr buttons; the script fills the copy), the touch
+   controls (the site's own green arrow icons in transparent tap targets, like
+   .n58-gallery-arrow) and the mobile fullscreen layer. Single-class selectors
+   + longhand only (Webflow/Flowriter styleLess rules). The inline canvas keeps
+   the N58 monogram's aspect ratio (1116.97 / 582.9); the script's camera
+   handles any other size (fullscreen phones).
    ───────────────────────────────────────────────────────────────────────── */
 .n58-arcade-head {
   display: flex;
@@ -4017,6 +4155,7 @@ body {
 }
 .alan-arcade {
   position: relative;
+  isolation: isolate;
   width: 100%;
   aspect-ratio: 1116.97 / 582.9;
   overflow-x: hidden;
@@ -4038,22 +4177,24 @@ body {
   border-top-right-radius: var(--_component---card--radius);
   border-bottom-right-radius: var(--_component---card--radius);
   border-bottom-left-radius: var(--_component---card--radius);
-  touch-action: manipulation;
+  touch-action: none;
 }
 .alan-arcade_canvas {
   display: block;
   width: 100%;
   height: 100%;
-  object-fit: contain;
-  cursor: pointer;
   touch-action: none;
+  outline-width: 0;
+  outline-style: none;
 }
+/* Screen overlay: scrim + the game panel (start / pause / results). */
 .alan-arcade_overlay {
   position: absolute;
   top: 0;
   right: 0;
   bottom: 0;
   left: 0;
+  z-index: 3;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -4061,46 +4202,62 @@ body {
   padding-right: var(--_spacing---step--3);
   padding-bottom: var(--_spacing---step--3);
   padding-left: var(--_spacing---step--3);
-  border-top-style: none;
-  border-right-style: none;
-  border-bottom-style: none;
-  border-left-style: none;
-  background-color: rgba(12, 14, 15, 0.62);
-  color: var(--_palette---neutral--0);
+  background-color: var(--_palette---scrim--strong);
   cursor: pointer;
-  appearance: none;
-  -webkit-appearance: none;
-  transition-property: background-color;
-  transition-duration: 220ms;
-  transition-timing-function: ease;
-}
-.alan-arcade_overlay:hover {
-  background-color: rgba(12, 14, 15, 0.5);
 }
 .alan-arcade_overlay.is-hidden {
   display: none;
 }
-.alan-arcade_overlay-card {
+/* The panel reuses the site's dark modal chrome (.antifraud-dialog: width,
+   padding, radius, surface) — only layout is added here. */
+[data-flwr] .alan-arcade_panel {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
   row-gap: var(--_spacing---step--2);
+  max-height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  text-align: left;
+  cursor: default;
+}
+.alan-arcade_actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  column-gap: var(--_spacing---step--3);
+  row-gap: var(--_spacing---step--2);
+  margin-top: var(--_spacing---step--2);
+}
+.alan-arcade_hint {
+  margin-top: var(--_spacing---step--1);
+}
+[data-flwr] .alan-arcade_slot.is-hidden {
+  display: none;
+}
+/* Compact panel (inline preview on phones): actions + hint only. */
+[data-flwr] .alan-arcade_panel.is-compact {
+  width: auto;
+  align-items: center;
+  row-gap: var(--_spacing---step--1);
+  padding-top: var(--_spacing---step--3);
+  padding-right: var(--_spacing---step--4);
+  padding-bottom: var(--_spacing---step--3);
+  padding-left: var(--_spacing---step--4);
   text-align: center;
 }
-/* Start button uses the real flwr_button_primary component (class in the HTML)
-   so it matches the site's design system exactly — no bespoke pill here. */
-.alan-arcade_hint {
-  font-size: var(--_typography---size--small);
-  color: var(--_palette---neutral--200);
-}
+/* Touch controls — coarse pointers only (.is-touch set by the script). Bare
+   green arrows (the gallery-arrow recipe) in 4rem tap targets: move cluster
+   left, jump right. */
 .alan-arcade_touch {
   position: absolute;
   right: 0;
   bottom: 0;
   left: 0;
+  z-index: 2;
   display: none;
   align-items: flex-end;
-  column-gap: var(--_spacing---step--2);
+  justify-content: space-between;
   padding-top: var(--_spacing---step--3);
   padding-right: var(--_spacing---step--4);
   padding-bottom: var(--_spacing---step--4);
@@ -4110,52 +4267,40 @@ body {
 .alan-arcade_touch.is-touch {
   display: flex;
 }
-.alan-arcade_touch-btn {
+.alan-arcade_touch-group {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 62px;
-  height: 62px;
-  border-top-style: none;
-  border-right-style: none;
-  border-bottom-style: none;
-  border-left-style: none;
-  border-top-left-radius: 50%;
-  border-top-right-radius: 50%;
-  border-bottom-right-radius: 50%;
-  border-bottom-left-radius: 50%;
-  background-color: rgba(255, 239, 233, 0.16);
-  color: var(--_palette---neutral--0);
-  font-size: 24px;
-  line-height: 1;
+  column-gap: var(--_spacing---step--3);
+}
+[data-flwr] .alan-arcade_touch-btn {
+  width: 4rem;
+  height: 4rem;
   pointer-events: auto;
   touch-action: none;
   user-select: none;
   -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
 }
-.alan-arcade_touch-btn:active {
-  background-color: rgba(160, 221, 82, 0.4);
+.alan-arcade_touch-btn img {
+  height: 2rem;
 }
-.alan-arcade_touch-btn--jump {
-  margin-left: auto;
-  width: 74px;
-  height: 74px;
-  background-color: rgba(160, 221, 82, 0.24);
+[data-flwr] .alan-arcade_touch-btn.is-jump {
+  width: 4.75rem;
+  height: 4.75rem;
 }
-
-/* Mobile fullscreen (landscape). On tap-to-play the whole arcade becomes a
-   fixed overlay filling the screen; on a portrait phone .is-rotated turns it
-   90° so the game always plays landscape (pure CSS — works on iOS, no
-   permissions). The close button returns to the page. */
+/* Mobile fullscreen layer: tap-to-play turns the arcade into a fixed layer
+   filling the screen (the camera zooms + follows AlaN). The close X is the
+   site's shared modal close (.n58-modal-close), shown only in this mode. */
 .alan-arcade.is-fullscreen {
   position: fixed;
   top: 0;
-  right: auto;
-  bottom: auto;
+  right: 0;
+  bottom: 0;
   left: 0;
   z-index: 2147483000;
-  width: 100vw;
-  height: 100dvh;
+  width: auto;
+  height: auto;
+  aspect-ratio: auto;
   border-top-width: 0;
   border-right-width: 0;
   border-bottom-width: 0;
@@ -4164,62 +4309,33 @@ body {
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
   border-bottom-left-radius: 0;
-  background-color: var(--_palette---neutral--1000);
 }
-.alan-arcade.is-fullscreen.is-rotated {
-  left: 100vw;
-  width: 100dvh;
-  height: 100vw;
-  transform: rotate(90deg);
-  transform-origin: 0 0;
-}
-.alan-arcade_close {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  z-index: 4;
+[data-flwr] .alan-arcade_close {
   display: none;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  border-top-style: none;
-  border-right-style: none;
-  border-bottom-style: none;
-  border-left-style: none;
-  border-top-left-radius: 50%;
-  border-top-right-radius: 50%;
-  border-bottom-right-radius: 50%;
-  border-bottom-left-radius: 50%;
-  background-color: rgba(255, 239, 233, 0.16);
-  color: var(--_palette---neutral--0);
-  font-size: 20px;
-  line-height: 1;
-  cursor: pointer;
-  pointer-events: auto;
-  -webkit-tap-highlight-color: transparent;
+  top: var(--_spacing---step--3);
+  right: var(--_spacing---step--3);
+  z-index: 4;
 }
-.alan-arcade_close.is-visible {
-  display: flex;
+[data-flwr] .alan-arcade_close.is-visible {
+  display: inline-flex;
 }
 
 @media (max-width: 767px) {
-  .alan-arcade {
-    border-top-left-radius: var(--_component---card--radius);
-    border-top-right-radius: var(--_component---card--radius);
-    border-bottom-right-radius: var(--_component---card--radius);
-    border-bottom-left-radius: var(--_component---card--radius);
+  [data-flwr] .alan-arcade_panel {
+    padding-top: var(--_spacing---step--4);
+    padding-right: var(--_spacing---step--4);
+    padding-bottom: var(--_spacing---step--4);
+    padding-left: var(--_spacing---step--4);
   }
 }
 @media (max-width: 478px) {
-  .alan-arcade_touch-btn {
-    width: 54px;
-    height: 54px;
-    font-size: 21px;
+  [data-flwr] .alan-arcade_touch-btn {
+    width: 3.5rem;
+    height: 3.5rem;
   }
-  .alan-arcade_touch-btn--jump {
-    width: 64px;
-    height: 64px;
+  [data-flwr] .alan-arcade_touch-btn.is-jump {
+    width: 4.25rem;
+    height: 4.25rem;
   }
 }
 

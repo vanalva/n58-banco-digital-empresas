@@ -16,7 +16,7 @@
   <link rel="stylesheet" href="css/fonts.css?v=d00f1644">
   <link rel="stylesheet" href="css/framework.css?v=1a765f0c">
   <link rel="stylesheet" href="css/variables.css?v=402f79dd">
-  <link rel="stylesheet" href="css/project.css?v=1f5dbe83">
+  <link rel="stylesheet" href="css/project.css?v=9026990e">
   <!-- Swiper.js — required by the flwr swiper gallery (data-flwr="swiper") -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.css">
   <!-- Three.js for the self-hosted reeded-glass hero overlay (n58-hero-glass.js).
@@ -359,8 +359,8 @@
           </div>
           <!-- Mobile-only framed photo (hidden ≥992px, where the coins take over). -->
           <div class="home-split_media n58-hero_media">
-            <div class="home-media">
-              <img src="assets/images/photos/n58-hero-image.webp" alt="Pareja revisando sus cuentas N58 desde una tableta en casa" class="home-media_img" loading="lazy">
+            <div class="home-media f-frame is-hero">
+              <img src="assets/images/photos/n58-hero-image.webp" alt="Pareja revisando sus cuentas N58 desde una tableta en casa" class="home-media_img f-frame-img" loading="lazy">
             </div>
           </div>
         </div>
@@ -856,37 +856,49 @@
     </section>
 
     <!-- ════════════════ 07.5 · EASTER EGG — "El desafío de AlaN" [dark] · canvas mini-game ════════════════
-         Original momentum platformer. The N58 monogram SVG is the solid terrain
-         (Path2D → bitmask); AlaN, the robot mascot, is drawn procedurally. Run
-         momentum + chainable wall-jumps; collect the N58 coins before the timer
-         drains, then reach the unlocked exit. Keyboard + touch. All logic lives
-         in assets/alan-arcade.js (deferred, self-inits after DOM ready). The
-         game gates its own input behind the start overlay and only preventDefaults
-         arrow/space while actively playing, so page scroll is never affected. -->
+         Original momentum platformer. Every level is an N58 brand shape (monogram,
+         isologo, icon-pack icons) rasterised into terrain (Path2D → bitmask); AlaN,
+         the robot mascot, is drawn procedurally. Run momentum + chainable wall-jumps;
+         collect the N58 coins before the energy drains, then step through the gate.
+         All logic lives in assets/alan-arcade.js (deferred, self-inits after DOM
+         ready). The screens (start / pause / results) are the HTML panel below — the
+         site's own flwr buttons + dark modal chrome — whose copy the script fills in;
+         the canvas only draws gameplay. Keyboard is captured only while a session is
+         live, so page scroll is never affected outside play. -->
     <section class="f-section-lg f-mode-dark n58-arcade-section" aria-label="El desafío de AlaN">
       <div class="n58-container n58-arcade-head">
         <p class="f-text-small f-text-color-accent">Easter egg</p>
         <h2 class="f-text-h1 f-text-color-strong">El desafío de AlaN</h2>
-        <p class="f-text-body f-text-color-muted f-max-w-40ch">Recoge las monedas antes de que se acabe el tiempo. AlaN salta paredes — tú pones el ritmo.</p>
+        <p class="f-text-body f-text-color-muted f-max-w-40ch">Recoge las monedas antes de que se acabe la energía y sal por la puerta. AlaN corre, salta y trepa paredes — tú pones el ritmo.</p>
       </div>
       <div class="n58-container">
         <div class="alan-arcade" data-alan-arcade>
-          <canvas class="alan-arcade_canvas" width="1117" height="583" aria-label="Mini-juego: El desafío de AlaN — recoge las monedas y llega a la salida"></canvas>
-          <div class="alan-arcade_overlay" data-alan-start>
-            <div class="alan-arcade_overlay-card">
-              <button type="button" class="flwr_button_primary" data-alan-start-btn aria-label="Pulsa para jugar El desafío de AlaN">
-                <span aria-hidden="true">▶</span>
-                <span data-flwr-target="label">Jugar</span>
-              </button>
-              <span class="alan-arcade_hint">← → mover · Espacio saltar · R reiniciar</span>
+          <canvas class="alan-arcade_canvas" width="1117" height="583" aria-label="Mini-juego: El desafío de AlaN — recoge las monedas y sal por la puerta"></canvas>
+          <div class="alan-arcade_overlay" data-alan-overlay>
+            <div class="alan-arcade_panel antifraud-dialog" role="dialog" aria-labelledby="alan-arcade-title" aria-describedby="alan-arcade-text">
+              <p class="alan-arcade_slot f-text-small f-text-color-accent" data-alan-kicker>Easter egg</p>
+              <h3 class="alan-arcade_slot f-text-h3 f-text-color-strong" id="alan-arcade-title" data-alan-title>El desafío de AlaN</h3>
+              <p class="alan-arcade_slot f-text-body f-text-color-muted" id="alan-arcade-text" data-alan-text></p>
+              <div class="alan-arcade_actions">
+                <button type="button" class="flwr_button_primary" data-alan-action="primary"><span data-flwr-target="label">Jugar</span></button>
+                <button type="button" class="alan-arcade_slot flwr_button_secondary is-hidden" data-alan-action="secondary"><span data-flwr-target="label">Empezar de nuevo</span></button>
+              </div>
+              <p class="alan-arcade_slot alan-arcade_hint f-text-small f-text-color-muted" data-alan-hint>← → mover · Espacio saltar · Esc pausa</p>
             </div>
           </div>
           <div class="alan-arcade_touch" aria-hidden="true">
-            <button type="button" class="alan-arcade_touch-btn" data-alan-touch="left" aria-label="Mover a la izquierda">◀</button>
-            <button type="button" class="alan-arcade_touch-btn" data-alan-touch="right" aria-label="Mover a la derecha">▶</button>
-            <button type="button" class="alan-arcade_touch-btn alan-arcade_touch-btn--jump" data-alan-touch="jump" aria-label="Saltar">▲</button>
+            <div class="alan-arcade_touch-group">
+              <button type="button" class="n58-gallery-arrow alan-arcade_touch-btn" data-alan-touch="left" tabindex="-1"><img src="assets/images/icons/left-arrow-green.svg" alt=""></button>
+              <button type="button" class="n58-gallery-arrow alan-arcade_touch-btn" data-alan-touch="right" tabindex="-1"><img src="assets/images/icons/right-arrow-green.svg" alt=""></button>
+            </div>
+            <button type="button" class="n58-gallery-arrow alan-arcade_touch-btn is-jump" data-alan-touch="jump" tabindex="-1"><img src="assets/images/icons/up-arrow-green.svg" alt=""></button>
           </div>
-          <button type="button" class="alan-arcade_close" data-alan-close aria-label="Cerrar juego">✕</button>
+          <button type="button" class="n58-modal-close alan-arcade_close" data-alan-close aria-label="Cerrar juego">
+            <span class="n58-close-x">
+              <img src="assets/images/icons/menu-bar-cream.svg" alt="" class="n58-close-x_bar n58-close-x_bar--1">
+              <img src="assets/images/icons/menu-bar-cream.svg" alt="" class="n58-close-x_bar n58-close-x_bar--2">
+            </span>
+          </button>
         </div>
       </div>
     </section>
@@ -1283,24 +1295,33 @@
         /* ramped ease-in-out so it accelerates then settles, not a flat linear crawl */
         bar.style.setProperty('transition', 'transform ' + FILL_MS + 'ms cubic-bezier(0.65, 0, 0.35, 1)', 'important');
         bar.style.transform = 'scaleX(1)';
-        timer = setTimeout(function () { step(i); }, FILL_MS);
+        timer = setTimeout(function () { whenVisible(function () { step(i); }); }, FILL_MS);
       }
       function step(i) {
         if (cancelled) return;
         openItem(items[i]);
         var bar = barOf(i);
         if (bar) { bar.style.setProperty('transition', 'opacity 300ms', 'important'); bar.style.opacity = '0'; }
-        timer = setTimeout(function () { resetBar(bar); fill((i + 1) % items.length); }, HOLD_MS);
+        timer = setTimeout(function () { resetBar(bar); whenVisible(function () { fill((i + 1) % items.length); }); }, HOLD_MS);
       }
 
+      /* Hold the loop while the FAQ is out of view. Left running, every item
+         swap re-flowed the document (~27px) under whatever the visitor was doing
+         further down the page — e.g. the AlaN mini-game read as "the page
+         scrolls". Resumes exactly where it stopped when the FAQ is back. */
+      var visible = false, pending = null;
+      function whenVisible(fn) { if (visible) fn(); else pending = fn; }
       if ('IntersectionObserver' in window) {
         var io = new IntersectionObserver(function (entries) {
           entries.forEach(function (e) {
-            if (e.isIntersecting && !started) { started = true; io.disconnect(); fill(0); }
+            visible = e.isIntersecting;
+            if (!visible) return;
+            if (!started) { started = true; fill(0); }
+            else if (pending) { var p = pending; pending = null; p(); }
           });
         }, { threshold: 0.35 });
         io.observe(list);
-      } else { fill(0); }
+      } else { visible = true; fill(0); }
     })();
   </script>
 
