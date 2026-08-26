@@ -575,14 +575,23 @@
   margin-left: 0;
   font-size: clamp(1.4rem, 2vw, 1.95rem);
   line-height: 1.2;
-  /* contain the highlight block so it doesn't span the whole card width */
-  max-width: 18rem;
+  /* Contain the highlight so it doesn't span the whole card width. min(...,100%)
+     matters: a bare 18rem let a long title's inline-block grow WIDER than this
+     box and overflow to the right, which read as off-center content (the
+     description below it stayed centered, so the card looked skewed). */
+  max-width: min(26rem, 100%);
 }
 /* Accent highlight behind the title (like the live "Seguridad" mark). */
 /* ONE cohesive block behind the whole title (text wraps inside it) — no per-line
    clone, so multi-line titles read as a single clean sticker, not stepped bars. */
 .tpl-benef_hl {
   display: inline-block;
+  /* border-box so the sticker's own padding counts inside max-width — with
+     content-box it still spilled ~20px past the title box on the longest title. */
+  box-sizing: border-box;
+  /* Wrap inside the title box instead of overflowing it — text-align: center
+     cannot center a box that is wider than its containing block. */
+  max-width: 100%;
   padding-top: 0.3em;
   padding-right: 0.5em;
   padding-bottom: 0.3em;

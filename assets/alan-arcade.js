@@ -68,41 +68,41 @@
   var BOX16 = 'M16.14,16.14H.14V.14h12.895l3.105,3.105v12.895Z';
   var LEVELS = [
     { id: 'n58', name: 'El monograma', mode: 'ink', vb: [1116.97, 582.9], d: MONOGRAM_D, t: 70 },
-    { id: 'potencia', name: 'La potencia', mode: 'ink', vb: [1000, 1000],
+    { id: 'potencia', power: 'dj', name: 'La potencia', mode: 'ink', vb: [1000, 1000],
       d: 'M883.824,700h-201.752l-135.994-226.944h-92.156l-135.994,226.944H116.176l239.704-400h288.246l239.698,400Z' },
-    { id: 'casita', name: 'La casita', mode: 'arena', vb: [7.017, 6.772],
+    { id: 'casita', power: 'magnet', name: 'La casita', mode: 'arena', vb: [7.017, 6.772],
       d: poly('5.847 0 1.171 0 0 2.248 2.291 2.248 4.727 2.248 7.017 2.248 5.847 0') + poly('7.017 3.425 0 3.425 0 6.772 1.993 6.772 1.993 5.099 5.024 5.099 5.024 6.772 7.017 6.772 7.017 3.425') },
-    { id: 'isologo', name: 'El isologo', mode: 'ink', vb: [1000, 1000], rule: 'evenodd',
+    { id: 'isologo', power: 'dj', name: 'El isologo', mode: 'ink', vb: [1000, 1000], rule: 'evenodd',
       d: 'M900,900H100V100h644.741c60.633,60.633,94.627,94.627,155.259,155.26v644.741Z' +
          'M775,643.295h-144.55l-97.436-162.6h-66.027l-97.436,162.6h-144.55l171.742-286.59h206.521l171.738,286.59Z' },
-    { id: 'nube', name: 'La nube', mode: 'arena', vb: [10.701, 6.056],
+    { id: 'nube', power: 'dj', name: 'La nube', mode: 'arena', vb: [10.701, 6.056],
       d: 'M9.953,3.209C10.045,1.622,9.068-.03,7.018.001c-1.458-.047-2.502,1.065-3.075,2.298C1.905.058-1.298,3.136.557,5.353c.615.735,2.084.703,2.084.703,0,0,6.209,0,6.528,0,.846,0,1.533-.686,1.533-1.533,0-.559-.3-1.047-.748-1.315ZM5.607,3.9l-.031,1.009h-.45s-.03-1.009-.03-1.009h-.733s.853-1.03.853-1.03h.272s.853,1.031.853,1.031h-.733Z' },
-    { id: 'documento', name: 'El documento', mode: 'ink', vb: [6.785, 8.481], rule: 'evenodd', t: 70,
+    { id: 'documento', power: 'dj', name: 'El documento', mode: 'ink', vb: [6.785, 8.481], rule: 'evenodd', t: 70,
       d: 'M0,0v8.481h6.785V0H0ZM.997,1.458h4.79v.766H.997v-.766ZM.997,2.838h4.79v.766H.997v-.766ZM4.424,4.984H.997v-.765h3.426v.765ZM6.306,7.86h-1.24v-.765h1.24v.765Z' },
-    { id: 'carita', name: 'La carita', mode: 'arena', vb: [11.671, 6.103],
+    { id: 'carita', power: 'magnet', name: 'La carita', mode: 'arena', vb: [11.671, 6.103],
       d: 'M9.724,4.634c-2.222,1.959-5.555,1.959-7.777,0,.267-.303.534-.606.801-.909,1.765,1.556,4.411,1.556,6.175,0,.267.303.534.606.801.909Z' + poly('9.924 0 7.824 0 6.077 2.915 7.547 2.915 8.538 1.261 9.21 1.261 10.201 2.915 11.671 2.915 9.924 0') + poly('3.847 0 1.747 0 0 2.915 1.47 2.915 2.461 1.261 3.133 1.261 4.124 2.915 5.594 2.915 3.847 0') },
-    { id: 'moneda', name: 'La moneda', mode: 'ink', vb: [10.035, 9.544], d: ICON.coin.d },
-    { id: 'campana', name: 'La campana', mode: 'arena', rest: 'floor', vb: [7.271, 7.57],
+    { id: 'moneda', power: 'dj', name: 'La moneda', mode: 'ink', vb: [10.035, 9.544], d: ICON.coin.d },
+    { id: 'campana', power: 'turbo', t: 45, name: 'La campana', mode: 'arena', rest: 'floor', vb: [7.271, 7.57],
       d: poly('5.454 1.386 4.645 1.386 4.164 0 3.108 0 2.626 1.386 1.818 1.386 0 6.621 2.778 6.621 3.108 7.57 4.164 7.57 4.493 6.621 7.271 6.621 5.454 1.386') },
-    { id: 'descarga', name: 'La descarga', mode: 'arena', vb: [10.539, 5.063], d: ICON.download.d },
-    { id: 'formulario', name: 'El formulario', mode: 'ink', vb: [16.279, 16.279], rule: 'evenodd', t: 70,
+    { id: 'descarga', power: 'dj', name: 'La descarga', mode: 'arena', vb: [10.539, 5.063], d: ICON.download.d },
+    { id: 'formulario', power: 'magnet', name: 'El formulario', mode: 'ink', vb: [16.279, 16.279], rule: 'evenodd', t: 70,
       d: BOX16 + 'M5.526,6.216h5.226v.836h-5.226Z' + 'M5.526,7.722h5.226v.836h-5.226Z' + 'M5.526,9.228h3.738v.835h-3.738Z' },
-    { id: 'transfer', name: 'La transferencia', mode: 'arena', vb: [7.365, 6.219], d: ICON.transfer.d },
-    { id: 'correo', name: 'El correo', mode: 'arena', vb: [9.089, 5.186],
+    { id: 'transfer', power: 'dj', name: 'La transferencia', mode: 'arena', vb: [7.365, 6.219], d: ICON.transfer.d },
+    { id: 'correo', power: 'turbo', t: 45, name: 'El correo', mode: 'arena', vb: [9.089, 5.186],
       d: 'M6.177,3.856h-3.265c-.081,0-.158-.037-.208-.1L0,.395v4.791h9.089V.395l-2.703,3.361c-.051.063-.127.1-.208.1Z' + poly('6.049 3.321 8.72 0 .369 0 3.04 3.321 6.049 3.321') },
     { id: 'ojo', name: 'El ojo', mode: 'ink', vb: [9.063, 5.806], rule: 'evenodd', t: 70,
       d: 'M6.264.036h-.012l-.004-.005h-.021v-.031s-3.401.024-3.401.024L0,2.193v1.426l2.799,2.151h.012l.01.013.015.007v.016s3.402-.024,3.402-.024l2.826-2.168v-1.426L6.264.036ZM6.707,2.903c0,1.2-.976,2.176-2.176,2.176s-2.176-.976-2.176-2.176S3.332.727,4.532.727s2.176.976,2.176,2.176Z' +
          'M5.669,2.903a1.137,1.137,0,1,0,-2.274,0a1.137,1.137,0,1,0,2.274,0Z' },
-    { id: 'estrella', name: 'La estrella', mode: 'ink', vb: [1000, 1000],
+    { id: 'estrella', power: 'dj', name: 'La estrella', mode: 'ink', vb: [1000, 1000],
       d: poly('470.74 765.937 382.576 618.818 382.536 618.16 381.937 617.875 381.521 617.361 381.032 617.361 234.028 529.297 234.028 470.91 382.143 382.143 470.873 234.063 529.26 234.063 617.404 381.148 617.427 382.401 618.303 382.401 618.479 382.606 618.968 382.606 765.972 470.705 765.972 529.092 617.857 617.823 529.123 765.937 470.74 765.937') },
-    { id: 'candado', name: 'El candado', mode: 'arena', rest: 'floor', vb: [6.911, 8.405],
+    { id: 'candado', power: 'magnet', name: 'El candado', mode: 'arena', rest: 'floor', vb: [6.911, 8.405],
       d: 'M5.652,3.386h-3.572v-1.288c0-.759.617-1.376,1.376-1.376.74,0,1.341.588,1.37,1.321h.722c-.03-1.128-.957-2.044-2.092-2.044C2.302,0,1.358.944,1.358,2.098v1.288h-.098l-1.259,1.259v2.501c.49.49.769.769,1.259,1.259h4.393c.49-.49.769-.769,1.259-1.259v-2.501l-1.259-1.259ZM3.918,6.062v.043c0,.255-.208.463-.463.463s-.463-.208-.463-.463v-.596c0-.065.014-.127.038-.183.071-.164.235-.28.424-.28s.353.116.424.28c.024.056.038.118.038.183v.553Z' },
     { id: 'bloqueo', name: 'El bloqueo', mode: 'ink', vb: [9.152, 9.152], rule: 'evenodd', d: ICON.block.d },
-    { id: 'papelera', name: 'La papelera', mode: 'arena', vb: [6.075, 7.418], rule: 'evenodd',
+    { id: 'papelera', power: 'magnet', name: 'La papelera', mode: 'arena', vb: [6.075, 7.418], rule: 'evenodd',
       d: 'M1.018,7.418h4.04l.586-5.211H.432l.586,5.211ZM3.763,2.772h.493v4.153h-.493V2.772ZM1.82,2.772h.493v4.153h-.493V2.772Z' + poly('5.392 .449 4.204 .449 3.982 0 2.092 0 1.871 .449 .683 .449 0 1.835 6.075 1.835 5.392 .449') },
-    { id: 'copia', name: 'La copia', mode: 'arena', vb: [5.966, 7.801],
+    { id: 'copia', power: 'magnet', name: 'La copia', mode: 'arena', vb: [5.966, 7.801],
       d: poly('1.344 6.949 1.344 7.801 5.966 7.801 5.966 2.419 5.254 1.706 5.112 1.564 5.112 6.949 1.344 6.949') + poly('3.545 0 0 0 0 6.459 .854 6.459 1.019 6.459 1.183 6.459 4.622 6.459 4.622 1.181 4.622 1.077 4.562 1.017 4.397 .852 3.91 .365 3.545 0') },
-    { id: 'ene', name: 'La ene', mode: 'ink', vb: [1000, 1000],
+    { id: 'ene', t: 50, name: 'La ene', mode: 'ink', vb: [1000, 1000],
       d: poly('626.666 748.047 749.5 748.048 749.498 251.953 667.311 251.952 667.313 628.497 640.592 628.497 373.333 251.952 250.5 251.952 250.5 748.048 332.687 748.048 332.687 371.503 359.407 371.503 626.666 748.047') }
   ];
 
@@ -133,7 +133,7 @@
   var COIN_R = 8;
   var COIN_TIME = 6;                   // seconds per coin
   var START_TIME = 60;
-  var POWER_T = { dj: 780, turbo: 480, magnet: 540 };   // frames
+  var POWER_T = { dj: 1e9, turbo: 1e9, magnet: 1e9 };   // frames — powers last the whole level
   var TURBO_MULT = 1.32, MAGNET_R = 72, MAGNET_PULL = 3.2;
   var HAZARD_COST = 5, HAZARD_IFRAMES = 60, STREAK_WINDOW = 90;
 
@@ -377,15 +377,22 @@
        W — AlaN airborne touching a wall   (quantised 4px × 4px, per side)
      From every node a fixed set of scripted moves is simulated with stepPlayer
      (walk, run-off, tap/full jumps standing/walking/running, wall-jumps away /
-     back / neutral). Every landing yields a G node, every wall contact a W
-     node. Everything the search visits is, by construction, reachable in the
-     shipped game — entities are only ever placed on visited nodes.
-     Cost: ~1–3k nodes × ≤20 moves × ≤96 frames, box queries are O(1).       */
-  var GQX = 4, GQY = 2, WQ = 4;
+     back / neutral; with the double jump, the same plus a second press in the
+     air). Every landing yields a G node, every wall contact a W node, and every
+     position AlaN's centre passes through is marked in an 8px "swept" grid.
+     Everything the search visits is, by construction, reachable in the shipped
+     game — entities are only ever placed on visited nodes / swept cells.
+     The solver runs once WITHOUT powers (base) and, on levels that are about a
+     power, once more WITH it: the difference is what that power unlocks.
+     Cost: ~1–3k nodes × ≤25 moves × ≤96 frames, box queries are O(1).       */
+  var GQX = 4, GQY = 2, WQ = 4, SQ = 8;
   var GW = Math.ceil(VBW / GQX) + 2, GH = Math.ceil(VBH / GQY) + 2, WH = Math.ceil(VBH / WQ) + 2;
-  var gSeen = new Uint8Array(GW * GH), wSeen = new Uint8Array(GW * WH * 2);
+  var SW = Math.ceil(VBW / SQ) + 1, SH = Math.ceil(VBH / SQ) + 1;
+  var gSeen = new Uint8Array(GW * GH), wSeen = new Uint8Array(GW * WH * 2), swept = new Uint8Array(SW * SH);
+  var gSeenBase = new Uint8Array(GW * GH), sweptBase = new Uint8Array(SW * SH);
   var gNodes = [], wNodes = [];          // {x,y,depth,hard}  /  {x,y,side,depth}
   var solveMs = 0;
+  var mods = { dj: false, turbo: false };
   var ghost = newPlayer();
   var ghostIn = { left: false, right: false, jump: false, jumpEdge: false };
   var MOVES_G = [
@@ -397,64 +404,136 @@
     { jump: 4, dir: -1, vx0: -RUN_MAX }, { jump: 4, dir: 1, vx0: RUN_MAX },
     { jump: 40, dir: -1, vx0: RUN_MAX }, { jump: 40, dir: 1, vx0: -RUN_MAX }   // reversal jumps
   ];
+  var MOVES_G_DJ = MOVES_G.concat([                            // + a second press in the air
+    { jump: 40, jump2: 22 }, { jump: 40, dir: -1, jump2: 22 }, { jump: 40, dir: 1, jump2: 22 },
+    { jump: 40, dir: -1, vx0: -RUN_MAX, jump2: 22 }, { jump: 40, dir: 1, vx0: RUN_MAX, jump2: 22 },
+    { jump: 40, dir: -1, vx0: -RUN_MAX, jump2: 12 }, { jump: 40, dir: 1, vx0: RUN_MAX, jump2: 12 },
+    { jump: 4, dir: -1, vx0: -RUN_MAX, jump2: 14 }, { jump: 4, dir: 1, vx0: RUN_MAX, jump2: 14 }
+  ]);
   var MOVES_W = [                                              // side = wall side (-1 left, +1 right)
     { jump: 40, mode: 'away' }, { jump: 4, mode: 'away' },
     { jump: 40, mode: 'back' }, { jump: 4, mode: 'back' },
     { jump: 40, mode: 'none' }, { jump: 40, mode: 'back', from: 10 }
   ];
+  var MOVES_W_DJ = MOVES_W.concat([
+    { jump: 40, mode: 'away', jump2: 18 }, { jump: 40, mode: 'back', jump2: 18 }, { jump: 40, mode: 'none', jump2: 18 }
+  ]);
   function gKey(x, y) { return (Math.round(y / GQY) + 1) * GW + Math.round(x / GQX) + 1; }
   function wKey(x, y, side) { return ((Math.round(y / WQ) + 1) * GW + Math.round(x / GQX) + 1) * 2 + (side > 0 ? 1 : 0); }
+  function sKey(cx, cy) { return ((cy / SQ) | 0) * SW + ((cx / SQ) | 0); }
 
+  /* The input a move script produces on frame f (shared by the solver ghosts
+     and the self-play bot, so a plan replays exactly). side = wall side of
+     the node the move starts from (0 = ground / free air). */
+  function moveInput(mv, f, side, inp) {
+    var dir = mv.dir || 0, jumpFrames = mv.jump || 0, from = mv.from || 0, jump2 = mv.jump2 == null ? -1 : mv.jump2;
+    if (side) dir = mv.mode === 'away' ? -side : (mv.mode === 'back' ? side : 0);
+    var dNow = (side && mv.mode === 'back' && f < Math.max(from, WALL_STICK + 1)) ? -side : dir;
+    inp.left = dNow < 0; inp.right = dNow > 0;
+    inp.jump = f < jumpFrames || (jump2 >= 0 && f >= jump2 && f < jump2 + 30);
+    inp.jumpEdge = (f === 0 && jumpFrames > 0) || f === jump2;
+  }
+  var planTarget = null, planHit = null;   // self-play: hit test + first (node, move, frame) that satisfies it
   function simulate(node, mv, out, hard) {
     var p = ghost;
-    p.x = node.x; p.y = node.y; p.vx = mv.vx0 || 0; p.vy = node.side ? 1.0 : 0;
-    p.onGround = !node.side; p.coyote = node.side ? 0 : COYOTE; p.jumpBuf = 0; p.wallStick = 0; p.jumpHeld = false;
-    p.djTimer = 0; p.airJumps = 0; p.turbo = 0; p.magnet = 0; p.kb = 0; p.squash = 0;
-    var dir = mv.dir || 0, jumpFrames = mv.jump || 0, from = mv.from || 0;
-    if (node.side) {                       // wall moves: direction relative to the wall
-      if (mv.mode === 'away') dir = -node.side;
-      else if (mv.mode === 'back') dir = node.side;
-      else dir = 0;
+    if (node.live) {                       // bot: start from the exact live state
+      var L = node.live;
+      p.x = L.x; p.y = L.y; p.vx = L.vx; p.vy = L.vy; p.onGround = L.onGround; p.wallL = L.wallL; p.wallR = L.wallR;
+      p.coyote = L.coyote; p.jumpBuf = 0; p.wallStick = L.wallStick; p.jumpHeld = L.jumpHeld; p.facing = L.facing;
+      p.djTimer = L.djTimer; p.airJumps = L.airJumps; p.turbo = L.turbo; p.kb = L.kb; p.magnet = 0; p.squash = 0;
+    } else {
+      p.x = node.x; p.y = node.y; p.vx = mv.vx0 || 0; p.vy = node.side ? 1.0 : 0;
+      p.onGround = !node.side; p.coyote = node.side ? 0 : COYOTE; p.jumpBuf = 0; p.wallStick = 0; p.jumpHeld = false;
+      p.djTimer = mods.dj ? 1e9 : 0; p.airJumps = mods.dj ? 1 : 0; p.turbo = mods.turbo ? 1e9 : 0;
+      p.magnet = 0; p.kb = 0; p.squash = 0;
     }
-    var airborne = !!node.side, wallUsed = !!node.side;
+    var dir = mv.dir || 0, jumpFrames = mv.jump || 0;
+    var airborne = !!node.side || (node.live && !node.live.onGround), wallUsed = !!node.side;
     for (var f = 0; f < 96; f++) {
-      var dNow = (node.side && mv.mode === 'back' && f < Math.max(from, WALL_STICK + 1)) ? -node.side : dir;
-      ghostIn.left = dNow < 0; ghostIn.right = dNow > 0;
-      ghostIn.jump = f < jumpFrames; ghostIn.jumpEdge = (f === 0 && jumpFrames > 0);
+      moveInput(mv, f, node.side, ghostIn);
       stepPlayer(p, ghostIn, false);
       if (p.wallJumped) wallUsed = true;
       if (p.y > VBH || p.x < -PW || p.x > VBW) return;
+      var cx = p.x + PW / 2, cy = p.y + PH / 2;
+      if (cx >= 0 && cy >= 0 && cx < VBW && cy < VBH) swept[sKey(cx, cy)] = 1;
+      if (planTarget && planTarget(cx, cy, p)) { planHit = { node: node, mv: mv, f: f + 1 }; return; }
       if (p.onGround) {
         if (airborne || !node.side) {
           var k = gKey(p.x, p.y);
-          if (!gSeen[k]) { gSeen[k] = 1; out.push({ x: p.x, y: p.y, depth: node.depth + 1, hard: hard + (wallUsed ? 1 : 0), side: 0 }); }
+          if (!gSeen[k]) { gSeen[k] = 1; out.push({ x: p.x, y: p.y, depth: node.depth + 1, hard: hard + (wallUsed ? 1 : 0), side: 0, parent: node, mv: mv, f: f + 1 }); }
         }
         if (airborne) return;             // landed → done
-        if (jumpFrames === 0 && dir === 0) return;
+        if (jumpFrames === 0 && dir === 0 && !node.side) return;
       } else {
         airborne = true;
         if (f > 1 && (p.wallL || p.wallR)) {
           var side = p.wallL ? -1 : 1;
           var wk = wKey(p.x, p.y, side);
-          if (!wSeen[wk]) { wSeen[wk] = 1; out.push({ x: p.x, y: p.y, depth: node.depth + 1, hard: hard + 1, side: side }); }
+          if (!wSeen[wk]) { wSeen[wk] = 1; out.push({ x: p.x, y: p.y, depth: node.depth + 1, hard: hard + 1, side: side, parent: node, mv: mv, f: f + 1 }); }
         }
       }
     }
   }
-  function solveReach(sx, sy) {
+  /* Plan from a LIVE player state to whatever satisfies hitFn(cx, cy): BFS
+     over the same moves; the first move starts from the exact live state, so
+     replaying it in the real game lands on the same trajectory. Returns the
+     first move + how many frames to hold it (then re-plan).                 */
+  function plan(live, hitFn) {
+    gSeen.fill(0); wSeen.fill(0); swept.fill(0); planHit = null; planTarget = hitFn;
+    var side = (!live.onGround && live.wallL) ? -1 : ((!live.onGround && live.wallR) ? 1 : 0);
+    var start = { x: live.x, y: live.y, depth: 0, hard: 0, side: side, live: live, parent: null };
+    var queue = [start], head = 0;
+    var mg = mods.dj ? MOVES_G_DJ : MOVES_G, mw = mods.dj ? MOVES_W_DJ : MOVES_W;
+    while (head < queue.length && head < 4000 && !planHit) {
+      var n = queue[head++];
+      var moves = n.side ? mw : mg;
+      for (var i = 0; i < moves.length && !planHit; i++) simulate(n, moves[i], queue, n.hard);
+    }
+    planTarget = null;
+    if (!planHit) return null;
+    var node = planHit.node, mv = planHit.mv, frames = planHit.f;
+    if (node !== start) { while (node.parent !== start) node = node.parent; mv = node.mv; frames = node.f; }
+    return { mv: mv, frames: frames, side: start.side, nodes: head };
+  }
+  function solveReach(sx, sy, m) {
     var t0 = performance.now();
-    gSeen.fill(0); wSeen.fill(0);
+    mods.dj = !!(m && m.dj); mods.turbo = !!(m && m.turbo);
+    gSeen.fill(0); wSeen.fill(0); swept.fill(0);
     gNodes.length = 0; wNodes.length = 0;
     var start = { x: sx, y: sy, depth: 0, hard: 0, side: 0 };
     gSeen[gKey(sx, sy)] = 1;
     var queue = [start], head = 0, budget = 4000;
+    var mg = mods.dj ? MOVES_G_DJ : MOVES_G, mw = mods.dj ? MOVES_W_DJ : MOVES_W;
     while (head < queue.length && head < budget) {
       var n = queue[head++];
       if (n.side) wNodes.push(n); else gNodes.push(n);
-      var moves = n.side ? MOVES_W : MOVES_G;
-      for (var m = 0; m < moves.length; m++) simulate(n, moves[m], queue, n.hard);
+      var moves = n.side ? mw : mg;
+      for (var i = 0; i < moves.length; i++) simulate(n, moves[i], queue, n.hard);
     }
-    solveMs = performance.now() - t0;
+    solveMs += performance.now() - t0;
+  }
+  /* How enclosed a point is: solid in how many of 8 directions at 18px (0–8). */
+  var ENC_DIRS = [[1, 0], [-1, 0], [0, 1], [0, -1], [0.71, 0.71], [-0.71, 0.71], [0.71, -0.71], [-0.71, -0.71]];
+  function enclosure(cx, cy, r) {
+    var n = 0, m = curMode === 'ink' ? 0 : ARENA_FRAME + 2;
+    for (var i = 0; i < 8; i++) {
+      var px = cx + ENC_DIRS[i][0] * r, py = cy + ENC_DIRS[i][1] * r;
+      if (px < m || py < m || px > VBW - m || py > VBH - m) continue;   // the arena frame is not "geometry"
+      if (solidPx(px, py)) n++;
+    }
+    return n;
+  }
+  /* How far (in 8px cells, 4..9) a cell sits from anything the base run swept. */
+  function baseRing(cx, cy) { for (var r = 4; r <= 8; r++) if (nearBase(cx, cy, r)) return r; return 9; }
+  /* Is this 8px cell within `r` cells of anything the BASE run swept? */
+  function nearBase(cx, cy, r) {
+    var c0 = (cx / SQ) | 0, r0 = (cy / SQ) | 0;
+    for (var dy = -r; dy <= r; dy++) for (var dx = -r; dx <= r; dx++) {
+      var c = c0 + dx, rr2 = r0 + dy;
+      if (c < 0 || rr2 < 0 || c >= SW || rr2 >= SH) continue;
+      if (sweptBase[rr2 * SW + c]) return true;
+    }
+    return false;
   }
 
   /* ═══════════════════════ Entities + placement ═══════════════════════════ */
@@ -507,7 +586,7 @@
 
   /* Farthest-point sampling: picks `count` nodes maximally spread from each
      other and from the `avoid` points, honouring a minimum spacing. */
-  function spread(pool, count, minD, avoid, score) {
+  function spread(pool, count, minD, avoid, score, cap) {
     var picked = [];
     while (picked.length < count && pool.length) {
       var best = null, bestD = -1;
@@ -516,7 +595,7 @@
         var c = nodeCenter(n), dmin = 1e9, j;
         for (j = 0; j < avoid.length; j++) { var dd = dist(c.x, c.y, avoid[j].x, avoid[j].y); if (dd < dmin) dmin = dd; }
         for (j = 0; j < picked.length; j++) { var pc = nodeCenter(picked[j]); var d2 = dist(c.x, c.y, pc.x, pc.y); if (d2 < dmin) dmin = d2; }
-        var s = dmin + (score ? score(n) : 0);
+        var s = (cap ? Math.min(dmin, cap) : dmin) + (score ? score(n) : 0);
         if (dmin >= minD && s > bestD) { bestD = s; best = n; }
       }
       if (!best) break;
@@ -525,77 +604,167 @@
     return picked;
   }
 
-  function buildEntities(levelIndex) {
+  /* Power vocabulary — what each pickup is FOR, and how a level uses it:
+       dj     double jump  → 3 coins live where only a second jump reaches
+       magnet coins float in sealed pockets / dead air → the magnet pulls them
+       turbo  speed → the two long-tour levels run a 45 s clock; the turbo
+              sits early on the route (this geometry has no gaps to gate)
+       shield one free hit on hazard levels
+       time   +12 s, rare: only tours over 4000px
+     Assignment is per level in LEVELS (measured with __alanArcade.probe):
+       dj: potencia isologo nube documento moneda descarga transfer estrella
+       magnet: casita carita formulario candado papelera copia
+       turbo: campana correo · none: n58 ojo bloqueo ene
+     A level names its power in LEVELS (power: 'dj'|'turbo'|'magnet'). The
+     solver then proves what that power unlocks on THIS geometry: if it unlocks
+     enough, the power is required — it sits on the normal route and 3 coins
+     (and on finale levels the gate itself) live only where the power reaches.
+     If the geometry gates nothing, the power is still placed as a bonus and
+     the debug hook says so, so the roster can be tuned.                     */
+  var POWER_HINT = { dj: 'Busca el doble salto', turbo: 'Busca el turbo', magnet: 'Busca el imán' };
+  var gating = { theme: null, required: false, gatedGround: 0, gatedSpots: 0, tour: 0 };
+
+  function buildEntities(levelIndex, def) {
+    var lv = def || LEVELS[levelIndex] || LEVELS[0];
     seed(levelIndex + 1);
     findSpawn();
-    solveReach(spawn.x, spawn.y);
+    solveMs = 0;
     var i, n, c;
-    var maxDepth = 0, maxHard = 0;
-    for (i = 0; i < gNodes.length; i++) { if (gNodes[i].depth > maxDepth) maxDepth = gNodes[i].depth; if (gNodes[i].hard > maxHard) maxHard = gNodes[i].hard; }
-    levelHard = maxHard;
-    for (i = 0; i < gNodes.length; i++) gNodes[i].used = false;
-    for (i = 0; i < wNodes.length; i++) wNodes[i].used = false;
     var spawnC = { x: spawn.x + PW / 2, y: spawn.y + PH / 2 };
 
-    // Exit gate: a far, HIGH, hard-to-reach standing spot with headroom for the
-    // gate. Whenever the level has any elevated spot, floor spots are ignored.
-    var ex = null, exScore = -1e9, cands = [], anyHigh = false;
-    for (i = 0; i < gNodes.length; i++) {
-      n = gNodes[i]; c = nodeCenter(n);
-      if (dist(c.x, c.y, spawnC.x, spawnC.y) < 140 || !headroom(n, exit.h - PH + 6)) continue;
-      cands.push(n); if (n.y < VBH - 60) anyHigh = true;
+    // ── Base run (no powers) ──
+    solveReach(spawn.x, spawn.y, null);
+    gSeenBase.set(gSeen); sweptBase.set(swept);
+    var baseG = gNodes.slice(), baseW = wNodes.slice();
+    var maxDepth = 0, maxHard = 0;
+    for (i = 0; i < baseG.length; i++) { if (baseG[i].depth > maxDepth) maxDepth = baseG[i].depth; if (baseG[i].hard > maxHard) maxHard = baseG[i].hard; baseG[i].used = false; }
+    for (i = 0; i < baseW.length; i++) baseW[i].used = false;
+    levelHard = maxHard;
+
+    // ── Powered run: what does this level's power unlock? ──
+    var theme = lv.power || null, gatedG = [], gatedSpots = [];
+    gating.theme = theme; gating.required = false;
+    if (theme === 'dj' || theme === 'turbo') {
+      solveReach(spawn.x, spawn.y, theme === 'dj' ? { dj: true } : { turbo: true });
+      for (i = 0; i < gNodes.length; i++) { n = gNodes[i]; if (!gSeenBase[gKey(n.x, n.y)]) { n.used = false; gatedG.push(n); } }
+      for (var sy = 0; sy < SH; sy++) for (var sx = 0; sx < SW; sx++) {
+        if (!swept[sy * SW + sx]) continue;
+        var scx = sx * SQ + SQ / 2, scy = sy * SQ + SQ / 2;
+        if (nearBase(scx, scy, 4)) continue;                       // ≥32px from anything base-reachable
+        if (scx < 28 || scx > VBW - 28 || scy < 28 || scy > VBH - 28) continue;   // not in the frame margin
+        gatedSpots.push({ x: scx - PW / 2, y: scy - PH / 2, depth: 0, hard: 0, used: false, ring: baseRing(scx, scy), enc: enclosure(scx, scy, 18), enc2: enclosure(scx, scy, 40) });
+      }
+    } else if (theme === 'magnet') {
+      // Open cells the base run never touched but within magnet reach of it.
+      for (var my = 1; my < SH - 1; my++) for (var mx = 1; mx < SW - 1; mx++) {
+        var mcx = mx * SQ + SQ / 2, mcy = my * SQ + SQ / 2;
+        if (solidPx(mcx, mcy) || solidPx(mcx - 7, mcy - 7) || solidPx(mcx + 7, mcy - 7) || solidPx(mcx - 7, mcy + 7) || solidPx(mcx + 7, mcy + 7)) continue;
+        if (nearBase(mcx, mcy, 4)) continue;                        // truly out of reach
+        if (!nearBase(mcx, mcy, Math.floor((MAGNET_R - 10) / SQ))) continue;  // but within the pull
+        if (mcx < 28 || mcx > VBW - 28 || mcy < 28 || mcy > VBH - 28) continue;
+        gatedSpots.push({ x: mcx - PW / 2, y: mcy - PH / 2, depth: 0, hard: 0, used: false, ring: baseRing(mcx, mcy), enc: enclosure(mcx, mcy, 18), enc2: enclosure(mcx, mcy, 40) });
+      }
     }
-    for (i = 0; i < cands.length; i++) {
-      n = cands[i]; c = nodeCenter(n);
-      if (anyHigh && n.y >= VBH - 60) continue;
-      var s = n.hard * 20 + (VBH - n.y) * 0.5 + n.depth * 2 + dist(c.x, c.y, spawnC.x, spawnC.y) * 0.05 + rnd() * 4;
-      if (s > exScore) { exScore = s; ex = n; }
+    // A gated ground spot can still be brushed mid-air from the normal route
+    // (coins and the gate trigger on touch) — keep only spots the base run
+    // never came near.
+    gatedG = gatedG.filter(function (g) { return !nearBase(g.x + PW / 2, g.y + PH / 2, 4); });
+    gNodes.length = 0; wNodes.length = 0;                             // placement works on the BASE sets
+    for (i = 0; i < baseG.length; i++) gNodes.push(baseG[i]);
+    for (i = 0; i < baseW.length; i++) wNodes.push(baseW[i]);
+    var required = !!theme && (gatedSpots.length >= 6 || gatedG.length >= 3);
+    gating.required = required; gating.gatedGround = gatedG.length; gating.gatedSpots = gatedSpots.length;
+
+    // ── Exit gate: far, HIGH, hard-to-reach standing spot with headroom. On a
+    // gated finale the gate itself lives where only the power reaches. ──
+    function pickExit(pool, ignoreFloorIfHigh) {
+      var best = null, bestS = -1e9, cands = [], anyHigh = false;
+      for (var k = 0; k < pool.length; k++) {
+        var q = pool[k], qc = nodeCenter(q);
+        if (dist(qc.x, qc.y, spawnC.x, spawnC.y) < 140 || !headroom(q, exit.h - PH + 6)) continue;
+        cands.push(q); if (q.y < VBH - 60) anyHigh = true;
+      }
+      for (k = 0; k < cands.length; k++) {
+        q = cands[k]; qc = nodeCenter(q);
+        if (ignoreFloorIfHigh && anyHigh && q.y >= VBH - 60) continue;
+        var sc = q.hard * 20 + (VBH - q.y) * 0.5 + q.depth * 2 + dist(qc.x, qc.y, spawnC.x, spawnC.y) * 0.05 + rnd() * 4;
+        if (sc > bestS) { bestS = sc; best = q; }
+      }
+      return best;
     }
-    if (!ex) { for (i = 0; i < gNodes.length; i++) { n = gNodes[i]; var dd0 = dist(n.x, n.y, spawn.x, spawn.y); if (!ex || dd0 > dist(ex.x, ex.y, spawn.x, spawn.y)) ex = n; } }
+    var ex = (lv.exitGated && required && gatedG.length) ? pickExit(gatedG, false) : null;
+    if (!ex) ex = pickExit(gNodes, true);
+    if (!ex) { for (i = 0; i < gNodes.length; i++) { n = gNodes[i]; if (!ex || dist(n.x, n.y, spawn.x, spawn.y) > dist(ex.x, ex.y, spawn.x, spawn.y)) ex = n; } }
     if (!ex) ex = { x: spawn.x, y: spawn.y, depth: 0, hard: 0 };
     ex.used = true;
-    exit.x = ex.x + PW / 2; exit.y = ex.y + PH;      // gate centre x, gate floor y
+    exit.x = ex.x + PW / 2; exit.y = ex.y + PH;
     exit.open = false;
     var exitC = { x: exit.x, y: exit.y - exit.h / 2 };
     var avoid = [spawnC, exitC];
 
-    // Coins: spread over ground nodes; from level 3 on, a share of them sit on
-    // wall faces (collected while climbing). Count scales with the open area.
+    // ── Coins: base coins spread over reachable ground (+ wall faces from
+    // level 3 on); gated levels swap 3 of them for coins only the power reaches. ──
     var target = Math.max(7, Math.min(14, Math.round(reachCount / 900)));
+    var gatedCount = required ? 3 : 0;
+    var baseTarget = target - gatedCount;
     var groundPool = gNodes.filter(function (g) { return !g.used && dist(g.x, g.y, spawn.x, spawn.y) > 44; });
     var wallShare = levelIndex >= 2 ? Math.min(0.35, 0.12 + levelIndex * 0.02) : 0;
-    var wallCount = Math.round(target * wallShare);
-    var groundPicks = spread(groundPool, target - wallCount, 30, avoid, function (g) { return g.depth * 0.6 + rnd() * 10; });
+    var wallCount = Math.round(baseTarget * wallShare);
+    var groundPicks = spread(groundPool, baseTarget - wallCount, 30, avoid, function (g) { return g.depth * 0.6 + rnd() * 10; });
     var wallPool = wNodes.filter(function (w) { return w.y > 30 && w.y < VBH - 40; });
     var wallPicks = spread(wallPool, wallCount, 34, avoid.concat(groundPicks.map(nodeCenter)), function () { return rnd() * 20; });
-    if (groundPicks.length + wallPicks.length < target) {
-      var extra = spread(groundPool, target - groundPicks.length - wallPicks.length, 22, avoid.concat(groundPicks.map(nodeCenter), wallPicks.map(nodeCenter)));
+    if (groundPicks.length + wallPicks.length < baseTarget) {
+      var extra = spread(groundPool, baseTarget - groundPicks.length - wallPicks.length, 22, avoid.concat(groundPicks.map(nodeCenter), wallPicks.map(nodeCenter)));
       groundPicks = groundPicks.concat(extra);
     }
+    // Double-jump coins hover JUST beyond normal reach, next to geometry (not
+    // in the empty band under the arena ceiling); magnet coins sit inside real
+    // pockets — the more enclosed by solid, the better.
+    var arena = curMode !== 'ink';
+    var gatedPicks = required ? spread(gatedSpots.concat(gatedG), gatedCount, 36, avoid, function (g) {
+      var ring = g.ring || 4, enc = g.enc || 0, enc2 = g.enc2 || 0, cy2 = g.y + PH / 2;
+      var ceiling = arena && cy2 < 70 ? -30 : 0;
+      return (theme === 'magnet' ? enc * 10 + enc2 * 4 + ring * 2 : -(ring - 4) * 8 + enc * 6 + enc2 * 4) + ceiling + rnd() * 5;
+    }, 120) : [];
     coins.length = 0;
-    var all = groundPicks.concat(wallPicks);
+    var all = groundPicks.concat(wallPicks, gatedPicks);
     for (i = 0; i < all.length; i++) { c = nodeCenter(all[i]); coins.push({ x: c.x, y: c.y - 2, got: false, phase: rnd() * 6.28, hx: c.x, hy: c.y - 2 }); }
 
-    // Pickups (deterministic per level): doble salto on odd levels (hard spot),
-    // turbo or imán from level 3, tiempo extra on a hard spot every 3rd level,
-    // candado on hazard levels. Max 3 per level, all on solver-reached nodes.
+    // ── Pickups ──
     pickups.length = 0;
-    var coinC = coins.map(function (k) { return { x: k.x, y: k.y }; });
-    var pickAvoid = avoid.concat(coinC);
-    function place(type, pool, minDepthFrac, maxDepthFrac) {
-      var p = pool.filter(function (g) { return !g.used && g.depth >= maxDepth * minDepthFrac && g.depth <= maxDepth * maxDepthFrac + 1; });
-      var pk = spread(p, 1, 40, pickAvoid, function (g) { return g.hard * 6 + rnd() * 12; });
-      if (!pk.length) pk = spread(pool.filter(function (g) { return !g.used; }), 1, 30, pickAvoid);
-      if (pk.length) { var cc = nodeCenter(pk[0]); pickups.push({ type: type, x: cc.x, y: cc.y - 3, got: false, phase: rnd() * 6.28 }); pickAvoid.push({ x: cc.x, y: cc.y }); }
+    var pickAvoid = avoid.concat(coins.map(function (k) { return { x: k.x, y: k.y }; }));
+    function place(type, pool, minDepthFrac, maxDepthFrac, score) {
+      var pl = pool.filter(function (g) { return !g.used && g.depth >= maxDepth * minDepthFrac && g.depth <= maxDepth * maxDepthFrac + 1 && headroom(g, 6); });
+      var pk = spread(pl, 1, 40, pickAvoid, score || function (g) { return g.hard * 6 + rnd() * 12; });
+      if (!pk.length) pk = spread(pool.filter(function (g) { return !g.used && headroom(g, 6); }), 1, 30, pickAvoid);
+      if (pk.length) { var cc = nodeCenter(pk[0]); pickups.push({ type: type, x: cc.x, y: cc.y - 3, got: false, phase: rnd() * 6.28 }); pickAvoid.push({ x: cc.x, y: cc.y }); return true; }
+      return false;
+    }
+    if (theme) {
+      // The level's power: on the normal route (base-reachable), not trivial,
+      // and as close as possible to what it unlocks — you find it, you use it.
+      var gx = 0, gy = 0, gn = gatedPicks.length;
+      for (i = 0; i < gn; i++) { gx += gatedPicks[i].x; gy += gatedPicks[i].y; }
+      if (gn) { gx /= gn; gy /= gn; }
+      place(theme, gNodes, required ? 0.15 : 0.3, required ? 0.85 : 0.9, function (g) {
+        return (gn ? -dist(g.x, g.y, gx, gy) * 0.35 : g.hard * 6) + rnd() * 8;
+      });
     }
     var hazardLevel = levelIndex >= 5;
-    if (levelIndex % 2 === 1) place('dj', gNodes, 0.55, 1);
-    if (levelIndex >= 2) place(rnd() < 0.5 ? 'turbo' : 'magnet', gNodes, 0.15, 0.7);
-    if (levelIndex >= 4 && levelIndex % 3 === 1) place('time', gNodes, 0.6, 1);
     if (hazardLevel) place('shield', gNodes, 0.1, 0.5);
+    // Time bonus where the coin tour is long (greedy nearest-neighbour estimate).
+    var tour = 0, tx = spawnC.x, ty = spawnC.y, left = coins.slice();
+    while (left.length) {
+      var bi = 0, bd = 1e9;
+      for (i = 0; i < left.length; i++) { var dd = dist(tx, ty, left[i].x, left[i].y); if (dd < bd) { bd = dd; bi = i; } }
+      tour += bd; tx = left[bi].x; ty = left[bi].y; left.splice(bi, 1);
+    }
+    tour += dist(tx, ty, exit.x, exit.y);
+    gating.tour = Math.round(tour);
+    if (tour > 4000) place('time', gNodes, 0.4, 1);   // rare: only the longest tours
 
-    // Hazards: phishing drones patrol long flat ground runs with jump headroom,
-    // away from spawn/exit. From level 6 on, 1–3 per level.
+    // ── Hazards: phishing drones patrol long flat ground runs with jump
+    // headroom, away from spawn/exit. From level 6 on, 1–3 per level. ──
     hazards.length = 0;
     if (hazardLevel) {
       var want = Math.min(3, 1 + ((levelIndex - 5) / 5 | 0));
@@ -641,7 +810,7 @@
     computeFit(lv);
     buildLevelMask(lv);
     buildReach();
-    buildEntities(index);
+    buildEntities(index, lv);
     resetLevel();
   }
   var P = newPlayer();
@@ -758,13 +927,14 @@
   }
   function animateIdle() { P.blinkT--; if (P.blinkT <= 0) { P.blink = 6; P.blinkT = 90 + (Math.random() * 120 | 0); } if (P.blink > 0) P.blink--; }
   function applyPickup(type) {
-    if (type === 'dj') { P.djTimer = POWER_T.dj; P.airJumps = 1; showHint('Doble salto — pulsa saltar en el aire', 150); }
-    else if (type === 'turbo') { P.turbo = POWER_T.turbo; showHint('Turbo — más velocidad y salto', 150); }
-    else if (type === 'magnet') { P.magnet = POWER_T.magnet; showHint('Imán — las monedas vienen a ti', 150); }
+    if (type === 'dj') { P.djTimer = POWER_T.dj; P.airJumps = 1; showHint('Doble salto — pulsa saltar otra vez en el aire', 170); }
+    else if (type === 'turbo') { P.turbo = POWER_T.turbo; showHint('Turbo — corres más y saltas más alto', 170); }
+    else if (type === 'magnet') { P.magnet = POWER_T.magnet; showHint('Imán — atrae las monedas cercanas', 170); }
     else if (type === 'time') { timeLeft += 12; showHint('+12 s', 90); }
     else if (type === 'shield') { P.shield = true; showHint('Candado — te protege de un ataque', 150); }
   }
   function hitHazard(hz) {
+    hazardHits++;
     if (P.shield) { P.shield = false; P.hurt = HAZARD_IFRAMES; burst(P.x + PW / 2, P.y, 10, COL.cream, 1.6, 0.03); showHint('El candado te protegió', 100); }
     else { timeLeft = Math.max(0.5, timeLeft - HAZARD_COST); P.hurt = HAZARD_IFRAMES; burst(P.x + PW / 2, P.y + PH / 2, 10, COL.coral, 1.6, 0.04); showHint('−' + HAZARD_COST + ' s · phishing', 90); }
     P.vx = (P.x + PW / 2 < hz.x ? -1 : 1) * 3.6; P.vy = -3.2; P.kb = 10; P.onGround = false;
@@ -774,9 +944,11 @@
     burst(P.x + PW / 2, P.y + PH / 2, 10, COL.cream, 1.6, 0.05);
     deaths++; respawn();
   }
+  var botRunning = false, hazardHits = 0;
   function finishLevel() {
     if (STATE !== 'playing') return;
     totalElapsed += elapsed;
+    if (botRunning) { STATE = 'levelWon'; return; }
     saveProgress(curLevel + 1);
     if (curLevel >= LEVELS.length - 1) { STATE = 'won'; saveProgress(0); showScreen('won'); }
     else { STATE = 'levelWon'; showScreen('levelWon'); }
@@ -786,7 +958,54 @@
     if (STATE !== 'playing') return;
     STATE = 'lost'; deaths++;
     burst(P.x + PW / 2, P.y + PH / 2, 12, COL.coral, 1.8, 0.05);
+    if (botRunning) return;
     showScreen('lost'); logState('playing', 'timeout');
+  }
+  /* ── Self-play bot (QA) — plays a level against the real tick(): timer,
+     drones, magnet, gate. Targets: the level's power first, then the nearest
+     coin (gated coins once powered), then the gate. Each step plans from the
+     live state and replays only the first move, so drift can't accumulate.  */
+  function botLevel(i) {
+    var t0 = performance.now(), deaths0 = deaths;
+    botRunning = true; hazardHits = 0;
+    loadLevel(i); STATE = 'playing'; introT = 0; camReveal = 0;
+    var fails = [], skipped = [], moves = 0, plans = 0;
+    function liveState() {
+      return { x: P.x, y: P.y, vx: P.vx, vy: P.vy, onGround: P.onGround, wallL: P.wallL, wallR: P.wallR, coyote: P.coyote,
+               wallStick: P.wallStick, jumpHeld: P.jumpHeld, facing: P.facing, djTimer: P.djTimer, airJumps: P.airJumps, turbo: P.turbo, kb: P.kb };
+    }
+    function powered() { for (var k = 0; k < pickups.length; k++) if (pickups[k].type === gating.theme && !pickups[k].got) return false; return true; }
+    function target() {
+      var k, best = null, bd = 1e9, cxp = P.x + PW / 2, cyp = P.y + PH / 2;
+      for (k = 0; k < pickups.length; k++) if (!pickups[k].got && pickups[k].type === gating.theme && skipped.indexOf(pickups[k]) < 0) return { kind: 'power', o: pickups[k] };
+      var pw = powered();
+      for (k = 0; k < coins.length; k++) {
+        var co = coins[k]; if (co.got || skipped.indexOf(co) >= 0) continue;
+        if (gating.required && k >= coins.length - 3 && !pw) continue;
+        var d = dist(cxp, cyp, co.x, co.y); if (d < bd) { bd = d; best = { kind: 'coin', o: co }; }
+      }
+      if (best) return best;
+      if (exit.open) return { kind: 'exit', o: exit };
+      return null;
+    }
+    while (STATE === 'playing' && moves < 600) {
+      var tg = target(); if (!tg) break;
+      var hit;
+      if (tg.kind === 'exit') hit = function (cx, cy) { return Math.abs(exit.x - cx) < 9 && cy > exit.y - exit.h && cy < exit.y + 4; };
+      else if (tg.kind === 'coin' && P.magnet > 0) hit = function (cx, cy) { return dist(cx, cy, tg.o.x, tg.o.y) < MAGNET_R - 16; };
+      else { var r = tg.kind === 'coin' ? COIN_R : 9; hit = function (cx, cy) { return Math.abs(tg.o.x - cx) < r + PW * 0.5 && Math.abs(tg.o.y - cy) < r + PH * 0.5; }; }
+      mods.dj = P.djTimer > 0; mods.turbo = P.turbo > 0;
+      var pl = plan(liveState(), hit); plans++;
+      if (!pl) { fails.push(tg.kind + '@' + Math.round(tg.o.x) + ',' + Math.round(tg.o.y)); skipped.push(tg.o); continue; }
+      for (var f = 0; f < pl.frames && STATE === 'playing'; f++) { moveInput(pl.mv, f, pl.side, input); tick(); }
+      input.left = input.right = input.jump = false; input.jumpEdge = false;
+      moves++;
+    }
+    var res = { level: i + 1, id: LEVELS[i].id, theme: gating.theme, required: gating.required, ok: STATE === 'levelWon',
+                state: STATE, coins: (coins.length - coinsLeft) + '/' + coins.length, timeLeft: Math.round(timeLeft), played: Math.round(elapsed),
+                deaths: deaths - deaths0, hazardHits: hazardHits, moves: moves, plans: plans, fails: fails, ms: Math.round(performance.now() - t0) };
+    botRunning = false;
+    return res;
   }
 
   /* ═══════════════════════ Camera ═════════════════════════════════════════ */
@@ -1061,9 +1280,9 @@
 
     // Power chips (icon + seconds), stacked under the timer.
     var cy = y + barH + 18;
-    if (P.djTimer > 0) { chip('stars', 'Doble salto ' + Math.ceil(P.djTimer / 60) + 's', x, cy); cy += 18; }
-    if (P.turbo > 0) { chip('transfer', 'Turbo ' + Math.ceil(P.turbo / 60) + 's', x, cy); cy += 18; }
-    if (P.magnet > 0) { chip('download', 'Imán ' + Math.ceil(P.magnet / 60) + 's', x, cy); cy += 18; }
+    if (P.djTimer > 0) { chip('stars', 'Doble salto', x, cy); cy += 18; }
+    if (P.turbo > 0) { chip('transfer', 'Turbo', x, cy); cy += 18; }
+    if (P.magnet > 0) { chip('download', 'Imán', x, cy); cy += 18; }
     if (P.shield) { chip('lock', 'Candado', x, cy); cy += 18; }
 
     // Centre slot: level name, hint, or the intro card.
@@ -1072,12 +1291,21 @@
       var a = Math.min(1, introT / 14, (84 - introT) / 10);
       ctx.globalAlpha = a;
       ctx.fillStyle = 'rgba(10,12,13,0.72)';
-      var bw = Math.min(cssW - 32, 360), bh = 72;
-      ctx.fillRect(cssW / 2 - bw / 2, cssH / 2 - bh / 2, bw, bh);
+      var gated = gating.theme && POWER_HINT[gating.theme];
+      var bw = Math.min(cssW - 32, 360), bh = gated ? 96 : 72, by = cssH / 2 - bh / 2;
+      ctx.fillRect(cssW / 2 - bw / 2, by, bw, bh);
       ctx.fillStyle = COL.lime; ctx.font = f(800, 24);
-      ctx.fillText('Nivel ' + (curLevel + 1), cssW / 2, cssH / 2 - 12);
+      ctx.fillText('Nivel ' + (curLevel + 1), cssW / 2, by + 24);
       ctx.fillStyle = COL.cream; ctx.font = f(600, 15);
-      ctx.fillText(lv.name, cssW / 2, cssH / 2 + 14);
+      ctx.fillText(lv.name, cssW / 2, by + 50);
+      if (gated) {
+        var hint = POWER_HINT[gating.theme];
+        ctx.font = f(700, 13); var tw = ctx.measureText(hint).width;
+        icon(PICK_ICON[gating.theme], cssW / 2 - tw / 2 - 12, by + 76, 13, COL.lime);
+        ctx.fillStyle = COL.lime; ctx.textAlign = 'left';
+        ctx.fillText(hint, cssW / 2 - tw / 2, by + 76);
+        ctx.textAlign = 'center';
+      }
       ctx.globalAlpha = 1;
     }
     if (hintT > 0 && STATE === 'playing') {
@@ -1411,6 +1639,7 @@
       get state() { return STATE; }, get input() { return { left: input.left, right: input.right, jump: input.jump }; },
       get stateLog() { return stateLog.slice(); }, get level() { return curLevel; },
       get reachCount() { return reachCount; }, get solver() { return { ms: solveMs, ground: gNodes.length, wall: wNodes.length, hard: levelHard }; },
+      get gating() { return { theme: gating.theme, required: gating.required, gatedGround: gating.gatedGround, gatedSpots: gating.gatedSpots, tour: gating.tour }; },
       get font() { return FONT_FAMILY; }, get cam() { return { x: cam.x, y: cam.y, zoom: curZoom(), fit: fitZoom, play: playZoom, cssW: cssW, cssH: cssH }; },
       get fullscreen() { return fsActive; }, get timeLeft() { return timeLeft; },
       levels: LEVELS.map(function (l) { return { id: l.id, name: l.name, mode: l.mode }; }),
@@ -1419,9 +1648,14 @@
         loadDef(def, index || 0); built = -1;
         var top = VBH, hi = 0;
         for (var i = 0; i < gNodes.length; i++) { if (gNodes[i].y < top) top = gNodes[i].y; if (gNodes[i].y < VBH - 60) hi++; }
-        return { ms: Math.round(solveMs), ground: gNodes.length, wall: wNodes.length, hard: levelHard, highest: Math.round(top), highNodes: hi, exit: [Math.round(exit.x), Math.round(exit.y)], coins: coins.length, reach: reachCount };
+        return { ms: Math.round(solveMs), ground: gNodes.length, wall: wNodes.length, hard: levelHard, highest: Math.round(top), highNodes: hi, exit: [Math.round(exit.x), Math.round(exit.y)], coins: coins.length, reach: reachCount, gating: { theme: gating.theme, required: gating.required, gatedGround: gating.gatedGround, gatedSpots: gating.gatedSpots, tour: gating.tour }, picks: pickups.map(function (q) { return q.type; }) };
       },
       LEVELS: LEVELS, ICON: ICON,
+      bot: function (i) {                     // QA: self-play one level, restore the idle screen
+        var saved = loadProgress(), r = botLevel(i);
+        saveProgress(saved); STATE = 'idle'; loadLevel(saved > 0 && saved < LEVELS.length ? saved : 0); showScreen('idle');
+        return r;
+      },
       warp: function (x, y) { P.x = x; P.y = y; P.vx = 0; P.vy = 0; },
       start: function (lvl) { beginSession(lvl == null ? curLevel : lvl, 'debug'); },
       pause: pauseGame, resume: resumeGame, isMobile: isMobile,
