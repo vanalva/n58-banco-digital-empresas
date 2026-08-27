@@ -5425,6 +5425,10 @@ body {
 [data-flwr] .alan-stage,
 dialog.alan-stage {
   --alan-level: 0;
+  /* How much of the screen the chat occupies. The scene's lift is derived from
+     this on phones, so the two can never drift apart and let the transcript
+     climb over the avatar. */
+  --alan-chat-h: min(46vh, 30rem);
   /* Explicit, not inherited from the UA sheet: a modal <dialog> is centred with
      `margin:auto` by default, and margin:0 alone would leave it corner-pinned in
      some engines. */
@@ -5550,7 +5554,7 @@ html.alan-stage-open body {
   right: 0;
   bottom: 0;
   left: 0;
-  height: min(46vh, 30rem);
+  height: var(--alan-chat-h);
 }
 .alan-stage_frame {
   position: absolute;
@@ -5605,8 +5609,22 @@ html.alan-stage-open body {
 @media (max-width: 991px) {
   /* Shorter strip: there is no 3D to preserve room for, and the on-screen
      keyboard already eats the bottom of the viewport. */
-  .alan-stage_chat {
-    height: min(52vh, 26rem);
+  [data-flwr] .alan-stage,
+  dialog.alan-stage {
+    /* Sized close to what the chat actually needs (transcript tail + a wrapped
+       row of chips + the bar). The taller value left a band of empty strip
+       between the avatar and the greeting, because the content pins to the
+       BOTTOM of the strip while the avatar has to stop at its top. */
+    --alan-chat-h: min(46vh, 20rem);
+  }
+  /* Clear the chat outright rather than overlapping it. On desktop a little
+     overlap reads as depth because there is room to spare; on a phone the chat
+     is half the screen, so the same 22% lift left the avatar's lower third
+     underneath the transcript and messages climbed over its face. Deriving the
+     lift from the strip height means this holds on a short phone and a tall one
+     alike. */
+  .alan-stage_scene {
+    bottom: calc(var(--alan-chat-h) + 8px);
   }
   .alan-stage_scene::before {
     width: min(42vh, 78vw);
