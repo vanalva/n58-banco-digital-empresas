@@ -321,13 +321,15 @@
     if (P.jumpBuf > 0) {
       if (P.onGround || P.coyote > 0) {
         P.vy = JUMP_VY * (turbo > 1 ? 1.06 : 1); P.jumpBuf = 0; P.coyote = 0; P.onGround = false; P.jumpHeld = true;
+        if (fx) SFX.play('jump');
       } else if (P.wallL || P.wallR) {
         var away = P.wallL ? 1 : -1;
         P.vx = away * WALL_JUMP_VX; P.vy = WALL_JUMP_VY;
         P.facing = away; P.wallStick = WALL_STICK; P.jumpBuf = 0; P.jumpHeld = true; P.wallJumped = true;
+        if (fx) SFX.play('wallJump');
       } else if (P.djTimer > 0 && P.airJumps > 0) {
         P.vy = JUMP_VY * 0.92; P.airJumps--; P.jumpBuf = 0; P.jumpHeld = true;
-        if (fx) burst(P.x + PW / 2, P.y + PH * 0.6, 8, COL.lime, 1.6, 0.04);
+        if (fx) { burst(P.x + PW / 2, P.y + PH * 0.6, 8, COL.lime, 1.6, 0.04); SFX.play('airJump'); }
       }
     }
     if (!input.jump && P.jumpHeld && P.vy < 0) { P.vy *= JUMP_CUT; P.jumpHeld = false; }
@@ -876,6 +878,80 @@
     }
   }
 
+  /* ═══════════════════════ Sound FX (Web Audio, synthesized) ══════════════
+     No audio files: every cue is an oscillator/noise blip built on the fly,
+     so nothing loads and the sound matches the flat, procedural art. The
+     context is created on the gesture that starts a session (autoplay policy),
+     suspended while paused, and never plays outside a live session or during
+     the self-play bot. Mute: panel toggle / M key, remembered in localStorage. */
+  var SFX = (function () {
+    var ac = null, master = null, on = true, KEY = 'n58-alan-arcade-sfx';
+    try { on = localStorage.getItem(KEY) !== '0'; } catch (e) {}
+    function init() {
+      if (ac) return true;
+      try {
+        var AC = window.AudioContext || window.webkitAudioContext; if (!AC) return false;
+        ac = new AC(); master = ac.createGain(); master.gain.value = on ? 0.3 : 0; master.connect(ac.destination);
+      } catch (e) { ac = null; return false; }
+      return true;
+    }
+    function unlock(cb) {                      // resume is async: cb runs once the context is really running
+      if (!init()) return;
+      if (ac.state === 'running') { if (cb) cb(); return; }
+      try { ac.resume().then(function () { if (cb) cb(); })['catch'](function () {}); } catch (e) {}
+    }
+    function suspend() { if (ac && ac.state === 'running') { try { ac.suspend()['catch'](function () {}); } catch (e) {} } }
+    function now() { return ac.currentTime; }
+    /* One note: oscillator `type`, frequency f0 → f1 over `dur` s, quick attack, exponential decay. */
+    function tone(f0, f1, dur, type, vol, at) {
+      if (!ac) return;
+      var t = now() + (at || 0), o = ac.createOscillator(), g = ac.createGain();
+      o.type = type || 'sine'; o.frequency.setValueAtTime(f0, t);
+      if (f1 && f1 !== f0) o.frequency.exponentialRampToValueAtTime(f1, t + dur);
+      g.gain.setValueAtTime(0.0001, t); g.gain.linearRampToValueAtTime(vol, t + 0.006);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+      o.connect(g); g.connect(master); o.start(t); o.stop(t + dur + 0.02);
+    }
+    /* Filtered noise burst (impacts). */
+    function noise(dur, vol, freq, at) {
+      if (!ac) return;
+      var t = now() + (at || 0), n = Math.ceil(ac.sampleRate * dur), buf = ac.createBuffer(1, n, ac.sampleRate), d = buf.getChannelData(0);
+      for (var i = 0; i < n; i++) d[i] = Math.random() * 2 - 1;
+      var src = ac.createBufferSource(), f = ac.createBiquadFilter(), g = ac.createGain();
+      src.buffer = buf; f.type = 'bandpass'; f.frequency.value = freq || 900; f.Q.value = 0.8;
+      g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+      src.connect(f); f.connect(g); g.connect(master); src.start(t); src.stop(t + dur + 0.02);
+    }
+    var cues = {
+      jump:     function () { tone(300, 560, 0.09, 'triangle', 0.5); },
+      wallJump: function () { tone(420, 720, 0.09, 'triangle', 0.5); },
+      airJump:  function () { tone(500, 820, 0.07, 'triangle', 0.45); tone(640, 1040, 0.08, 'triangle', 0.4, 0.05); },
+      coin:     function (streak) {                      // classic two-note; each streak step a semitone up (max +5)
+        var m = Math.pow(2, Math.min(5, Math.max(0, (streak || 1) - 1)) / 12);
+        tone(988 * m, 988 * m, 0.06, 'sine', 0.45); tone(1319 * m, 1319 * m, 0.09, 'sine', 0.45, 0.06);
+      },
+      power:    function () { tone(523, 523, 0.12, 'sine', 0.45); tone(659, 659, 0.12, 'sine', 0.45, 0.07); tone(784, 784, 0.18, 'sine', 0.45, 0.14); },
+      shield:   function () { tone(392, 392, 0.12, 'sine', 0.4); tone(494, 494, 0.12, 'sine', 0.4, 0.07); tone(587, 587, 0.18, 'sine', 0.4, 0.14); },
+      time:     function () { tone(880, 880, 0.08, 'sine', 0.4); tone(1175, 1175, 0.08, 'sine', 0.4, 0.06); tone(1760, 1760, 0.16, 'sine', 0.4, 0.12); },
+      hit:      function () { noise(0.14, 0.5, 700); tone(160, 55, 0.18, 'sawtooth', 0.35); },
+      block:    function () { tone(900, 900, 0.04, 'square', 0.25); tone(600, 600, 0.07, 'square', 0.25, 0.04); },
+      gateOpen: function () { tone(660, 660, 0.1, 'sine', 0.4); tone(880, 880, 0.1, 'sine', 0.4, 0.09); tone(1320, 1320, 0.22, 'sine', 0.4, 0.18); },
+      enter:    function () { tone(880, 440, 0.3, 'sine', 0.35); },
+      clear:    function () { tone(523, 523, 0.16, 'sine', 0.45); tone(659, 659, 0.16, 'sine', 0.45, 0.09); tone(784, 784, 0.16, 'sine', 0.45, 0.18); tone(1047, 1047, 0.32, 'sine', 0.45, 0.27); },
+      lose:     function () { tone(330, 165, 0.5, 'sawtooth', 0.25); tone(247, 123, 0.55, 'triangle', 0.25, 0.08); },
+      ui:       function () { tone(700, 700, 0.03, 'square', 0.15); }
+    };
+    function play(name, arg) {
+      if (!on || botRunning || !ac || ac.state !== 'running') return;
+      var c = cues[name]; if (c) { try { c(arg); } catch (e) {} }
+    }
+    function set(v) {
+      on = !!v; if (master) master.gain.value = on ? 0.3 : 0;
+      try { localStorage.setItem(KEY, on ? '1' : '0'); } catch (e) {}
+    }
+    return { play: play, unlock: unlock, suspend: suspend, set: set, get on() { return on; } };
+  })();
+
   /* ═══════════════════════ Game state + tick ══════════════════════════════ */
   var STATE = 'idle';          // idle | playing | paused | levelWon | won | lost
   var reducedMotion = false;
@@ -908,7 +984,8 @@
         timeLeft += COIN_TIME + bonus;
         if (streak >= 3) { streakPop = 50; streakPopN = streak; }
         burst(co.x, co.y, 6, COL.magenta, 1.3, 0.03);
-        if (coinsLeft <= 0) { exit.open = true; showHint('Puerta abierta — llega a la salida', 160); }
+        SFX.play('coin', streak);
+        if (coinsLeft <= 0) { exit.open = true; showHint('Puerta abierta — llega a la salida', 160); SFX.play('gateOpen'); }
       }
     }
     if (streakT > 0) streakT--; else streak = 0;
@@ -934,6 +1011,7 @@
     if (exit.open && Math.abs(exit.x - cxp) < 9 && cyp > exit.y - exit.h && cyp < exit.y + 4) {
       enterT = 26; P.vx = 0; P.vy = 0;
       burst(exit.x, exit.y - exit.h / 2, 10, COL.lime, 1.4, 0.02);
+      SFX.play('enter');
     }
     if (hintT > 0) hintT--;
     timeLeft -= STEP / 1000;
@@ -942,16 +1020,16 @@
   }
   function animateIdle() { P.blinkT--; if (P.blinkT <= 0) { P.blink = 6; P.blinkT = 90 + (Math.random() * 120 | 0); } if (P.blink > 0) P.blink--; }
   function applyPickup(type) {
-    if (type === 'dj') { P.djTimer = POWER_T.dj; P.airJumps = 1; showHint('Doble salto — pulsa saltar otra vez en el aire', 170); }
-    else if (type === 'turbo') { P.turbo = POWER_T.turbo; showHint('Turbo — corres más y saltas más alto', 170); }
-    else if (type === 'magnet') { P.magnet = POWER_T.magnet; showHint('Imán — atrae las monedas cercanas', 170); }
-    else if (type === 'time') { timeLeft += 12; showHint('+12 s', 90); }
-    else if (type === 'shield') { P.shield = true; showHint('Candado — te protege de un ataque', 150); }
+    if (type === 'dj') { P.djTimer = POWER_T.dj; P.airJumps = 1; showHint('Doble salto — pulsa saltar otra vez en el aire', 170); SFX.play('power'); }
+    else if (type === 'turbo') { P.turbo = POWER_T.turbo; showHint('Turbo — corres más y saltas más alto', 170); SFX.play('power'); }
+    else if (type === 'magnet') { P.magnet = POWER_T.magnet; showHint('Imán — atrae las monedas cercanas', 170); SFX.play('power'); }
+    else if (type === 'time') { timeLeft += 12; showHint('+12 s', 90); SFX.play('time'); }
+    else if (type === 'shield') { P.shield = true; showHint('Candado — te protege de un ataque', 170); SFX.play('shield'); }
   }
   function hitHazard(hz) {
     hazardHits++;
-    if (P.shield) { P.shield = false; P.hurt = HAZARD_IFRAMES; burst(P.x + PW / 2, P.y, 10, COL.cream, 1.6, 0.03); showHint('El candado te protegió', 100); }
-    else { timeLeft = Math.max(0.5, timeLeft - HAZARD_COST); P.hurt = HAZARD_IFRAMES; burst(P.x + PW / 2, P.y + PH / 2, 10, COL.coral, 1.6, 0.04); showHint('−' + HAZARD_COST + ' s · phishing', 90); }
+    if (P.shield) { P.shield = false; P.hurt = HAZARD_IFRAMES; burst(P.x + PW / 2, P.y, 10, COL.cream, 1.6, 0.03); showHint('El candado te protegió', 100); SFX.play('block'); }
+    else { timeLeft = Math.max(0.5, timeLeft - HAZARD_COST); P.hurt = HAZARD_IFRAMES; burst(P.x + PW / 2, P.y + PH / 2, 10, COL.coral, 1.6, 0.04); showHint('−' + HAZARD_COST + ' s · phishing', 90); SFX.play('hit'); }
     P.vx = (P.x + PW / 2 < hz.x ? -1 : 1) * 3.6; P.vy = -3.2; P.kb = 10; P.onGround = false;
   }
   function showHint(t, frames) { hintText = t; hintT = frames; }
@@ -964,6 +1042,7 @@
     if (STATE !== 'playing') return;
     totalElapsed += elapsed;
     if (botRunning) { STATE = 'levelWon'; return; }
+    SFX.play('clear');
     saveProgress(curLevel + 1);
     if (curLevel >= LEVELS.length - 1) { STATE = 'won'; saveProgress(0); showScreen('won'); }
     else { STATE = 'levelWon'; showScreen('levelWon'); }
@@ -974,6 +1053,7 @@
     STATE = 'lost'; deaths++;
     burst(P.x + PW / 2, P.y + PH / 2, 12, COL.coral, 1.8, 0.05);
     if (botRunning) return;
+    SFX.play('lose');
     showScreen('lost'); logState('playing', 'timeout');
   }
   /* ── Self-play bot (QA) — plays a level against the real tick(): timer,
@@ -1412,6 +1492,7 @@
     ui.secondary.classList.toggle('is-hidden', !secondary);
     if (secondary) ui.secondaryLabel.textContent = secondary;
     ui.hint.classList.toggle('is-hidden', kind !== 'idle');
+    if (ui.sound) { ui.sound.classList.toggle('is-hidden', !(kind === 'idle' || kind === 'paused')); updateSoundLabel(); }
     // Compact panel when the canvas is small (inline preview on phones): the
     // section heading above already carries the title — keep just the actions.
     var compact = cssH < 320 && !fsActive;
@@ -1440,9 +1521,20 @@
     var kind = overlay.getAttribute('data-alan-screen');
     if (kind === 'idle') { var saved = loadProgress(); beginSession(saved > 0 && saved < LEVELS.length ? saved : 0, 'start'); }
     else if (kind === 'paused') resumeGame('panel');
-    else if (kind === 'levelWon') { loadLevel(curLevel + 1); STATE = 'playing'; hideScreen(); focusCanvas(); logState('levelWon', 'next-level'); }
-    else if (kind === 'lost') { resetLevel(); STATE = 'playing'; hideScreen(); focusCanvas(); logState('lost', 'retry'); }
+    else if (kind === 'levelWon') { SFX.unlock(); loadLevel(curLevel + 1); STATE = 'playing'; hideScreen(); focusCanvas(); logState('levelWon', 'next-level'); }
+    else if (kind === 'lost') { SFX.unlock(); resetLevel(); STATE = 'playing'; hideScreen(); focusCanvas(); logState('lost', 'retry'); }
     else if (kind === 'won') beginSession(0, 'replay');
+  }
+  function toggleSound() {
+    SFX.set(!SFX.on);
+    if (SFX.on) SFX.unlock(function () { SFX.play('ui'); });
+    updateSoundLabel();
+    if (STATE === 'playing') showHint(SFX.on ? 'Sonido activado' : 'Sonido apagado', 80);
+  }
+  function updateSoundLabel() {
+    if (!ui.sound) return;
+    ui.soundLabel.textContent = SFX.on ? 'Silenciar' : 'Activar sonido';
+    ui.sound.setAttribute('aria-pressed', SFX.on ? 'false' : 'true');
   }
   function secondaryAction() {
     var kind = overlay.getAttribute('data-alan-screen');
@@ -1452,6 +1544,7 @@
   var sessionStarted = false;
   function beginSession(levelIndex, why) {
     sessionStarted = true;
+    SFX.unlock();
     if (isMobile() && !fsActive) enterFullscreen();
     if (built !== levelIndex) loadLevel(levelIndex); else resetLevel();
     STATE = 'playing'; hideScreen(); focusCanvas(); clearInput();
@@ -1460,14 +1553,16 @@
   function pauseGame(why) {
     if (STATE !== 'playing') return;
     STATE = 'paused'; clearInput(); showScreen('paused'); logState('playing', why || 'pause');
+    SFX.suspend();
   }
   function resumeGame(why) {
     if (STATE !== 'paused') return;
     STATE = 'playing'; hideScreen(); focusCanvas(); logState('paused', why || 'resume');
+    SFX.unlock();
   }
   function quitToIdle(why) {
     var prev = STATE;
-    STATE = 'idle'; clearInput();
+    STATE = 'idle'; clearInput(); SFX.suspend();
     if (fsActive) exitFullscreen();
     resetLevel(); showScreen('idle'); logState(prev, why);
   }
@@ -1558,6 +1653,7 @@
     if (STATE === 'playing') {
       if (LEFT_KEYS[k] || RIGHT_KEYS[k] || JUMP_KEYS[k]) { heldKeys[k] = true; syncInput(); }
       else if (k === 'r') { resetLevel(); logState('playing', 'R-restart'); }
+      else if (k === 'm') toggleSound();
       else if (k === 'escape' || k === 'p') pauseGame(k === 'p' ? 'P' : 'Escape');
     } else if (STATE === 'paused') {
       if (k === 'escape' || k === 'p') resumeGame('key');
@@ -1618,6 +1714,8 @@
     ui.primaryLabel = ui.primary.querySelector('[data-flwr-target="label"]') || ui.primary;
     ui.secondaryLabel = ui.secondary.querySelector('[data-flwr-target="label"]') || ui.secondary;
     ui.close = wrap.querySelector('[data-alan-close]');
+    ui.sound = overlay.querySelector('[data-alan-sound]');
+    ui.soundLabel = ui.sound ? (ui.sound.querySelector('[data-flwr-target="label"]') || ui.sound) : null;
     ui.touch = wrap.querySelector('.alan-arcade_touch');
     reducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     for (var k in ICON) if (ICON.hasOwnProperty(k)) ICON_PATH[k] = new Path2D(ICON[k].d);
@@ -1628,10 +1726,12 @@
     resize();
     showScreen('idle');
     if (isMobile() && ui.hint) ui.hint.textContent = 'Se juega a pantalla completa · mejor en horizontal';
+    else if (ui.hint) ui.hint.textContent = '← → mover · Espacio saltar · Esc pausa · M sonido';
     if (window.matchMedia && window.matchMedia('(pointer: coarse)').matches && ui.touch) ui.touch.classList.add('is-touch');
 
     ui.primary.addEventListener('click', function (e) { e.preventDefault(); primaryAction(); });
     ui.secondary.addEventListener('click', function (e) { e.preventDefault(); secondaryAction(); });
+    if (ui.sound) ui.sound.addEventListener('click', function (e) { e.preventDefault(); toggleSound(); });
     overlay.addEventListener('click', function (e) {
       if (e.target === overlay) primaryAction();               // backdrop = primary action
     });
@@ -1668,7 +1768,7 @@
       get reachCount() { return reachCount; }, get solver() { return { ms: solveMs, ground: gNodes.length, wall: wNodes.length, hard: levelHard }; },
       get gating() { return { theme: gating.theme, required: gating.required, gatedGround: gating.gatedGround, gatedSpots: gating.gatedSpots, tour: gating.tour }; },
       get font() { return FONT_FAMILY; }, get cam() { return { x: cam.x, y: cam.y, zoom: curZoom(), fit: fitZoom, play: playZoom, cssW: cssW, cssH: cssH }; },
-      get fullscreen() { return fsActive; }, get timeLeft() { return timeLeft; },
+      get fullscreen() { return fsActive; }, get timeLeft() { return timeLeft; }, sfx: SFX,
       levels: LEVELS.map(function (l) { return { id: l.id, name: l.name, mode: l.mode }; }),
       loadLevel: function (i) { loadLevel(i); }, solidPx: solidPx, boxHitsSolid: boxHitsSolid,
       probe: function (def, index) {          // dev: load an arbitrary level def, report solver reach

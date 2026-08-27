@@ -844,6 +844,16 @@ html.n58-reader-open {
 }
 /* Hamburger bars are currentColor already — named here so the intent is on the
    record if the component ever hardcodes a colour. */
+/* The AlaN mascot is an inline SVG on currentColor, so it takes the button’s
+   label colour in every context — ink on a lime face, cream on an ink face.
+   It replaced a cream PNG that needed a brightness(0) filter per context.
+   Same artwork as the marquee separators (face-*.svg), 11.671 x 6.103. */
+/* Sizing is the framework’s job: it already sets button icons to height 1.25em /
+   width auto precisely so a non-square mascot keeps its proportions, and the FAB
+   overrides that to 1em. Nothing to add here — the class exists to name the
+   artwork and to hang this note on. */
+[data-flwr] .n58-alan-face { flex-shrink: 0; }
+
 /* Navbar CTAs follow the bar: over a light section they take the same
    coloured-face / ink-label reading as every other button on that surface.
    The wrapper keeps f-mode-dark for the dropdown panels, so this is keyed on
@@ -3172,9 +3182,8 @@ body {
   transition: background-color 0.3s var(--_motion---ease-standard),
               transform 0.28s cubic-bezier(0.22, 0.61, 0.36, 1);
 }
-[data-flwr] .alan-fab.is-invert [data-flwr-target="icon-leading"] {
-  filter: brightness(0);
-}
+/* (The FAB’s brightness(0) rule is gone: the mascot is an SVG on
+   currentColor now, so it inverts with the label by itself.) */
 /* Hidden once the footer bottom bar is reached, so it stops overlapping the
    footer's Línea N58 / WhatsApp CTAs (toggled by an IntersectionObserver in
    index.html). */
@@ -4824,9 +4833,40 @@ body {
 .alan-arcade_touch-btn img {
   height: 2rem;
 }
+/* Jump = a tap circle: the icons' lime as a 2px stroke, a soft translucent
+   lime fill, slightly dimmed at rest; brighter and pressed-in while held. */
 [data-flwr] .alan-arcade_touch-btn.is-jump {
-  width: 4.75rem;
-  height: 4.75rem;
+  width: 5.5rem;
+  height: 5.5rem;
+  border-top-width: 2px;
+  border-right-width: 2px;
+  border-bottom-width: 2px;
+  border-left-width: 2px;
+  border-top-style: solid;
+  border-right-style: solid;
+  border-bottom-style: solid;
+  border-left-style: solid;
+  border-top-color: var(--_palette---core--500);
+  border-right-color: var(--_palette---core--500);
+  border-bottom-color: var(--_palette---core--500);
+  border-left-color: var(--_palette---core--500);
+  border-top-left-radius: 50%;
+  border-top-right-radius: 50%;
+  border-bottom-right-radius: 50%;
+  border-bottom-left-radius: 50%;
+  background-color: color-mix(in oklab, var(--_palette---core--500) 12%, transparent);
+  opacity: 0.8;
+  transition-property: opacity, transform, background-color;
+  transition-duration: var(--_motion---duration-fast);
+  transition-timing-function: var(--_motion---ease-standard);
+}
+[data-flwr] .alan-arcade_touch-btn.is-jump:hover {
+  opacity: 0.8;
+}
+[data-flwr] .alan-arcade_touch-btn.is-jump:active {
+  opacity: 1;
+  background-color: color-mix(in oklab, var(--_palette---core--500) 32%, transparent);
+  transform: scale(0.94);
 }
 /* Mobile fullscreen layer: tap-to-play turns the arcade into a fixed layer
    filling the screen (the camera zooms + follows AlaN). The close X is the
@@ -4874,8 +4914,8 @@ body {
     height: 3.5rem;
   }
   [data-flwr] .alan-arcade_touch-btn.is-jump {
-    width: 4.25rem;
-    height: 4.25rem;
+    width: 4.75rem;
+    height: 4.75rem;
   }
 }
 
@@ -4938,16 +4978,21 @@ body {
 .n58-stat-card.is-alert { --stat-flood: var(--_palette---alert--500); }
 .n58-stat-card.is-alternate-2 { --stat-flood: var(--_palette---alternate-2--300); }
 
+/* Hover/active must clear the card’s NATURAL height, not just the base
+   min-height — with the larger illustrations the cards settle at ~292px, so a
+   19rem (304px) hover barely moved and 16rem did nothing at all. 21rem gives a
+   ~44px lift that actually reads. Re-check this number if the card content or
+   the illustration size changes again. */
 .n58-stat-card:hover {
   --n58-notch-fill: var(--stat-flood);
   --n58-notch-border-color: var(--stat-flood);
-  min-height: 16rem;
+  min-height: 21rem;
 }
 
 .n58-stat-card.is-active {
   --n58-notch-fill: var(--stat-flood);
   --n58-notch-border-color: var(--stat-flood);
-  min-height: 16rem;
+  min-height: 21rem;
 }
 
 [data-flwr] .n58-stat-card::before {
@@ -5134,11 +5179,13 @@ body {
   .n58-stat-card {
     width: calc((100% - var(--_spacing---step--4)) / 2);
   }
+  /* Tablet keeps hover level with the resting height (no growth by design) —
+     tracked to the new 16rem base so it cannot shrink the card. */
   .n58-stat-card:hover {
-    min-height: 13rem;
+    min-height: 16rem;
   }
   .n58-stat-card.is-active {
-    min-height: 13rem;
+    min-height: 16rem;
   }
   .n58-arch-marquee {
     padding-top: var(--_spacing---step--3);
@@ -5360,5 +5407,284 @@ body {
   }
   .n58-steps-panel_desc {
     max-width: 40ch;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   AlaN stage — full-screen "Habla con AlaN" (FAQ page)
+   A native <dialog> opened by the hero's secondary CTA. It stacks the hero's
+   Spline scene full-bleed, the Vanny chat embed on top (transparent panel, so
+   only its floating input bar reads), and a close control. showModal() puts the
+   whole thing in the top layer, which is how it covers the corner chat widget
+   without entering the z-index race (that frame sits at 2147483000).
+
+   --alan-level (0..1) is written every frame by alan-stage.js from the live
+   call's audio; data-state carries the call state. Both are the entire drive
+   surface, so the motion below works whatever the Spline scene contains.
+   ══════════════════════════════════════════════════════════════════════════ */
+[data-flwr] .alan-stage,
+dialog.alan-stage {
+  --alan-level: 0;
+  /* Explicit, not inherited from the UA sheet: a modal <dialog> is centred with
+     `margin:auto` by default, and margin:0 alone would leave it corner-pinned in
+     some engines. */
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  max-width: 100vw;
+  height: 100dvh;
+  max-height: 100dvh;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  overflow: hidden;
+  background: #1b2021;
+  color: #ffefe9;
+}
+dialog.alan-stage::backdrop {
+  background: rgba(12, 14, 15, 0.72);
+  -webkit-backdrop-filter: blur(6px);
+          backdrop-filter: blur(6px);
+}
+/* Lock the page behind the stage so a scroll gesture over the 3D layer does not
+   move the FAQ list underneath. */
+html.alan-stage-open,
+html.alan-stage-open body {
+  overflow: hidden;
+}
+
+/* ── layer 1 · the scene ──────────────────────────────────────────────────
+   Full-bleed on purpose: the scene reacts to the pointer, and an iframe is a
+   hit-test barrier, so anything the chat covers is dead to the mouse. Keeping
+   the canvas at inset:0 (with the chat confined to a bottom strip) leaves the
+   whole upper viewport live, which is where the avatar sits. The art is a
+   padded square at object-fit contain, so the shorter axis caps its size. */
+.alan-stage_scene {
+  position: absolute;
+  top: 0;
+  right: 0;
+  /* Lifted off dead centre. Centring in the full viewport left a band of empty
+     space above AlaN and crowded the chat; pulling the bottom edge up recentres
+     the avatar in the room it actually has. The lower sliver that ends up behind
+     the transcript is deliberate, and everything above the chat strip is still
+     live for the pointer. */
+  bottom: var(--alan-lift, 22%);
+  left: 0;
+  display: grid;
+  place-items: center;
+  /* Rise on volume. The range is deliberately generous: at six percent the
+     avatar was technically animating and visibly doing nothing, which is the
+     same thing as far as anyone watching is concerned. The lift adds a second
+     axis so the motion does not read as a flat zoom. */
+  transform: scale(calc(1 + (var(--alan-level) * 0.13)))
+             translateY(calc(var(--alan-level) * -1.4%));
+  transition: transform 0.08s linear;
+  will-change: transform;
+}
+.alan-stage_poster,
+.alan-stage_scene spline-viewer {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: contain;
+  transition: opacity 0.6s var(--_motion---ease-decelerate);
+}
+.alan-stage_scene spline-viewer {
+  opacity: 0;
+}
+/* Crossfade once the scene reports loaded (same choreography as the hero). */
+.alan-stage_scene.is-loaded .alan-stage_poster {
+  opacity: 0;
+}
+.alan-stage_scene.is-loaded spline-viewer {
+  opacity: 1;
+}
+/* Lime bloom, sized by the voice — the part that reads as "AlaN is talking"
+   even on the poster fallback. It sits ABOVE the scene on `screen`, so it adds
+   light instead of hiding the avatar: a Spline scene paints its own background,
+   which would swallow the glow entirely if this stayed behind the canvas. */
+.alan-stage_scene::before {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  top: 50%;
+  left: 50%;
+  width: min(58vh, 70vw);
+  height: min(58vh, 70vw);
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(160, 221, 82, 0.34), rgba(160, 221, 82, 0) 68%);
+  mix-blend-mode: screen;
+  transform: translate(-50%, -50%) scale(calc(0.74 + (var(--alan-level) * 0.62)));
+  opacity: calc(0.22 + (var(--alan-level) * 0.78));
+  transition: transform 0.08s linear, opacity 0.08s linear;
+  pointer-events: none;
+}
+/* Connecting: hold a dim pulse until the first audio arrives. */
+.alan-stage[data-state="connecting"] .alan-stage_scene::before {
+  animation: alan-stage-wait 1.1s ease-in-out infinite;
+}
+@keyframes alan-stage-wait {
+  0%, 100% { opacity: 0.25; }
+  50%      { opacity: 0.55; }
+}
+.alan-stage[data-state="error"] .alan-stage_scene {
+  filter: grayscale(0.7);
+}
+
+/* ── layer 2 · the chat ───────────────────────────────────────────────────
+   Fills the dialog. The embed paints nothing (transparent panel + messages in
+   the widget theme), so the scene shows through; its own customCss makes the
+   panel click-through except for the composer, chips and call controls. */
+/* A bottom strip, NOT a full-screen overlay. The iframe swallows every pointer
+   event over its box and cannot forward them to the scene beneath it, so its
+   footprint is kept to the transcript + chips + bar. Everything above stays
+   live for the scene's own mouse tracking. The panel inside is transparent, so
+   the avatar still shows through behind the chat. */
+.alan-stage_chat {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: min(46vh, 30rem);
+}
+.alan-stage_frame {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  background: transparent;
+  /* Must match the widget instance's panelColorScheme, or the browser paints an
+     opaque UA canvas behind the transparent panel. */
+  color-scheme: dark;
+}
+
+/* ── layer 3 · close ──────────────────────────────────────────────────────── */
+[data-flwr] .alan-stage_close {
+  position: absolute;
+  top: var(--_spacing---step--5);
+  right: var(--_spacing---step--5);
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  padding: 0;
+  border: 1px solid rgba(255, 239, 233, 0.22);
+  border-radius: 999px;
+  background: rgba(27, 32, 33, 0.55);
+  color: #ffefe9;
+  cursor: pointer;
+  -webkit-backdrop-filter: blur(10px);
+          backdrop-filter: blur(10px);
+  transition: background-color 0.25s var(--_motion---ease-standard),
+              border-color 0.25s var(--_motion---ease-standard),
+              transform 0.25s var(--_motion---ease-standard);
+}
+[data-flwr] .alan-stage_close:is(:hover, :focus-visible) {
+  background: rgba(160, 221, 82, 0.16);
+  border-color: #a0dd52;
+  transform: scale(1.06);
+}
+[data-flwr] .alan-stage_close svg {
+  width: 1.125rem;
+  height: 1.125rem;
+}
+
+/* ── phones ───────────────────────────────────────────────────────────────
+   No 3D below 992px (the poster stays, same policy as the hero). Give the
+   avatar less vertical room, since the on-screen keyboard eats the bottom. */
+@media (max-width: 991px) {
+  /* Shorter strip: there is no 3D to preserve room for, and the on-screen
+     keyboard already eats the bottom of the viewport. */
+  .alan-stage_chat {
+    height: min(52vh, 26rem);
+  }
+  .alan-stage_scene::before {
+    width: min(42vh, 78vw);
+    height: min(42vh, 78vw);
+  }
+}
+
+/* Honour reduce-motion: keep the brightness cue, drop the movement. The script
+   already damps --alan-level; this removes the scale entirely. */
+@media (prefers-reduced-motion: reduce) {
+  .alan-stage_scene {
+    transform: none;
+  }
+  /* Keep the bloom centred and its brightness cue, drop the pulsing scale. */
+  .alan-stage_scene::before {
+    transform: translate(-50%, -50%);
+  }
+  .alan-stage[data-state="connecting"] .alan-stage_scene::before {
+    animation: none;
+  }
+}
+
+/* ── the curtain ──────────────────────────────────────────────────────────
+   data-phase="loading" holds the stage closed: no poster, no chat, just the
+   loading bar on the dialog's own background. Revealing the poster and the chat
+   behind a progress bar made the whole thing look frozen mid-render, which is
+   worse than an honest wait. data-phase="ready" lifts it once the scene AND the
+   chat embed have both loaded (phones skip the wait; there is no 3D there). */
+.alan-stage_loading {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.35s var(--_motion---ease-standard);
+}
+.alan-stage[data-phase="loading"] .alan-stage_loading {
+  opacity: 1;
+}
+/* The bar is positioned by this layer, so drop the absolute fill it inherits
+   from the shared .n58-spline_preloader rule. */
+.alan-stage_loading .n58-spline_preloader {
+  position: relative;
+  inset: auto;
+}
+.alan-stage[data-phase="loading"] .alan-stage_scene,
+.alan-stage[data-phase="loading"] .alan-stage_chat {
+  opacity: 0;
+  pointer-events: none;
+}
+/* Rise-in on reveal, so the stage arrives rather than blinking on.
+   The scene fades ONLY: its transform belongs to the voice drive above, and
+   giving it a half-second transition here would make the avatar lag the audio. */
+.alan-stage_scene {
+  transition: opacity 0.5s var(--_motion---ease-decelerate),
+              transform 0.09s linear;
+}
+.alan-stage_chat {
+  transition: opacity 0.5s var(--_motion---ease-decelerate),
+              transform 0.5s var(--_motion---ease-decelerate);
+}
+.alan-stage[data-phase="loading"] .alan-stage_chat {
+  transform: translateY(14px);
+}
+.alan-stage[data-phase="ready"] .alan-stage_scene,
+.alan-stage[data-phase="ready"] .alan-stage_chat {
+  opacity: 1;
+}
+.alan-stage[data-phase="ready"] .alan-stage_chat {
+  transform: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .alan-stage[data-phase="loading"] .alan-stage_chat {
+    transform: none;
   }
 }

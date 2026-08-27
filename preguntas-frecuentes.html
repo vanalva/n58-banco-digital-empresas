@@ -10,7 +10,9 @@
   <meta property="og:description" content="AlaN responde tus preguntas más frecuentes sobre cuentas, pagos, operaciones cambiarias y seguridad en N58 Banco Digital.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://www.n58bancodigital.com/preguntas-frecuentes">
-  <meta property="og:image" content="https://www.n58bancodigital.com/assets/images/photos/n58-hero-image.webp">
+  <meta property="og:image" content="https://www.n58bancodigital.com/assets/images/photos/n58-open-graph.png">
+  <link rel="icon" type="image/png" href="assets/images/icons/favicon.png">
+  <link rel="apple-touch-icon" href="assets/images/icons/n58-webclip.png">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Preguntas Frecuentes — N58 Banco Digital">
   <meta name="twitter:description" content="AlaN responde tus preguntas más frecuentes sobre cuentas, pagos, operaciones cambiarias y seguridad en N58 Banco Digital.">
@@ -22,7 +24,7 @@
   <link rel="stylesheet" href="css/fonts.css?v=d00f1644">
   <link rel="stylesheet" href="css/framework.css?v=1a765f0c">
   <link rel="stylesheet" href="css/variables.css?v=402f79dd">
-  <link rel="stylesheet" href="css/project.css?v=2dd56efb">
+  <link rel="stylesheet" href="css/project.css?v=e0b80d94">
 </head>
 <body>
 <div data-flwr class="f-mode-light n58-page">
@@ -37,7 +39,10 @@
   <div class="n58-preloader" aria-hidden="true">
     <div class="n58-preloader_bar"><div class="n58-preloader_fill"></div></div>
   </div>
-  <noscript><style>.n58-preloader { display: none; }</style></noscript>
+  <noscript><style>.n58-preloader { display: none; }
+    /* The AlaN stage is script-driven end to end (dialog + 3D + chat embed), so
+       with JS off its trigger would be a dead button. Hide it instead. */
+    [data-alan-open], .alan-stage { display: none !important; }</style></noscript>
   <script>document.querySelector('[data-flwr]').classList.add('is-booting');</script>
 
   <a href="#main-content" class="u-sr-only">Saltar al contenido</a>
@@ -213,6 +218,10 @@
             <p class="f-text-lead f-text-color-muted f-max-w-40ch">Soy el asistente inteligente de N58. Aquí respondo tus preguntas más frecuentes.</p>
             <div class="f-flex f-flex-wrap f-gap-3 f-margin-top-2">
               <a href="#seccion-faq" class="flwr_button_primary" data-flwr-trigger="hover focus"><span data-flwr-target="label">Lee abajo</span></a>
+              <!-- Opens the full-screen AlaN stage (dialog below). Kept as a real
+                   <button>: there is no URL to fall back to, so an <a href="#">
+                   would just jump the page with JS off. -->
+              <button type="button" class="flwr_button_secondary" data-alan-open data-flwr-trigger="hover focus"><span data-flwr-target="label">Habla con AlaN</span></button>
             </div>
           </div>
           <div class="home-split_media">
@@ -586,9 +595,31 @@
 
   <!-- ════════════════ Floating AlaN chatbot trigger ════════════════ -->
   <a href="https://interfaces.zapier.com/embed/chatbot/cmc1x2kxk001k4i9jbygtrl5e" target="_blank" rel="noopener" class="alan-fab flwr_button_primary">
-    <img src="assets/images/icons/alan-crema.png" alt="" width="22" height="22" data-flwr-target="icon-leading">
+    <svg class="n58-alan-face" viewBox="0 0 11.671 6.103" fill="currentColor" aria-hidden="true" data-flwr-target="icon-leading"><path d="M9.724,4.634c-2.222,1.959-5.555,1.959-7.777,0,.267-.303.534-.606.801-.909,1.765,1.556,4.411,1.556,6.175,0,.267.303.534.606.801.909Z"/><polygon points="9.924 0 7.824 0 6.077 2.915 7.547 2.915 8.538 1.261 9.21 1.261 10.201 2.915 11.671 2.915 9.924 0"/><polygon points="3.847 0 1.747 0 0 2.915 1.47 2.915 2.461 1.261 3.133 1.261 4.124 2.915 5.594 2.915 3.847 0"/></svg>
     <span data-flwr-target="label">Chatear con AlaN</span>
   </a>
+
+  <!-- ════════════════ Full-screen AlaN stage ════════════════
+       Opened by the hero's "Habla con AlaN" button. Three layers: the same
+       Spline scene as the hero (full-bleed, desktop only, poster on phones),
+       the Vanny chat embed on top with a transparent panel so only its input
+       bar shows, and a close control. The avatar reacts to AlaN's voice via the
+       embed's telemetry — see alan-stage.js. Empty until first open; the iframe
+       and the 3D scene are both built on demand. -->
+  <dialog id="alan-stage" class="alan-stage" data-phase="loading" aria-label="Habla con AlaN">
+    <div class="alan-stage_scene">
+      <img src="assets/images/photos/n58-alan-fallback.webp" alt="AlaN, el asistente inteligente de N58" class="alan-stage_poster" loading="lazy" decoding="async">
+    </div>
+    <div class="alan-stage_chat"></div>
+    <!-- Curtain: the loading bar sits on its own centred layer while the scene
+         and the chat load, and everything else is held back until both are
+         ready. Showing the poster and the chat behind the bar made the stage
+         read as frozen instead of loading. -->
+    <div class="alan-stage_loading" aria-hidden="true"></div>
+    <button type="button" class="alan-stage_close" data-alan-close aria-label="Cerrar">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </dialog>
 
   <!-- flwr runtime: hydrates navbar dropdown/hamburger, fullscreen menu, etc. (self-inits on DOMContentLoaded). -->
   <script src="assets/runtime.js" defer></script>
@@ -855,6 +886,11 @@
 
   <!-- Spline 3D loader (shared): preloads below-the-fold scenes before arrival; desktop-only. -->
   <script src="assets/spline-loader.js" defer></script>
+
+  <!-- Full-screen AlaN stage: wires the hero trigger to the dialog above, mounts
+       the Vanny embed + a second copy of the hero scene on first open, and drives
+       the avatar from the call's audio. -->
+  <script src="assets/alan-stage.js" defer></script>
 
   <!-- Lottie: animated brand logo in the header (matches the live site). -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.12.2/lottie.min.js" defer></script>
